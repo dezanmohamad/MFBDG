@@ -1,0 +1,524 @@
+<!doctype html>
+<html lang="id" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Muslim Footballers Bandung</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+  
+  <style>
+    body { box-sizing: border-box; font-family: 'Inter', sans-serif; }
+    .font-arabic { font-family: 'Amiri', serif; }
+    .glass-effect { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border: 1px solid rgba(218, 165, 32, 0.2); }
+    .gold-gradient { background: linear-gradient(135deg, #DAA520 0%, #FFD700 100%); }
+    .hover-lift { transition: all 0.3s ease; }
+    .hover-lift:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(218, 165, 32, 0.3); }
+    .menu-card { transition: all 0.3s ease; cursor: pointer; }
+    .menu-card:hover { transform: translateY(-2px); box-shadow: 0 8px 16px rgba(218, 165, 32, 0.3); }
+    .menu-card.active { background: linear-gradient(135deg, #DAA520 0%, #FFD700 100%); color: white; }
+    .islamic-pattern { background-image: radial-gradient(circle at 20px 20px, rgba(218, 165, 32, 0.1) 1px, transparent 1px); background-size: 40px 40px; }
+    
+    /* LOGIKA ADMIN */
+    .admin-only { display: none !important; }
+    body.is-admin .admin-only { display: block !important; }
+    body.is-admin div.flex.admin-only { display: flex !important; } 
+    body.is-admin label.admin-only { display: flex !important; }
+
+    /* PERBAIKAN: z-index ditingkatkan agar selalu muncul di atas */
+    .admin-toggle { 
+        position: fixed; 
+        bottom: 30px; 
+        left: 30px; 
+        z-index: 99999; 
+        font-size: 24px; 
+        cursor: pointer; 
+        background: linear-gradient(135deg, #DAA520 0%, #FFD700 100%); 
+        width: 60px; 
+        height: 60px; 
+        border-radius: 50%; 
+        display: flex; 
+        align-items: center; 
+        justify-content: center; 
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3); 
+        transition: all 0.3s ease; 
+        border: 3px solid white; /* Border dipertebal */
+    }
+    .admin-toggle:hover { transform: scale(1.1) rotate(15deg); }
+    
+    /* Toast Notification */
+    .toast { animation: fadeIn 0.3s, fadeOut 0.3s 2.5s forwards; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeOut { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-20px); } }
+  </style>
+ </head>
+ <body class="h-full bg-gradient-to-br from-amber-50 via-white to-green-50 islamic-pattern">
+  <div id="app" class="h-full w-full overflow-auto">
+   <header class="glass-effect shadow-lg sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 py-6">
+     <div class="flex items-center justify-between">
+      <div>
+       <h1 id="appTitle" class="text-3xl font-bold text-amber-600 font-arabic">⚽ Muslim Footballers Bandung</h1>
+       <p id="greetingText" class="text-sm text-gray-600 mt-1 font-arabic">السلام عليكم ورحمة الله وبركاته</p>
+      </div>
+      <div class="text-right">
+       <div class="text-sm text-gray-500" id="currentDate"></div>
+       <div class="text-xs text-gray-400" id="hijriDate"></div>
+      </div>
+     </div>
+    </div>
+   </header>
+
+   <div class="max-w-7xl mx-auto px-4 py-6">
+    <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-3">
+     <div class="menu-card glass-effect rounded-xl p-4 text-center active" data-menu="dashboard"><div class="text-3xl mb-2">📊</div><div id="menuDashboard" class="text-sm font-semibold">Dashboard</div></div>
+     <div class="menu-card glass-effect rounded-xl p-4 text-center" data-menu="islami"><div class="text-3xl mb-2">🕌</div><div id="menuIslami" class="text-sm font-semibold">Islami</div></div>
+     <div class="menu-card glass-effect rounded-xl p-4 text-center" data-menu="anggota"><div class="text-3xl mb-2">👥</div><div id="menuAnggota" class="text-sm font-semibold">Anggota</div></div>
+     <div class="menu-card glass-effect rounded-xl p-4 text-center" data-menu="jadwal"><div class="text-3xl mb-2">📅</div><div id="menuJadwal" class="text-sm font-semibold">Jadwal</div></div>
+     <div class="menu-card glass-effect rounded-xl p-4 text-center" data-menu="match"><div class="text-3xl mb-2">⚽</div><div id="menuMatch" class="text-sm font-semibold">Rekap Match</div></div>
+     <div class="menu-card glass-effect rounded-xl p-4 text-center" data-menu="statistik"><div class="text-3xl mb-2">📈</div><div id="menuStatistik" class="text-sm font-semibold">Statistik</div></div>
+     <div class="menu-card glass-effect rounded-xl p-4 text-center" data-menu="inventaris"><div class="text-3xl mb-2">📦</div><div id="menuInventaris" class="text-sm font-semibold">Inventaris</div></div>
+     <div class="menu-card glass-effect rounded-xl p-4 text-center" data-menu="sponsor"><div class="text-3xl mb-2">🤝</div><div id="menuSponsor" class="text-sm font-semibold">Sponsor</div></div>
+    </div>
+   </div>
+
+   <main class="max-w-7xl mx-auto px-4 pb-8">
+    
+    <!-- DASHBOARD VIEW -->
+    <div id="dashboardView" class="view-content">
+     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      <div class="glass-effect rounded-xl p-6 hover-lift"><div class="flex items-center justify-between"><div><p class="text-gray-600 text-sm">Total Anggota</p><p id="totalAnggota" class="text-3xl font-bold text-amber-600">0</p></div><div class="text-4xl">👥</div></div></div>
+      <div class="glass-effect rounded-xl p-6 hover-lift"><div class="flex items-center justify-between"><div class="flex-1"><p class="text-gray-600 text-sm">⚽ Top Scorer</p><p id="topScorer" class="text-base font-bold text-green-600 truncate">-</p><p id="topScorerGoals" class="text-xs text-gray-500">0 gol</p></div><div class="text-4xl">👑</div></div></div>
+      <div class="glass-effect rounded-xl p-6 hover-lift"><div class="flex items-center justify-between"><div class="flex-1"><p class="text-gray-600 text-sm">🎯 Top Assist</p><p id="topAssist" class="text-base font-bold text-blue-600 truncate">-</p><p id="topAssistCount" class="text-xs text-gray-500">0 assist</p></div><div class="text-4xl">🎯</div></div></div>
+      <div class="glass-effect rounded-xl p-6 hover-lift"><div class="flex items-center justify-between"><div><p class="text-gray-600 text-sm">Total Match</p><p id="totalMatches" class="text-3xl font-bold text-purple-600">0</p></div><div class="text-4xl">🏆</div></div></div>
+     </div>
+     <div class="glass-effect rounded-xl p-6"><h2 class="text-xl font-bold text-amber-600 mb-4">Ringkasan Cepat</h2><div class="space-y-3"><div class="flex items-center justify-between p-3 bg-amber-50 rounded-lg"><span class="text-gray-700">📊 Statistik tersedia untuk analisis</span> <button onclick="showMenu('statistik')" class="text-amber-600 hover:text-amber-700 font-semibold text-sm">Lihat →</button></div><div class="flex items-center justify-between p-3 bg-green-50 rounded-lg"><span class="text-gray-700">🕌 Jadwal ibadah &amp; kajian</span> <button onclick="showMenu('islami')" class="text-green-600 hover:text-green-700 font-semibold text-sm">Lihat →</button></div></div></div>
+    </div>
+
+    <!-- ISLAMI VIEW -->
+    <div id="islamiView" class="view-content hidden">
+     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+      <div class="glass-effect rounded-xl p-6"><div class="flex items-center justify-between mb-4"><h2 class="text-xl font-bold text-amber-600">🕌 Jadwal Sholat - Bandung</h2><div class="text-xs text-gray-500">Sumber: Kemenag RI</div></div><div id="prayerSchedule" class="space-y-2"></div></div>
+      <div class="glass-effect rounded-xl p-6"><h2 class="text-xl font-bold text-amber-600 mb-4">💎 Renungan Hari Ini</h2><div class="space-y-4"><div class="p-4 bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg border border-green-200"><p class="text-xs text-gray-500 mb-2">Ayat Al-Quran</p><p id="ayatText" class="text-sm font-arabic text-gray-800 leading-relaxed mb-2"></p><p id="ayatTranslation" class="text-xs text-gray-600 italic"></p></div><div class="p-4 bg-gradient-to-br from-amber-50 to-yellow-50 rounded-lg border border-amber-200"><p class="text-xs text-gray-500 mb-2">Hadist</p><p id="hadistText" class="text-sm text-gray-800 leading-relaxed"></p></div><button onclick="refreshRenungan()" class="w-full bg-amber-500 text-white px-4 py-2 rounded-lg hover:bg-amber-600 text-sm">🔄 Ganti Renungan</button></div></div>
+     </div>
+     <div class="glass-effect rounded-xl p-6 admin-only"><h2 class="text-xl font-bold text-amber-600 mb-4">📚 Jadwal Kajian</h2><div class="grid grid-cols-1 md:grid-cols-4 gap-3 mb-4"><input type="text" id="kajianTopic" placeholder="Topik Kajian" class="px-4 py-2 border border-amber-300 rounded-lg"> <input type="date" id="kajianDate" class="px-4 py-2 border border-amber-300 rounded-lg"> <input type="time" id="kajianTime" class="px-4 py-2 border border-amber-300 rounded-lg"> <input type="text" id="kajianSpeaker" placeholder="Pemateri/Ustadz" class="px-4 py-2 border border-amber-300 rounded-lg"></div><button onclick="addKajian()" class="w-full gold-gradient text-white px-4 py-3 rounded-lg hover:opacity-90 font-semibold"> ➕ Tambah Jadwal Kajian </button><div id="kajianList" class="mt-4 space-y-2"></div></div>
+    </div>
+
+    <!-- ANGGOTA VIEW (MODIFIED FOR PUBLIC) -->
+    <div id="anggotaView" class="view-content hidden">
+     <!-- PERUBAHAN: Hapus class 'admin-only' di sini agar publik bisa daftar -->
+     <div class="glass-effect rounded-xl p-6 mb-6">
+      <h2 class="text-xl font-bold text-amber-600 mb-4">➕ Daftar Sebagai Anggota</h2>
+      <div class="bg-blue-50 p-3 rounded-lg border border-blue-200 mb-4 text-sm text-blue-800">
+        📢 <b>Halo!</b> Silakan isi data diri Anda di sini untuk bergabung ke dalam database tim. Data akan langsung muncul di daftar anggota.
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4"><input type="text" id="memberName" placeholder="Nama Lengkap" class="px-4 py-2 border border-amber-300 rounded-lg"> <select id="memberPosition" class="px-4 py-2 border border-amber-300 rounded-lg"> <option value="">Pilih Posisi</option> <option value="Kiper">Kiper</option> <option value="Bek">Bek</option> <option value="Gelandang">Gelandang</option> <option value="Striker">Striker</option> </select> <input type="tel" id="memberPhone" placeholder="No. Telepon" class="px-4 py-2 border border-amber-300 rounded-lg"></div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4"><select id="memberSkill" class="px-4 py-2 border border-amber-300 rounded-lg"> <option value="">Level Keahlian</option> <option value="Pemula">Pemula</option> <option value="Menengah">Menengah</option> <option value="Mahir">Mahir</option> </select> <select id="memberAvailability" class="px-4 py-2 border border-amber-300 rounded-lg"> <option value="">Ketersediaan</option> <option value="Weekday">Weekday</option> <option value="Weekend">Weekend</option> <option value="Fleksibel">Fleksibel</option> </select></div><button onclick="addMember()" class="w-full gold-gradient text-white px-4 py-3 rounded-lg hover:opacity-90 font-semibold"> ➕ Gabung Tim Sekarang </button>
+     </div>
+     
+     <div class="glass-effect rounded-xl p-6">
+      <div class="flex items-center justify-between mb-4 flex-wrap gap-3">
+       <h2 class="text-xl font-bold text-amber-600">👥 Daftar Anggota</h2>
+       <div class="gap-2 flex-wrap admin-only hidden">
+        <button onclick="exportMembersCSV()" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 text-sm font-semibold"> 📥 Export CSV </button> 
+        <button onclick="backupMembersJSON()" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 text-sm font-semibold"> 💾 Backup JSON </button> 
+        <label class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 text-sm font-semibold cursor-pointer"> 📤 Import CSV <input type="file" accept=".csv" onchange="processImport(event)" class="hidden"> </label>
+       </div>
+      </div>
+      <div id="memberList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+     </div>
+    </div>
+
+    <!-- JADWAL VIEW -->
+    <div id="jadwalView" class="view-content hidden">
+     <div class="glass-effect rounded-xl p-6 mb-6 admin-only">
+      <h2 class="text-xl font-bold text-amber-600 mb-4">📅 Tambah Jadwal Pertandingan</h2>
+      <div class="mb-4"><select id="scheduleType" class="w-full px-4 py-2 border border-amber-300 rounded-lg bg-white font-semibold text-gray-700"> <option value="">-- Pilih Jenis Pertandingan --</option> <option value="Friendly Match">🤝 Friendly Match</option> <option value="Fun Football">⚽ Fun Football Internal</option> </select></div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4"><input type="text" id="scheduleName" placeholder="Nama Kegiatan / Lawan" class="px-4 py-2 border border-amber-300 rounded-lg"> <input type="date" id="scheduleDate" class="px-4 py-2 border border-amber-300 rounded-lg"></div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4"><input type="time" id="scheduleTime" class="px-4 py-2 border border-amber-300 rounded-lg"> <input type="text" id="scheduleLocation" placeholder="Lokasi" class="px-4 py-2 border border-amber-300 rounded-lg"></div><button onclick="addSchedule()" class="w-full gold-gradient text-white px-4 py-3 rounded-lg hover:opacity-90 font-semibold"> 💾 Simpan Jadwal </button>
+     </div>
+     <div class="glass-effect rounded-xl p-6"><h2 class="text-xl font-bold text-amber-600 mb-4">📋 Daftar Jadwal</h2><div id="scheduleList" class="space-y-3"></div></div>
+    </div>
+
+    <!-- MATCH VIEW -->
+    <div id="matchView" class="view-content hidden">
+     <div class="glass-effect rounded-xl p-6 mb-6 admin-only">
+      <h2 class="text-xl font-bold text-amber-600 mb-4">⚽ Input Hasil Pertandingan</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4"><input type="text" id="matchOpponent" placeholder="Nama Lawan" class="px-4 py-2 border border-amber-300 rounded-lg"> <input type="date" id="matchDate" class="px-4 py-2 border border-amber-300 rounded-lg"></div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4"><input type="text" id="matchLocation" placeholder="Lokasi" class="px-4 py-2 border border-amber-300 rounded-lg"> <select id="matchType" class="px-4 py-2 border border-amber-300 rounded-lg"> <option value="">Jenis Match</option> <option value="Friendly">Friendly Match</option> <option value="Fun Football">Fun Football</option> </select></div>
+      <div class="grid grid-cols-2 gap-4 mb-4"><input type="number" id="matchScoreUs" placeholder="Skor Kami" min="0" class="px-4 py-2 border border-amber-300 rounded-lg"> <input type="number" id="matchScoreOpponent" placeholder="Skor Lawan" min="0" class="px-4 py-2 border border-amber-300 rounded-lg"></div><button onclick="addMatch()" class="w-full gold-gradient text-white px-4 py-3 rounded-lg hover:opacity-90 font-semibold"> 💾 Simpan Hasil Match </button>
+     </div>
+     <div class="glass-effect rounded-xl p-6"><h2 class="text-xl font-bold text-amber-600 mb-4">🏆 Riwayat Pertandingan</h2><div id="matchList" class="space-y-3"></div></div>
+    </div>
+
+    <!-- STATISTIK VIEW -->
+    <div id="statistikView" class="view-content hidden">
+     <div class="glass-effect rounded-xl p-6 mb-6 admin-only">
+      <h2 class="text-xl font-bold text-amber-600 mb-4">📊 Input Statistik Pemain</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4"><select id="statsPlayerName" class="px-4 py-2 border border-amber-300 rounded-lg bg-white font-bold text-gray-700"> <option value="">-- Pilih Pemain --</option> </select> <input type="date" id="statsDate" class="px-4 py-2 border border-amber-300 rounded-lg"></div>
+      <div class="grid grid-cols-3 gap-3 mb-4"><div><label class="text-xs text-gray-500">Gol (3 Poin)</label> <input type="number" id="statsGoals" placeholder="0" min="0" class="w-full px-3 py-2 border border-gray-300 rounded-lg"></div><div><label class="text-xs text-gray-500">Assist (1 Poin)</label> <input type="number" id="statsAssists" placeholder="0" min="0" class="w-full px-3 py-2 border border-gray-300 rounded-lg"></div><div><label class="text-xs text-gray-500">Saves (1 Poin)</label> <input type="number" id="statsSaves" placeholder="0" min="0" class="w-full px-3 py-2 border border-gray-300 rounded-lg"></div></div>
+      <div class="mb-4 bg-amber-50 p-3 rounded-lg border border-amber-200"><p class="text-xs font-bold text-amber-700 mb-2">Kelengkapan &amp; Bonus:</p><div class="grid grid-cols-2 gap-2"><label class="flex items-center space-x-2 cursor-pointer"> <input type="checkbox" id="statsJersey" class="w-4 h-4 text-amber-600 rounded"> <span class="text-sm">👕 Pakai Jersey (+2)</span> </label> <label class="flex items-center space-x-2 cursor-pointer"> <input type="checkbox" id="statsCleanSheet" class="w-4 h-4 text-amber-600 rounded"> <span class="text-sm">🧤 Clean Sheet (+3)</span> </label></div></div>
+      <div class="mb-4 bg-green-50 p-3 rounded-lg border border-green-200"><p class="text-xs font-bold text-green-700 mb-2">Penghargaan Khusus:</p><div class="grid grid-cols-2 gap-2 text-sm"><label class="flex items-center space-x-2"><input type="checkbox" id="statsPOTM" class="w-4 h-4"> <span>🏅 Match (+3)</span></label> <label class="flex items-center space-x-2"><input type="checkbox" id="statsPOTW" class="w-4 h-4"> <span>⭐ Week (+3)</span></label> <label class="flex items-center space-x-2"><input type="checkbox" id="statsBestXI" class="w-4 h-4"> <span>🛡️ Best XI (+3)</span></label> <label class="flex items-center space-x-2"><input type="checkbox" id="statsPOTMonth" class="w-4 h-4"> <span>👑 Month (+5)</span></label></div></div><button onclick="addStats()" class="w-full gold-gradient text-white px-4 py-3 rounded-lg hover:opacity-90 font-semibold"> 💾 Simpan Statistik </button>
+     </div>
+     <div class="glass-effect rounded-xl p-6"><h2 class="text-xl font-bold text-amber-600 mb-4">📊 Klasemen Pemain</h2><div id="statsList" class="space-y-3"></div></div>
+    </div>
+
+    <!-- INVENTARIS VIEW -->
+    <div id="inventarisView" class="view-content hidden">
+     <div class="glass-effect rounded-xl p-6 mb-6 admin-only">
+      <h2 class="text-xl font-bold text-amber-600 mb-4">📦 Tambah Item Inventaris</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4"><input type="text" id="itemName" placeholder="Nama Item" class="px-4 py-2 border border-amber-300 rounded-lg"> <input type="text" id="itemImage" placeholder="Link Foto (opsional)" class="px-4 py-2 border border-amber-300 rounded-lg"></div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4"><input type="number" id="itemQuantity" placeholder="Jumlah" min="0" class="px-4 py-2 border border-amber-300 rounded-lg"> <select id="itemCondition" class="w-full px-4 py-2 border border-amber-300 rounded-lg"> <option value="">Kondisi</option> <option value="Baik">Baik</option> <option value="Cukup">Cukup</option> <option value="Perlu Diganti">Perlu Diganti</option> </select></div><button onclick="addInventory()" class="w-full gold-gradient text-white px-4 py-3 rounded-lg hover:opacity-90 font-semibold"> ➕ Tambah Item </button>
+     </div>
+     <div class="glass-effect rounded-xl p-6"><h2 class="text-xl font-bold text-amber-600 mb-4">📋 Daftar Inventaris</h2><div id="inventoryList" class="space-y-3"></div></div>
+    </div>
+
+    <!-- SPONSOR VIEW -->
+    <div id="sponsorView" class="view-content hidden">
+     <div class="glass-effect rounded-xl p-6 mb-6 admin-only">
+      <h2 class="text-xl font-bold text-amber-600 mb-4">🤝 Tambah Sponsor/Donatur</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4"><input type="text" id="sponsorName" placeholder="Nama Sponsor" class="px-4 py-2 border border-amber-300 rounded-lg"> <input type="text" id="sponsorImage" placeholder="Link Logo (https://...)" class="px-4 py-2 border border-amber-300 rounded-lg"></div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4"><input type="text" id="sponsorContact" placeholder="Kontak" class="px-4 py-2 border border-amber-300 rounded-lg"> <input type="number" id="sponsorAmount" placeholder="Jumlah Donasi (Rp)" min="0" class="w-full px-4 py-2 border border-amber-300 rounded-lg"></div><button onclick="addSponsor()" class="w-full gold-gradient text-white px-4 py-3 rounded-lg hover:opacity-90 font-semibold"> ➕ Tambah Sponsor </button>
+     </div>
+     <div class="glass-effect rounded-xl p-6"><h2 class="text-xl font-bold text-amber-600 mb-4">💰 Daftar Sponsor &amp; Donatur</h2><div id="sponsorList" class="space-y-3"></div></div>
+    </div>
+   </main>
+  </div>
+
+  <div id="adminBtn" class="admin-toggle" onclick="toggleAdmin()">🔒</div>
+
+  <!-- MODALS -->
+  <div id="loginModal" class="hidden fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm"><div class="bg-white p-6 rounded-xl shadow-2xl w-80 text-center border-2 border-amber-400"><h3 class="text-xl font-bold text-amber-600 mb-4 font-arabic">🔑 Login Admin</h3><input type="password" id="adminPassInput" placeholder="Masukkan Password..." class="w-full px-4 py-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:border-amber-500"><div class="flex gap-2"><button onclick="submitLogin()" class="flex-1 bg-amber-500 text-white py-2 rounded-lg hover:bg-amber-600 font-bold">Masuk</button> <button onclick="closeAdminModal()" class="flex-1 bg-gray-200 text-gray-700 py-2 rounded-lg hover:bg-gray-300">Batal</button></div></div></div>
+  <div id="editInventoryModal" class="hidden fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm"><div class="bg-white p-6 rounded-xl shadow-2xl w-96 border-2 border-blue-400"><h3 class="text-xl font-bold text-blue-600 mb-4">✏️ Edit Inventaris</h3><div class="space-y-3"><input type="text" id="editItemName" placeholder="Nama Item" class="w-full px-4 py-2 border border-gray-300 rounded-lg"> <input type="text" id="editItemImage" placeholder="Link Foto (opsional)" class="w-full px-4 py-2 border border-gray-300 rounded-lg"> <input type="number" id="editItemQuantity" placeholder="Jumlah" class="w-full px-4 py-2 border border-gray-300 rounded-lg"> <select id="editItemCondition" class="w-full px-4 py-2 border border-gray-300 rounded-lg"> <option value="Baik">Baik</option> <option value="Cukup">Cukup</option> <option value="Perlu Diganti">Perlu Diganti</option> </select></div><div class="flex gap-2 mt-4"><button onclick="saveEditInventory()" class="flex-1 bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 font-bold">💾 Simpan</button> <button onclick="closeEditInventoryModal()" class="flex-1 bg-gray-200 text-gray-700 py-2 rounded-lg hover:bg-gray-300">Batal</button></div></div></div>
+  <div id="editSponsorModal" class="hidden fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm"><div class="bg-white p-6 rounded-xl shadow-2xl w-96 border-2 border-pink-400"><h3 class="text-xl font-bold text-pink-600 mb-4">✏️ Edit Sponsor</h3><div class="space-y-3"><input type="text" id="editSponsorName" placeholder="Nama Sponsor" class="w-full px-4 py-2 border border-gray-300 rounded-lg"> <input type="text" id="editSponsorImage" placeholder="Link Logo (https://...)" class="w-full px-4 py-2 border border-gray-300 rounded-lg"> <input type="text" id="editSponsorContact" placeholder="Kontak" class="w-full px-4 py-2 border border-gray-300 rounded-lg"> <input type="number" id="editSponsorAmount" placeholder="Jumlah Donasi (Rp)" class="w-full px-4 py-2 border border-gray-300 rounded-lg"></div><div class="flex gap-2 mt-4"><button onclick="saveEditSponsor()" class="flex-1 bg-pink-500 text-white py-2 rounded-lg hover:bg-pink-600 font-bold">💾 Simpan</button> <button onclick="closeEditSponsorModal()" class="flex-1 bg-gray-200 text-gray-700 py-2 rounded-lg hover:bg-gray-300">Batal</button></div></div></div>
+  <div id="playerModal" class="hidden fixed inset-0 z-[9000] flex items-center justify-center bg-black/70 backdrop-blur-sm p-4"><div class="glass-effect w-full max-w-lg rounded-2xl overflow-hidden shadow-2xl relative bg-white"><button onclick="closePlayerModal()" class="absolute top-4 right-4 text-gray-500 hover:text-red-500 z-10 text-xl">✖</button><div class="bg-gradient-to-r from-amber-400 to-yellow-300 p-6 text-center"><div class="w-20 h-20 bg-white rounded-full mx-auto flex items-center justify-center text-4xl shadow-lg border-4 border-white mb-3">👤</div><h2 id="modalPlayerName" class="text-2xl font-bold text-amber-900 font-arabic">Nama Pemain</h2><p id="modalPlayerPos" class="text-amber-800 font-semibold">Posisi</p></div><div class="p-6"><div class="grid grid-cols-3 gap-2 text-center mb-6"><div class="p-2 bg-amber-50 rounded-lg"><div class="text-xs text-gray-500">Main</div><div id="modalStatsCaps" class="text-xl font-bold text-amber-600">0</div></div><div class="p-2 bg-green-50 rounded-lg"><div class="text-xs text-gray-500">Gol</div><div id="modalStatsGoals" class="text-xl font-bold text-green-600">0</div></div><div class="p-2 bg-blue-50 rounded-lg"><div class="text-xs text-gray-500">Assist</div><div id="modalStatsAssist" class="text-xl font-bold text-blue-600">0</div></div></div><h3 class="font-bold text-gray-700 mb-2 border-b pb-1">Riwayat Performa</h3><div id="modalHistoryList" class="max-h-48 overflow-y-auto space-y-2 text-sm"></div></div></div></div>
+  <div id="editMemberModal" class="hidden fixed inset-0 z-[9500] flex items-center justify-center bg-black/70 backdrop-blur-sm p-4"><div class="bg-white w-full max-w-2xl rounded-2xl overflow-hidden shadow-2xl"><div class="bg-gradient-to-r from-blue-500 to-blue-400 p-4 text-center"><h3 class="text-xl font-bold text-white">✏️ Edit Data Anggota</h3></div><div class="p-6"><div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4"><input type="text" id="editMemberName" placeholder="Nama Lengkap" class="px-4 py-2 border border-gray-300 rounded-lg"> <select id="editMemberPosition" class="px-4 py-2 border border-gray-300 rounded-lg"> <option value="">Pilih Posisi</option> <option value="Kiper">Kiper</option> <option value="Bek">Bek</option> <option value="Gelandang">Gelandang</option> <option value="Striker">Striker</option> </select></div><div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4"><input type="tel" id="editMemberPhone" placeholder="No. Telepon" class="px-4 py-2 border border-gray-300 rounded-lg"> <select id="editMemberSkill" class="px-4 py-2 border border-gray-300 rounded-lg"> <option value="">Level Keahlian</option> <option value="Pemula">Pemula</option> <option value="Menengah">Menengah</option> <option value="Mahir">Mahir</option> </select></div><div class="mb-4"><select id="editMemberAvailability" class="w-full px-4 py-2 border border-gray-300 rounded-lg"> <option value="">Ketersediaan</option> <option value="Weekday">Weekday</option> <option value="Weekend">Weekend</option> <option value="Fleksibel">Fleksibel</option> </select></div><div class="flex gap-3"><button onclick="saveEditMember()" class="flex-1 bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600 font-bold">💾 Simpan Perubahan</button> <button onclick="closeEditMemberModal()" class="flex-1 bg-gray-200 text-gray-700 py-3 rounded-lg hover:bg-gray-300 font-bold">❌ Batal</button></div></div></div></div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+    import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
+    import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
+
+    // --- FIREBASE CONFIGURATION ---
+    const myFirebaseConfig = {
+      apiKey: "AIzaSyDXA6RxsaZN1wL-fUEsvipbBonUMZac4Y4",
+      authDomain: "muslimfootballers-bandung.firebaseapp.com",
+      projectId: "muslimfootballers-bandung",
+      storageBucket: "muslimfootballers-bandung.firebasestorage.app",
+      messagingSenderId: "546357578832",
+      appId: "1:546357578832:web:87b8759b4c0fe9198dd555",
+      measurementId: "G-6X09T9TVMJ"
+    };
+
+    // --- SYSTEM SETUP (JANGAN UBAH DI BAWAH INI) ---
+    let firebaseConfig;
+    if (typeof __firebase_config !== 'undefined') {
+        firebaseConfig = JSON.parse(__firebase_config);
+    } else {
+        firebaseConfig = myFirebaseConfig;
+    }
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+
+    let currentUser = null;
+    let allData = [];
+    let currentMenu = 'dashboard';
+    let currentEditingRecord = null;
+    
+    // Auth Flow Logic (Auto Detect Environment)
+    const initAuth = async () => {
+        try {
+            if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                // Di dalam Preview AI
+                await signInWithCustomToken(auth, __initial_auth_token);
+            } else {
+                // Di Dunia Nyata (Netlify)
+                await signInAnonymously(auth);
+            }
+        } catch (error) {
+            console.error("Auth Error:", error);
+            // Alert logic removed to prevent annoying popups in production
+        }
+    };
+    initAuth();
+
+    onAuthStateChanged(auth, (user) => {
+        currentUser = user;
+        if (user) {
+            setupDataListener(user);
+        }
+    });
+
+    function setupDataListener(user) {
+        // Use a single collection for all data types as per original code structure
+        // Path Rule: /artifacts/{appId}/public/data/{collectionName}
+        const q = collection(db, 'artifacts', appId, 'public', 'data', 'universal_data');
+        
+        onSnapshot(q, (snapshot) => {
+            allData = snapshot.docs.map(doc => ({
+                ...doc.data(),
+                __backendId: doc.id
+            }));
+            
+            // Refresh UI
+            updateDashboard();
+            renderMembers();
+            renderSchedules();
+            renderMatches();
+            renderStats();
+            renderInventory();
+            renderSponsors();
+            renderKajianList();
+            renderPrayerSchedule();
+            if(currentMenu === 'statistik') updatePlayerDropdown();
+        }, (error) => {
+            console.error("Data fetch error:", error);
+            // Don't show toast on initial load error if config is just missing
+        });
+    }
+
+    // --- CRUD WRAPPERS ---
+    async function createData(data) {
+        if (!currentUser) return;
+        try {
+            await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'universal_data'), data);
+            // Toast handled by specific functions
+        } catch (e) {
+            console.error(e);
+            showToast("Gagal menyimpan (Cek Console)", "error");
+        }
+    }
+
+    async function updateData(data) {
+        if (!currentUser) return;
+        try {
+            const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'universal_data', data.__backendId);
+            // Remove __backendId before saving to avoid duplication in doc
+            const { __backendId, ...updatePayload } = data;
+            await updateDoc(docRef, updatePayload);
+        } catch (e) {
+            console.error(e);
+            showToast("Gagal update", "error");
+        }
+    }
+
+    async function deleteData(id) {
+        if (!currentUser) return;
+        try {
+            await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'universal_data', id));
+            showToast("Data dihapus");
+        } catch (e) {
+            console.error(e);
+            showToast("Gagal menghapus", "error");
+        }
+    }
+
+    // --- APP LOGIC ---
+
+    const ayatDatabase = [ { arabic: "وَأَعِدُّوا لَهُم مِّمَّا اسْتَطَعْتُم مِّن قُوَّةٍ", translation: "Dan persiapkanlah untuk menghadapi mereka kekuatan apa saja yang kamu sanggupi. (QS. Al-Anfal: 60)", surah: "Al-Anfal: 60" } ];
+    const hadistDatabase = [ "Mukmin yang kuat lebih baik dan lebih dicintai Allah daripada mukmin yang lemah. (HR. Muslim)" ];
+
+    function initializeAppUI() {
+      updateDates(); 
+      setInterval(updateDates, 60000); 
+      displayRenungan(); 
+      renderPrayerSchedule();
+      
+      document.querySelectorAll('.menu-card').forEach(card => card.addEventListener('click', () => showMenu(card.dataset.menu)));
+      
+      // Check admin status from localStorage or session (simple check)
+      if(localStorage.getItem('isAdmin') === 'true') {
+        document.body.classList.add('is-admin');
+        document.getElementById('adminBtn').textContent='🔓';
+      }
+    }
+
+    function updateDates() { const now = new Date(); document.getElementById('currentDate').textContent = now.toLocaleDateString('id-ID', { weekday:'long', year:'numeric', month:'long', day:'numeric' }); document.getElementById('hijriDate').textContent = '1446 H'; }
+    window.showMenu = function(menu) { currentMenu = menu; document.querySelectorAll('.menu-card').forEach(c => c.classList.remove('active')); document.querySelector(`[data-menu="${menu}"]`).classList.add('active'); document.querySelectorAll('.view-content').forEach(v => v.classList.add('hidden')); document.getElementById(menu + 'View').classList.remove('hidden'); if(menu === 'statistik') updatePlayerDropdown(); }
+    
+    // --- DASHBOARD ---
+    function updateDashboard() {
+        const members = allData.filter(d=>d.type==='member'); const matches = allData.filter(d=>d.type==='match');
+        document.getElementById('totalAnggota').textContent = members.length; document.getElementById('totalMatches').textContent = matches.length;
+        const stats = allData.filter(d=>d.type==='stats');
+        const goals = {}; const assists = {};
+        stats.forEach(s=>{ 
+            if(!goals[s.member_id]) goals[s.member_id]={name:'', val:0}; goals[s.member_id].val+=(parseInt(s.goals)||0);
+            if(!assists[s.member_id]) assists[s.member_id]={name:'', val:0}; assists[s.member_id].val+=(parseInt(s.assists)||0);
+            const m = members.find(x=>x.__backendId===s.member_id); if(m) { goals[s.member_id].name=m.name; assists[s.member_id].name=m.name; }
+        });
+        const topG = Object.values(goals).sort((a,b)=>b.val-a.val)[0]; document.getElementById('topScorer').textContent = topG?topG.name:'-'; document.getElementById('topScorerGoals').textContent = topG?topG.val+' gol':'0 gol';
+        const topA = Object.values(assists).sort((a,b)=>b.val-a.val)[0]; document.getElementById('topAssist').textContent = topA?topA.name:'-'; document.getElementById('topAssistCount').textContent = topA?topA.val+' assist':'0 assist';
+    }
+
+    // --- ISLAMI (API) ---
+    async function getAutoPrayerTimes() {
+      const date = new Date(); const d = String(date.getDate()).padStart(2,'0'); const m = String(date.getMonth()+1).padStart(2,'0'); const y = date.getFullYear();
+      try { const res = await fetch(`https://api.aladhan.com/v1/timings/${d}-${m}-${y}?latitude=-6.9175&longitude=107.6191&method=20`); const json = await res.json(); const t = json.data.timings; return [{prayer:"Subuh",prayer_time:t.Fajr},{prayer:"Dzuhur",prayer_time:t.Dhuhr},{prayer:"Ashar",prayer_time:t.Asr},{prayer:"Maghrib",prayer_time:t.Maghrib},{prayer:"Isya",prayer_time:t.Isha}]; } catch(e){ return null; }
+    }
+    async function renderPrayerSchedule() {
+      document.getElementById('prayerSchedule').innerHTML = '<p class="text-center text-amber-600 animate-pulse">Mengambil jadwal...</p>';
+      const data = await getAutoPrayerTimes() || [{prayer:"Subuh",prayer_time:"04:15"},{prayer:"Dzuhur",prayer_time:"11:50"},{prayer:"Ashar",prayer_time:"15:15"},{prayer:"Maghrib",prayer_time:"18:00"},{prayer:"Isya",prayer_time:"19:15"}];
+      document.getElementById('prayerSchedule').innerHTML = data.map(p=>`<div class="flex justify-between p-3 bg-gradient-to-r from-amber-50 to-yellow-50 rounded-lg border border-amber-200"><div class="flex gap-2 items-center"><span class="text-xl">🕌</span><span class="font-bold">${p.prayer}</span></div><span class="font-bold text-amber-600">${p.prayer_time}</span></div>`).join('');
+    }
+    function displayRenungan() { refreshRenungan(); }
+    window.refreshRenungan = function() { document.getElementById('hadistText').textContent = hadistDatabase[0]; document.getElementById('ayatText').textContent = ayatDatabase[0].arabic; document.getElementById('ayatTranslation').textContent = ayatDatabase[0].translation; }
+    
+    // --- KAJIAN ---
+    window.addKajian = async function() { await createData({ type:'kajian', kajian_topic:document.getElementById('kajianTopic').value, kajian_date:document.getElementById('kajianDate').value, kajian_time:document.getElementById('kajianTime').value, kajian_speaker:document.getElementById('kajianSpeaker').value, createdAt: new Date().toISOString() }); showToast('Jadwal Kajian Disimpan'); }
+    function renderKajianList() { document.getElementById('kajianList').innerHTML = allData.filter(d=>d.type==='kajian').sort((a,b)=>new Date(a.kajian_date)-new Date(b.kajian_date)).map(k=>`<div class="p-3 bg-green-50 rounded border border-green-200 mb-2"><div class="font-bold">${k.kajian_topic}</div><div class="text-xs">${k.kajian_date} | ${k.kajian_time} | ${k.kajian_speaker}</div><button onclick="deleteKajian('${k.__backendId}')" class="admin-only text-red-500 text-xs float-right">Hapus</button></div>`).join(''); }
+    window.deleteKajian = async function(id) { if(confirm('Hapus?')) await deleteData(id); }
+
+    // --- ANGGOTA (IMPORT/EXPORT FIXED) ---
+    window.addMember = async function() { const name = document.getElementById('memberName').value; if(!name) return; await createData({ type:'member', name, position:document.getElementById('memberPosition').value, phone:document.getElementById('memberPhone').value, skill_level:document.getElementById('memberSkill').value, availability:document.getElementById('memberAvailability').value, createdAt: new Date().toISOString() }); document.getElementById('memberName').value=''; showToast('Anggota ditambah'); }
+    function renderMembers() { document.getElementById('memberList').innerHTML = allData.filter(d=>d.type==='member').map(m=>`<div class="glass-effect p-4 rounded hover-lift relative group" onclick="showPlayerDetail('${m.__backendId}')"><div class="font-bold text-lg">${m.name}</div><div class="text-sm text-amber-600">${m.position}</div><div class="text-xs mt-1">📞 ${m.phone}</div><div class="admin-only absolute top-2 right-2 hidden group-hover:flex gap-1"><button onclick="event.stopPropagation();editMember('${m.__backendId}')" class="text-blue-500">✏️</button><button onclick="event.stopPropagation();deleteMember('${m.__backendId}')" class="text-red-500">🗑️</button></div></div>`).join(''); }
+    
+    window.exportMembersCSV = function() {
+        const rows = [["Nama","Posisi","Telepon","Skill","Ketersediaan"]];
+        allData.filter(d=>d.type==='member').forEach(m=>rows.push([`"${m.name}"`,m.position,`'${m.phone}`,m.skill_level,m.availability]));
+        const csvContent = "data:text/csv;charset=utf-8," + rows.map(e => e.join(",")).join("\n");
+        const link = document.createElement("a"); link.setAttribute("href", encodeURI(csvContent)); link.setAttribute("download", "anggota.csv"); document.body.appendChild(link); link.click(); document.body.removeChild(link);
+    }
+    window.backupMembersJSON = function() {
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(allData.filter(d=>d.type==='member')));
+        const link = document.createElement("a"); link.setAttribute("href", dataStr); link.setAttribute("download", "backup_anggota.json"); document.body.appendChild(link); link.click(); document.body.removeChild(link);
+    }
+    window.processImport = function(e) {
+        const reader = new FileReader(); reader.onload = async function(evt) {
+            const rows = evt.target.result.split('\n').slice(1);
+            let count = 0;
+            for(let row of rows) {
+                const cols = row.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g);
+                if(cols && cols.length >= 3) {
+                    const name = cols[0].replace(/"/g,'');
+                    // Avoid duplicates locally (simple check)
+                    if(!allData.find(d=>d.type==='member' && d.name===name)){
+                        await createData({ type:'member', name, position:cols[1]||'Gelandang', phone:cols[2]?.replace(/'/g,'')||'-', skill_level:cols[3]||'Menengah', availability:cols[4]||'Fleksibel', createdAt: new Date().toISOString() });
+                        count++;
+                    }
+                }
+            }
+            showToast(`Import ${count} data berhasil`);
+        }; reader.readAsText(e.target.files[0]);
+    }
+
+    // --- OTHER MODAL LOGIC (Edit Member, etc) ---
+    window.editMember = function(id) { currentEditingRecord=allData.find(d=>d.__backendId===id); if(!currentEditingRecord) return; document.getElementById('editMemberName').value=currentEditingRecord.name; document.getElementById('editMemberModal').classList.remove('hidden'); }
+    window.saveEditMember = async function() { if(!currentEditingRecord) return; await updateData({...currentEditingRecord, name:document.getElementById('editMemberName').value, position:document.getElementById('editMemberPosition').value, phone:document.getElementById('editMemberPhone').value, skill_level:document.getElementById('editMemberSkill').value, availability:document.getElementById('editMemberAvailability').value}); showToast('Update berhasil'); closeEditMemberModal(); }
+    window.closeEditMemberModal = function() { document.getElementById('editMemberModal').classList.add('hidden'); }
+    window.deleteMember = async function(id) { if(confirm('Hapus?')) await deleteData(id); }
+    window.showPlayerDetail = function(id) { 
+        document.getElementById('playerModal').classList.remove('hidden'); 
+        const m = allData.find(d=>d.__backendId===id); 
+        if(m) {
+            document.getElementById('modalPlayerName').textContent=m.name; 
+            document.getElementById('modalPlayerPos').textContent=m.position;
+            
+            // Calc Stats
+            const pStats = allData.filter(d=>d.type==='stats' && d.member_id===id);
+            const totalGoals = pStats.reduce((a,b)=>a+(parseInt(b.goals)||0),0);
+            const totalAssists = pStats.reduce((a,b)=>a+(parseInt(b.assists)||0),0);
+            document.getElementById('modalStatsCaps').textContent = pStats.length;
+            document.getElementById('modalStatsGoals').textContent = totalGoals;
+            document.getElementById('modalStatsAssist').textContent = totalAssists;
+            
+            document.getElementById('modalHistoryList').innerHTML = pStats.map(s => 
+                `<div class="flex justify-between border-b py-1"><span>${s.date}</span><span class="font-bold">${s.totalPoints} pts</span></div>`
+            ).join('');
+        }
+    }
+    window.closePlayerModal = function() { document.getElementById('playerModal').classList.add('hidden'); }
+
+    // --- JADWAL & TEAMS ---
+    window.addSchedule = async function() { await createData({ type:'schedule', schedule_type:document.getElementById('scheduleType').value, name:document.getElementById('scheduleName').value, date:document.getElementById('scheduleDate').value, time:document.getElementById('scheduleTime').value, location:document.getElementById('scheduleLocation').value, createdAt:new Date().toISOString() }); showToast('Jadwal disimpan'); }
+    function renderSchedules() { document.getElementById('scheduleList').innerHTML = allData.filter(d=>d.type==='schedule').map(s=>`<div class="glass-effect p-3 mb-2 border-l-4 border-blue-500"><div class="font-bold">${s.name}</div><div class="text-xs">${s.date} @ ${s.location}</div><div class="admin-only mt-2 flex gap-2"><button class="text-red-500 text-xs" onclick="deleteSchedule('${s.__backendId}')">Hapus</button></div></div>`).join(''); }
+    window.deleteSchedule = async function(id) { if(confirm('Hapus?')) await deleteData(id); }
+    
+    // --- MATCH ---
+    window.addMatch = async function() { await createData({ type:'match', opponent:document.getElementById('matchOpponent').value, date:document.getElementById('matchDate').value, location:document.getElementById('matchLocation').value, match_type:document.getElementById('matchType').value, score_us:document.getElementById('matchScoreUs').value, score_opponent:document.getElementById('matchScoreOpponent').value, result: (parseInt(document.getElementById('matchScoreUs').value) > parseInt(document.getElementById('matchScoreOpponent').value) ? 'Menang' : 'Kalah'), createdAt:new Date().toISOString() }); showToast('Match disimpan'); }
+    function renderMatches() { document.getElementById('matchList').innerHTML = allData.filter(d=>d.type==='match').map(m=>`<div class="bg-white p-3 rounded shadow mb-2 border-l-4 border-purple-500"><div class="font-bold text-center">${m.score_us} - ${m.score_opponent}</div><div class="text-center text-xs text-gray-500">${m.match_type} vs ${m.opponent}</div><button onclick="inputStatsForMatch('${m.__backendId}')" class="w-full mt-2 bg-gray-100 text-xs py-1 rounded">Isi Statistik</button><button onclick="deleteMatch('${m.__backendId}')" class="admin-only text-red-500 text-xs float-right mt-1">Hapus</button></div>`).join(''); }
+    window.deleteMatch = async function(id) { if(confirm('Hapus?')) await deleteData(id); }
+
+    // --- STATISTIK ---
+    window.inputStatsForMatch = function(id) { showMenu('statistik'); const m=allData.find(d=>d.__backendId===id); if(m) document.getElementById('statsDate').value=m.date; }
+    window.updatePlayerDropdown = function() { document.getElementById('statsPlayerName').innerHTML = '<option value="">Pilih</option>' + allData.filter(d=>d.type==='member').map(m=>`<option value="${m.__backendId}">${m.name}</option>`).join(''); }
+    window.addStats = async function() {
+        const pts = (parseInt(document.getElementById('statsGoals').value)||0)*3 + (parseInt(document.getElementById('statsAssists').value)||0) + (parseInt(document.getElementById('statsSaves').value)||0);
+        await createData({ type:'stats', member_id:document.getElementById('statsPlayerName').value, date:document.getElementById('statsDate').value, goals:document.getElementById('statsGoals').value, assists:document.getElementById('statsAssists').value, saves:document.getElementById('statsSaves').value, totalPoints:pts, createdAt:new Date().toISOString() });
+        showToast('Statistik disimpan');
+    }
+    function renderStats() { 
+        const map = {}; 
+        allData.filter(d=>d.type==='stats').forEach(s=>{ if(!map[s.member_id]) map[s.member_id]=0; map[s.member_id]+=parseInt(s.totalPoints); });
+        const sorted = Object.keys(map).sort((a,b)=>map[b]-map[a]);
+        document.getElementById('statsList').innerHTML = sorted.map((id,i)=>{ const m=allData.find(d=>d.__backendId===id); return m ? `<div class="flex justify-between p-2 border-b"><span>#${i+1} ${m.name}</span><span class="font-bold">${map[id]} pts</span></div>` : ''; }).join('');
+    }
+
+    // --- INVENTARIS (FIXED EDIT & IMAGE) ---
+    window.addInventory = async function() { await createData({ type:'inventory', item_name:document.getElementById('itemName').value, item_image:document.getElementById('itemImage').value, quantity:document.getElementById('itemQuantity').value, condition:document.getElementById('itemCondition').value, createdAt:new Date().toISOString() }); showToast('Item ditambah'); document.getElementById('itemName').value=''; }
+    function renderInventory() { document.getElementById('inventoryList').innerHTML = allData.filter(d=>d.type==='inventory').map(i=>`<div class="flex gap-3 p-3 bg-white rounded border items-center hover-lift"><img src="${i.item_image||'https://via.placeholder.com/50'}" class="w-12 h-12 object-cover rounded"><div class="flex-1"><b>${i.item_name}</b> <span class="text-xs bg-gray-200 px-1 rounded">${i.condition}</span><div class="text-xs">Stok: ${i.quantity}</div></div><div class="admin-only flex gap-1"><button onclick="editInventory('${i.__backendId}')" class="text-blue-500">✏️</button><button onclick="deleteInventory('${i.__backendId}')" class="text-red-500">🗑️</button></div></div>`).join(''); }
+    window.editInventory = function(id) { currentEditingRecord=allData.find(d=>d.__backendId===id); if(!currentEditingRecord) return; document.getElementById('editItemName').value=currentEditingRecord.item_name; document.getElementById('editItemImage').value=currentEditingRecord.item_image||''; document.getElementById('editItemQuantity').value=currentEditingRecord.quantity; document.getElementById('editInventoryModal').classList.remove('hidden'); }
+    window.saveEditInventory = async function() { if(!currentEditingRecord) return; await updateData({...currentEditingRecord, item_name:document.getElementById('editItemName').value, item_image:document.getElementById('editItemImage').value, quantity:document.getElementById('editItemQuantity').value, condition:document.getElementById('editItemCondition').value }); showToast('Update berhasil'); closeEditInventoryModal(); }
+    window.closeEditInventoryModal = function() { document.getElementById('editInventoryModal').classList.add('hidden'); }
+    window.deleteInventory = async function(id) { if(confirm('Hapus?')) await deleteData(id); }
+
+    // --- SPONSOR (FIXED EDIT & IMAGE) ---
+    window.addSponsor = async function() { await createData({ type:'sponsor', sponsor_name:document.getElementById('sponsorName').value, sponsor_image:document.getElementById('sponsorImage').value, contact:document.getElementById('sponsorContact').value, amount:document.getElementById('sponsorAmount').value, createdAt:new Date().toISOString() }); showToast('Sponsor ditambah'); }
+    function renderSponsors() { 
+        const list = allData.filter(d=>d.type==='sponsor');
+        const total = list.reduce((a,b)=>a+(parseInt(b.amount)||0),0);
+        document.getElementById('sponsorList').innerHTML = `<div class="p-3 bg-green-100 mb-2 rounded text-center font-bold">Total: Rp ${total.toLocaleString()}</div>` + list.map(s=>`<div class="flex gap-3 p-3 bg-white rounded border items-center hover-lift"><img src="${s.sponsor_image||'https://via.placeholder.com/50'}" class="w-12 h-12 object-contain rounded"><div class="flex-1"><b>${s.sponsor_name}</b><div class="text-xs text-gray-500">${s.contact}</div></div><div class="font-bold text-green-600 text-sm">Rp ${(parseInt(s.amount)||0).toLocaleString()}</div><div class="admin-only flex gap-1 ml-2"><button onclick="editSponsor('${s.__backendId}')" class="text-blue-500 text-xs">Edit</button><button onclick="deleteSponsor('${s.__backendId}')" class="text-red-500 text-xs">Hapus</button></div></div>`).join('');
+    }
+    window.editSponsor = function(id) { currentEditingRecord=allData.find(d=>d.__backendId===id); if(!currentEditingRecord) return; document.getElementById('editSponsorName').value=currentEditingRecord.sponsor_name; document.getElementById('editSponsorImage').value=currentEditingRecord.sponsor_image||''; document.getElementById('editSponsorContact').value=currentEditingRecord.contact; document.getElementById('editSponsorAmount').value=currentEditingRecord.amount; document.getElementById('editSponsorModal').classList.remove('hidden'); }
+    window.saveEditSponsor = async function() { 
+        if(!currentEditingRecord) return; 
+        await updateData({
+            ...currentEditingRecord, 
+            sponsor_name:document.getElementById('editSponsorName').value, 
+            sponsor_image:document.getElementById('editSponsorImage').value, 
+            contact:document.getElementById('editSponsorContact').value, 
+            amount:document.getElementById('editSponsorAmount').value 
+        }); 
+        showToast('Update berhasil'); closeEditSponsorModal(); 
+    }
+    window.closeEditSponsorModal = function() { document.getElementById('editSponsorModal').classList.add('hidden'); }
+    window.deleteSponsor = async function(id) { if(confirm('Hapus?')) await deleteData(id); }
+
+    // --- SYSTEM ---
+    window.showToast = function(msg, type='success') { const t = document.createElement('div'); t.className = `fixed top-4 right-4 z-[9999] px-4 py-2 rounded text-white shadow-lg toast ${type==='success'?'bg-green-500':'bg-red-500'}`; t.innerText = msg; document.body.appendChild(t); setTimeout(()=>t.remove(), 2800); }
+    window.toggleAdmin = function() { 
+        if(document.body.classList.contains('is-admin')){ 
+            document.body.classList.remove('is-admin'); 
+            document.getElementById('adminBtn').textContent='🔒'; 
+            localStorage.setItem('isAdmin', 'false');
+            showToast('Admin Logout'); 
+        } else { 
+            document.getElementById('loginModal').classList.remove('hidden'); 
+        } 
+    }
+    window.submitLogin = function() { 
+        if(document.getElementById('adminPassInput').value === 'hudan123'){ 
+            document.body.classList.add('is-admin'); 
+            document.getElementById('adminBtn').textContent='🔓'; 
+            localStorage.setItem('isAdmin', 'true');
+            closeAdminModal(); 
+            showToast('Admin Login Success'); 
+        } else { 
+            showToast('Password Salah','error'); 
+        } 
+    }
+    window.closeAdminModal = function() { document.getElementById('loginModal').classList.add('hidden'); }
+
+    // Init Logic
+    initializeAppUI();
+
+  </script>
+ </body>
+</html>
