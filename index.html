@@ -71,6 +71,7 @@
     body.is-admin .admin-only { display: block !important; }
     body.is-admin div.flex.admin-only { display: flex !important; } 
     body.is-admin label.admin-only { display: flex !important; }
+    body.is-admin .admin-grid { display: grid !important; }
 
     .admin-toggle { 
         position: fixed; 
@@ -109,7 +110,7 @@
  </head>
  <body class="h-full islamic-pattern text-slate-800">
   <div id="app" class="h-full w-full overflow-auto">
-   
+    
    <!-- HEADER WITH SEARCH -->
    <header class="glass-effect shadow-sm sticky top-0 z-50 border-b border-amber-100/50">
     <div class="max-w-7xl mx-auto px-4 py-3 md:py-4">
@@ -142,7 +143,7 @@
     </div>
    </header>
 
-   <!-- MENU NAVIGASI (FLOATING DOCK STYLE) -->
+   <!-- MENU NAVIGASI -->
    <div class="max-w-7xl mx-auto px-4 pt-4 pb-2 sticky top-[70px] z-40">
     <div class="glass-nav rounded-2xl p-2 shadow-lg">
         <div class="flex md:grid md:grid-cols-9 gap-2 overflow-x-auto pb-1 md:pb-0 hide-scrollbar" style="-webkit-overflow-scrolling: touch;">
@@ -170,7 +171,6 @@
             <div class="menu-item rounded-xl p-2 min-w-[80px] text-center flex-shrink-0" data-menu="sponsor">
                 <div class="text-xl mb-1 filter drop-shadow-sm">🤝</div><div class="text-[10px] font-bold uppercase tracking-wider">Sponsor</div>
             </div>
-            <!-- NEW GALLERY MENU -->
             <div class="menu-item rounded-xl p-2 min-w-[80px] text-center flex-shrink-0" data-menu="galeri">
                 <div class="text-xl mb-1 filter drop-shadow-sm">📷</div><div class="text-[10px] font-bold uppercase tracking-wider">Galeri</div>
             </div>
@@ -181,8 +181,8 @@
    <main class="max-w-7xl mx-auto px-4 pb-24 pt-4">
     
     <!-- DASHBOARD VIEW -->
-    <div id="dashboardView" class="view-content"> <!-- Visible by default -->
-      <!-- HERO SECTION: NEXT MATCH (FULL WIDTH) -->
+    <div id="dashboardView" class="view-content"> 
+      <!-- Hero Section -->
       <div class="mb-8">
         <div class="relative rounded-2xl overflow-hidden shadow-2xl group min-h-[220px] hover:shadow-amber-500/20 transition-all duration-500 w-full">
             <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1556056504-5c7696c4c28d?q=80&w=2000')] bg-cover bg-center transition-transform duration-700 group-hover:scale-105"></div>
@@ -209,18 +209,15 @@
         </div>
       </div>
 
-      <!-- MAIN STATS CARDS (UNIFIED DESIGN) -->
+      <!-- Stats Cards -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        
         <!-- Squad Card -->
         <div class="bg-gradient-to-br from-blue-600 to-blue-800 p-5 rounded-2xl shadow-lg shadow-blue-500/20 text-white relative overflow-hidden group hover-lift cursor-pointer border border-blue-500/30" onclick="showMenu('anggota')">
             <div class="absolute -right-4 -bottom-4 text-9xl text-white opacity-10 transform rotate-12 transition-transform group-hover:scale-110">👥</div>
             <div class="relative z-10">
                 <div class="text-[10px] font-bold bg-white/20 text-blue-100 inline-block px-2 py-1 rounded mb-3 shadow-sm backdrop-blur">SQUAD TIM</div>
                 <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center font-bold text-2xl border border-white/20 shadow-inner">
-                        👕
-                    </div>
+                    <div class="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center font-bold text-2xl border border-white/20 shadow-inner">👕</div>
                     <div>
                         <h3 id="totalAnggota" class="text-3xl font-bold font-head leading-none text-white">0</h3>
                         <p class="text-xs font-semibold text-blue-100 opacity-80">Pemain Terdaftar</p>
@@ -228,16 +225,13 @@
                 </div>
             </div>
         </div>
-
         <!-- Matches Card -->
         <div class="bg-gradient-to-br from-purple-600 to-purple-800 p-5 rounded-2xl shadow-lg shadow-purple-500/20 text-white relative overflow-hidden group hover-lift cursor-pointer border border-purple-500/30" onclick="showMenu('match')">
             <div class="absolute -right-4 -bottom-4 text-9xl text-white opacity-10 transform rotate-12 transition-transform group-hover:scale-110">⚽</div>
             <div class="relative z-10">
                 <div class="text-[10px] font-bold bg-white/20 text-purple-100 inline-block px-2 py-1 rounded mb-3 shadow-sm backdrop-blur">MATCHES</div>
                 <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center font-bold text-2xl border border-white/20 shadow-inner">
-                        🏟️
-                    </div>
+                    <div class="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center font-bold text-2xl border border-white/20 shadow-inner">🏟️</div>
                     <div>
                         <h3 id="totalMatches" class="text-3xl font-bold font-head leading-none text-white">0</h3>
                         <p class="text-xs font-semibold text-purple-100 opacity-80">Laga Dimainkan</p>
@@ -245,7 +239,6 @@
                 </div>
             </div>
         </div>
-
         <!-- Top Scorer Card -->
         <div class="bg-gradient-to-br from-amber-500 to-orange-600 p-5 rounded-2xl shadow-lg shadow-amber-500/20 text-white relative overflow-hidden group hover-lift cursor-pointer border border-amber-500/30" onclick="showMenu('statistik')">
              <div class="absolute -right-4 -bottom-4 text-9xl text-white opacity-10 transform rotate-12 transition-transform group-hover:scale-110">👑</div>
@@ -260,7 +253,6 @@
                 </div>
              </div>
         </div>
-
          <!-- Top Assist Card -->
          <div class="bg-gradient-to-br from-cyan-500 to-teal-600 p-5 rounded-2xl shadow-lg shadow-cyan-500/20 text-white relative overflow-hidden group hover-lift cursor-pointer border border-cyan-500/30" onclick="showMenu('statistik')">
             <div class="absolute -right-4 -bottom-4 text-9xl text-white opacity-10 transform rotate-12 transition-transform group-hover:scale-110">🎯</div>
@@ -278,9 +270,8 @@
       </div>
     </div>
 
-    <!-- ISLAMI VIEW (REVAMPED) -->
+    <!-- ISLAMI VIEW -->
     <div id="islamiView" class="view-content hidden">
-      <!-- HERO ISLAMI -->
       <div class="relative rounded-2xl overflow-hidden mb-6 shadow-xl border border-green-200">
           <div class="absolute inset-0 bg-gradient-to-r from-emerald-800 to-green-600"></div>
           <div class="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/arabesque.png')]"></div>
@@ -296,19 +287,15 @@
           </div>
       </div>
 
-      <!-- JADWAL SHOLAT MODERN GRID -->
       <div class="mb-6">
           <div class="flex items-center justify-between mb-3 px-1">
             <h3 class="text-lg font-bold text-emerald-800 flex items-center gap-2"><span class="text-xl">🕌</span> Waktu Sholat Bandung</h3>
             <span class="text-xs text-gray-500 bg-white px-2 py-1 rounded shadow-sm">Sumber: Kemenag</span>
           </div>
-          <div id="prayerSchedule" class="grid grid-cols-2 md:grid-cols-5 gap-3">
-              <!-- Cards will be injected here -->
-          </div>
+          <div id="prayerSchedule" class="grid grid-cols-2 md:grid-cols-5 gap-3"></div>
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-        <!-- RENUNGAN CARD -->
         <div class="lg:col-span-2 glass-effect rounded-xl p-0 overflow-hidden shadow-lg border-t-4 border-amber-500">
             <div class="bg-amber-50 p-4 border-b border-amber-100 flex justify-between items-center">
                 <h3 class="font-bold text-amber-800 flex items-center gap-2">💎 Renungan Hari Ini</h3>
@@ -329,21 +316,16 @@
             </div>
         </div>
 
-        <!-- SIDEBAR: DOA PILIHAN (FIXED WITH MODAL & ONLINE FETCH) -->
         <div class="space-y-6">
-             <!-- Doa Section -->
              <div class="glass-effect rounded-xl p-5 shadow-md">
                 <div class="flex justify-between items-center mb-3">
                     <h3 class="font-bold text-emerald-700 flex items-center gap-2">🤲 Doa Harian Online</h3>
                     <button onclick="getOnlineDoa()" class="text-xs text-emerald-600 hover:text-emerald-800 font-semibold bg-emerald-50 px-2 py-1 rounded">🔄 Reload</button>
                 </div>
-                <!-- Container Doa -->
                 <div id="doaListContainer" class="space-y-2 max-h-[300px] overflow-y-auto pr-1">
                     <div class="text-center py-4 text-gray-500 text-sm animate-pulse">Mengambil data doa online...</div>
                 </div>
              </div>
-
-             <!-- Info Kiblat (Static Mockup) -->
              <div class="bg-slate-800 text-white rounded-xl p-5 shadow-lg relative overflow-hidden">
                 <div class="absolute top-0 right-0 p-4 opacity-10 text-6xl">🧭</div>
                 <h3 class="text-sm font-bold text-gray-400 uppercase mb-1">Arah Kiblat</h3>
@@ -355,7 +337,6 @@
         </div>
       </div>
 
-      <!-- KAJIAN SECTION -->
       <div class="glass-effect rounded-xl p-6 admin-only">
         <h2 class="text-xl font-bold text-amber-600 mb-4 flex items-center gap-2"><span>📚</span> Kelola Jadwal Kajian</h2>
         <div class="grid grid-cols-1 md:grid-cols-4 gap-3 mb-4">
@@ -367,20 +348,14 @@
         <button onclick="addKajian()" class="w-full gold-gradient text-white px-4 py-3 rounded-lg hover:opacity-90 font-semibold shadow-md transform active:scale-95 transition"> ➕ Tambah Jadwal Kajian </button>
       </div>
       
-      <!-- KAJIAN LIST PUBLIC -->
       <div class="mt-6">
         <h3 class="text-lg font-bold text-slate-700 mb-4 px-1">Agenda Kajian Rutin</h3>
-        <div id="kajianList" class="space-y-3">
-            <!-- Kajian items injected here -->
-        </div>
+        <div id="kajianList" class="space-y-3"></div>
       </div>
-
     </div>
 
-    <!-- ANGGOTA VIEW (REVAMPED: PLAYER GALLERY) -->
+    <!-- ANGGOTA VIEW -->
     <div id="anggotaView" class="view-content hidden">
-      
-      <!-- Hero Squad -->
       <div class="relative rounded-2xl overflow-hidden mb-8 shadow-xl bg-slate-900 text-white min-h-[220px] flex items-center">
           <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1579952363873-27f3bade9f55?q=80&w=2000')] bg-cover bg-center opacity-40"></div>
           <div class="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/80 to-transparent"></div>
@@ -388,16 +363,14 @@
               <span class="text-amber-400 font-bold tracking-widest text-xs uppercase mb-2 block">Daftar Pemain Resmi</span>
               <h2 class="text-4xl md:text-5xl font-head font-bold leading-tight mb-2">The Squad</h2>
               <p class="text-gray-300 text-sm mb-6 max-w-md">Barisan pejuang lapangan hijau. Menjunjung tinggi sportivitas dan ukhuwah islamiyah.</p>
-              <button onclick="document.getElementById('joinFormSection').scrollIntoView({behavior: 'smooth'})" class="bg-amber-500 hover:bg-amber-600 text-slate-900 px-6 py-2 rounded-full font-bold text-sm transition shadow-lg transform hover:scale-105">Gabung Tim</button>
+              <button onclick="document.getElementById('joinFormSection').scrollIntoView({behavior: 'smooth'})" class="admin-only bg-amber-500 hover:bg-amber-600 text-slate-900 px-6 py-2 rounded-full font-bold text-sm transition shadow-lg transform hover:scale-105">Gabung Tim</button>
           </div>
       </div>
 
-      <!-- Player Gallery (FUT Style Grid) -->
       <div class="mb-10">
           <h3 class="text-xl font-bold text-slate-800 mb-6 flex items-center gap-2 border-l-4 border-amber-500 pl-3">
               <span>👥</span> Galeri Pemain
           </h3>
-          
           <div class="flex items-center justify-between mb-4 px-2">
               <span class="text-xs text-gray-500 font-semibold" id="totalPlayerCount">Memuat pemain...</span>
               <div class="admin-only flex gap-2">
@@ -405,74 +378,29 @@
                  <label class="bg-blue-100 text-blue-700 px-3 py-1 rounded-lg text-xs font-bold hover:bg-blue-200 cursor-pointer">📤 Import <input type="file" accept=".csv" onchange="processImport(event)" class="hidden"></label>
               </div>
           </div>
-
-          <div id="memberList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-              <!-- Cards Rendered via JS -->
-          </div>
+          <div id="memberList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5"></div>
       </div>
 
-      <!-- Join Form Section -->
-      <div id="joinFormSection" class="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 relative overflow-hidden">
+      <div id="joinFormSection" class="admin-only bg-white rounded-2xl p-6 shadow-lg border border-gray-100 relative overflow-hidden">
          <div class="absolute top-0 right-0 p-10 opacity-5 text-9xl rotate-12">📝</div>
          <div class="relative z-10">
              <h2 class="text-2xl font-bold text-slate-800 mb-2 font-head">Formulir Pendaftaran</h2>
              <p class="text-gray-500 text-sm mb-6">Isi data diri Anda dengan lengkap untuk bergabung.</p>
-             
              <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
-                 <div class="col-span-1 md:col-span-2">
-                     <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Nama Lengkap</label>
-                     <input type="text" id="memberName" placeholder="Masukkan nama..." class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-amber-400 focus:border-transparent bg-gray-50">
-                 </div>
-                 
-                 <div>
-                     <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Posisi Utama</label>
-                     <select id="memberPosition" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-amber-400 bg-white"> 
-                        <option value="Gelandang">Gelandang (MID)</option> 
-                        <option value="Striker">Striker (FWD)</option> 
-                        <option value="Bek">Bek (DEF)</option> 
-                        <option value="Kiper">Kiper (GK)</option> 
-                     </select> 
-                 </div>
-                 
-                 <div>
-                     <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Nomor WhatsApp</label>
-                     <input type="tel" id="memberPhone" placeholder="08..." class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-amber-400 bg-gray-50">
-                 </div>
-
-                 <div>
-                     <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Skill Level</label>
-                     <select id="memberSkill" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-amber-400 bg-white"> 
-                        <option value="Pemula">⭐ Pemula</option> 
-                        <option value="Menengah">⭐⭐ Menengah</option> 
-                        <option value="Mahir">⭐⭐⭐ Mahir</option> 
-                     </select> 
-                 </div>
-
-                 <div>
-                     <label class="block text-xs font-bold text-gray-500 uppercase mb-1">URL Foto Profil (Opsional)</label>
-                     <input type="text" id="memberPhoto" placeholder="https://..." class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-amber-400 bg-gray-50">
-                 </div>
-                 
-                 <div class="col-span-1 md:col-span-2">
-                     <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Ketersediaan</label>
-                     <select id="memberAvailability" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-amber-400 bg-white"> 
-                        <option value="Fleksibel">Fleksibel</option> 
-                        <option value="Weekend">Weekend Only</option> 
-                        <option value="Weekday">Weekday Only</option> 
-                     </select> 
-                 </div>
+                 <div class="col-span-1 md:col-span-2"><label class="block text-xs font-bold text-gray-500 uppercase mb-1">Nama Lengkap</label><input type="text" id="memberName" placeholder="Masukkan nama..." class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-amber-400 bg-gray-50"></div>
+                 <div><label class="block text-xs font-bold text-gray-500 uppercase mb-1">Posisi Utama</label><select id="memberPosition" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-amber-400 bg-white"><option value="Gelandang">Gelandang (MID)</option><option value="Striker">Striker (FWD)</option><option value="Bek">Bek (DEF)</option><option value="Kiper">Kiper (GK)</option></select></div>
+                 <div><label class="block text-xs font-bold text-gray-500 uppercase mb-1">Nomor WhatsApp</label><input type="tel" id="memberPhone" placeholder="08..." class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-amber-400 bg-gray-50"></div>
+                 <div><label class="block text-xs font-bold text-gray-500 uppercase mb-1">Skill Level</label><select id="memberSkill" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-amber-400 bg-white"><option value="Pemula">⭐ Pemula</option><option value="Menengah">⭐⭐ Menengah</option><option value="Mahir">⭐⭐⭐ Mahir</option></select></div>
+                 <div><label class="block text-xs font-bold text-gray-500 uppercase mb-1">URL Foto Profil (Opsional)</label><input type="text" id="memberPhoto" placeholder="https://..." class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-amber-400 bg-gray-50"></div>
+                 <div class="col-span-1 md:col-span-2"><label class="block text-xs font-bold text-gray-500 uppercase mb-1">Ketersediaan</label><select id="memberAvailability" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-amber-400 bg-white"><option value="Fleksibel">Fleksibel</option><option value="Weekend">Weekend Only</option><option value="Weekday">Weekday Only</option></select></div>
              </div>
-             
-             <button onclick="addMember()" class="w-full bg-gradient-to-r from-amber-500 to-amber-600 text-white font-bold py-4 rounded-xl shadow-lg hover:shadow-amber-500/30 transform hover:-translate-y-1 transition-all"> 
-                ➕ Simpan Data Pemain 
-             </button>
+             <button onclick="addMember()" class="w-full bg-gradient-to-r from-amber-500 to-amber-600 text-white font-bold py-4 rounded-xl shadow-lg hover:shadow-amber-500/30 transform hover:-translate-y-1 transition-all"> ➕ Simpan Data Pemain </button>
          </div>
       </div>
     </div>
 
-    <!-- JADWAL VIEW (REVAMPED) -->
+    <!-- JADWAL VIEW -->
     <div id="jadwalView" class="view-content hidden">
-      <!-- Hero Section -->
       <div class="relative rounded-2xl overflow-hidden mb-8 shadow-xl bg-slate-900 text-white min-h-[200px] flex items-center">
           <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1522778119026-d647f0565c6d?q=80&w=2000')] bg-cover bg-center opacity-40"></div>
           <div class="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/80 to-transparent"></div>
@@ -484,17 +412,13 @@
           </div>
       </div>
 
-      <!-- Schedule List -->
       <div class="mb-10">
           <h3 class="text-xl font-bold text-slate-800 mb-6 flex items-center gap-2 border-l-4 border-amber-500 pl-3">
               <span>📅</span> Agenda Mendatang
           </h3>
-          <div id="scheduleList" class="space-y-6">
-              <!-- Rendered via JS -->
-          </div>
+          <div id="scheduleList" class="space-y-6"></div>
       </div>
 
-      <!-- Add Schedule Form (Admin) -->
       <div id="scheduleSectionAdmin" class="glass-effect rounded-xl p-6 mb-6 admin-only border border-amber-200">
        <h2 class="text-xl font-bold text-amber-600 mb-4">📅 Buat Jadwal Baru</h2>
        <div class="mb-4"><select id="scheduleType" class="w-full px-4 py-3 border border-amber-300 rounded-xl bg-white font-semibold text-gray-700 focus:ring-2 focus:ring-amber-400"> <option value="">-- Pilih Jenis Kegiatan --</option> <option value="Friendly Match">🤝 Friendly Match</option> <option value="Fun Football">⚽ Fun Football Internal</option> </select></div>
@@ -538,37 +462,16 @@
               <button onclick="document.getElementById('inventorySectionAdmin').scrollIntoView({behavior: 'smooth'})" class="admin-only bg-amber-500 hover:bg-amber-600 text-slate-900 px-5 py-2 rounded-full font-bold text-xs transition shadow-lg">Tambah Aset</button>
           </div>
       </div>
-
-      <!-- Inventory Grid -->
-      <div class="mb-8">
-          <div id="inventoryList" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              <!-- Rendered via JS -->
-          </div>
-      </div>
-
-      <!-- Add Inventory Form (Admin Only) -->
+      <div class="mb-8"><div id="inventoryList" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div></div>
       <div id="inventorySectionAdmin" class="glass-effect rounded-xl p-6 mb-6 admin-only border border-amber-200">
        <h2 class="text-xl font-bold text-amber-600 mb-4 flex items-center gap-2">📦 Catat Aset Baru</h2>
-       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-           <input type="text" id="itemName" placeholder="Nama Barang (Misal: Bola Adidas)" class="px-4 py-2 border border-amber-300 rounded-lg"> 
-           <input type="text" id="itemImage" placeholder="URL Foto Barang (https://...)" class="px-4 py-2 border border-amber-300 rounded-lg">
-       </div>
-       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-           <input type="number" id="itemQuantity" placeholder="Jumlah Stok" min="0" class="px-4 py-2 border border-amber-300 rounded-lg"> 
-           <select id="itemCondition" class="w-full px-4 py-2 border border-amber-300 rounded-lg bg-amber-50 font-semibold"> 
-                <option value="">-- Kondisi Fisik --</option> 
-                <option value="Baik">✅ Baik (Layak Pakai)</option> 
-                <option value="Cukup">⚠️ Cukup (Ada Lecet)</option> 
-                <option value="Perlu Diganti">❌ Rusak / Perlu Ganti</option> 
-           </select>
-       </div>
-       <button onclick="addInventory()" class="w-full gold-gradient text-white px-4 py-3 rounded-lg hover:opacity-90 font-semibold shadow-md"> ➕ Simpan ke Inventaris </button>
+       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4"><input type="text" id="itemName" placeholder="Nama Barang (Misal: Bola Adidas)" class="px-4 py-2 border border-amber-300 rounded-lg"> <input type="text" id="itemImage" placeholder="URL Foto Barang (https://...)" class="px-4 py-2 border border-amber-300 rounded-lg"></div>
+       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4"><input type="number" id="itemQuantity" placeholder="Jumlah Stok" min="0" class="px-4 py-2 border border-amber-300 rounded-lg"> <select id="itemCondition" class="w-full px-4 py-2 border border-amber-300 rounded-lg bg-amber-50 font-semibold"> <option value="">-- Kondisi Fisik --</option> <option value="Baik">✅ Baik (Layak Pakai)</option> <option value="Cukup">⚠️ Cukup (Ada Lecet)</option> <option value="Perlu Diganti">❌ Rusak / Perlu Ganti</option> </select></div><button onclick="addInventory()" class="w-full gold-gradient text-white px-4 py-3 rounded-lg hover:opacity-90 font-semibold shadow-md"> ➕ Simpan ke Inventaris </button>
       </div>
     </div>
 
     <!-- SPONSOR VIEW -->
     <div id="sponsorView" class="view-content hidden">
-      <!-- Header Sponsor -->
       <div class="relative rounded-2xl overflow-hidden mb-8 shadow-xl bg-slate-900 text-white min-h-[200px] flex items-center">
           <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1517466787929-bc90951d0974?q=80&w=2000')] bg-cover bg-center opacity-40"></div>
           <div class="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/80 to-transparent"></div>
@@ -579,37 +482,11 @@
               <button onclick="handleManageSponsor()" class="bg-amber-500 hover:bg-amber-600 text-slate-900 px-6 py-2 rounded-full font-bold text-sm transition shadow-lg transform hover:scale-105">Kelola Sponsor</button>
           </div>
       </div>
-
-      <!-- Sponsor Wall -->
-      <div class="mb-8">
-          <h3 class="text-xl font-bold text-slate-800 mb-6 flex items-center gap-2 border-l-4 border-amber-500 pl-3">
-              <span>🏆</span> Wall of Fame
-          </h3>
-          
-          <div id="sponsorListGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <!-- Rendered via JS -->
-          </div>
-      </div>
-
-      <!-- Add Sponsor Form (Admin Only) -->
+      <div class="mb-8"><h3 class="text-xl font-bold text-slate-800 mb-6 flex items-center gap-2 border-l-4 border-amber-500 pl-3"><span>🏆</span> Wall of Fame</h3><div id="sponsorListGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div></div>
       <div id="sponsorSectionAdmin" class="glass-effect rounded-xl p-6 mb-6 admin-only border border-amber-200">
        <h2 class="text-xl font-bold text-amber-600 mb-4">🤝 Tambah Sponsor/Donatur Baru</h2>
-       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-           <input type="text" id="sponsorName" placeholder="Nama Sponsor / Donatur" class="px-4 py-2 border border-amber-300 rounded-lg"> 
-           <input type="text" id="sponsorImage" placeholder="Link Logo (https://...)" class="px-4 py-2 border border-amber-300 rounded-lg">
-       </div>
-       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-           <input type="text" id="sponsorContact" placeholder="Kontak / Keterangan" class="px-4 py-2 border border-amber-300 rounded-lg"> 
-           <div class="flex gap-2">
-               <input type="number" id="sponsorAmount" placeholder="Jumlah Donasi (Rp)" min="0" class="w-full px-4 py-2 border border-amber-300 rounded-lg">
-               <select id="sponsorTier" class="w-full px-4 py-2 border border-amber-300 rounded-lg bg-amber-50 font-semibold">
-                   <option value="3">Tier 3 (Silver)</option>
-                   <option value="2">Tier 2 (Gold)</option>
-                   <option value="1">Tier 1 (Platinum)</option>
-               </select>
-           </div>
-       </div>
-       <button onclick="addSponsor()" class="w-full gold-gradient text-white px-4 py-3 rounded-lg hover:opacity-90 font-semibold shadow-md"> ➕ Tambah ke Database </button>
+       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4"><input type="text" id="sponsorName" placeholder="Nama Sponsor / Donatur" class="px-4 py-2 border border-amber-300 rounded-lg"> <input type="text" id="sponsorImage" placeholder="Link Logo (https://...)" class="px-4 py-2 border border-amber-300 rounded-lg"></div>
+       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4"><input type="text" id="sponsorContact" placeholder="Kontak / Keterangan" class="px-4 py-2 border border-amber-300 rounded-lg"> <div class="flex gap-2"><input type="number" id="sponsorAmount" placeholder="Jumlah Donasi (Rp)" min="0" class="w-full px-4 py-2 border border-amber-300 rounded-lg"><select id="sponsorTier" class="w-full px-4 py-2 border border-amber-300 rounded-lg bg-amber-50 font-semibold"><option value="3">Tier 3 (Silver)</option><option value="2">Tier 2 (Gold)</option><option value="1">Tier 1 (Platinum)</option></select></div></div><button onclick="addSponsor()" class="w-full gold-gradient text-white px-4 py-3 rounded-lg hover:opacity-90 font-semibold shadow-md"> ➕ Tambah ke Database </button>
       </div>
     </div>
     
@@ -625,34 +502,17 @@
                 <button onclick="document.getElementById('gallerySectionAdmin').scrollIntoView({behavior: 'smooth'})" class="admin-only bg-amber-500 hover:bg-amber-600 text-slate-900 px-6 py-2 rounded-full font-bold text-sm transition shadow-lg">Upload Foto</button>
             </div>
         </div>
-
         <div class="flex gap-2 mb-6 overflow-x-auto pb-2 scrollbar-hide">
             <button onclick="filterGallery('all')" id="btn-filter-all" class="px-5 py-2 rounded-full font-bold text-sm shadow-sm transition-all bg-slate-800 text-white border border-slate-700 gallery-filter">Semua</button>
             <button onclick="filterGallery('match')" id="btn-filter-match" class="px-5 py-2 rounded-full font-bold text-sm shadow-sm transition-all bg-white text-gray-600 border border-gray-200 hover:bg-gray-50 gallery-filter">📸 Match</button>
             <button onclick="filterGallery('jersey')" id="btn-filter-jersey" class="px-5 py-2 rounded-full font-bold text-sm shadow-sm transition-all bg-white text-gray-600 border border-gray-200 hover:bg-gray-50 gallery-filter">👕 Jersey</button>
             <button onclick="filterGallery('venue')" id="btn-filter-venue" class="px-5 py-2 rounded-full font-bold text-sm shadow-sm transition-all bg-white text-gray-600 border border-gray-200 hover:bg-gray-50 gallery-filter">🏟️ Venue</button>
         </div>
-
-        <div id="galleryGrid" class="columns-1 md:columns-2 lg:columns-3 gap-4 space-y-4 mb-10">
-             <!-- JS Rendered Items -->
-        </div>
-
+        <div id="galleryGrid" class="columns-1 md:columns-2 lg:columns-3 gap-4 space-y-4 mb-10"></div>
         <div id="gallerySectionAdmin" class="glass-effect rounded-xl p-6 mb-6 admin-only border border-amber-200">
             <h2 class="text-xl font-bold text-amber-600 mb-4 flex items-center gap-2">📷 Upload Galeri Baru</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                <input type="text" id="galleryTitle" placeholder="Judul Foto (Misal: Final Match vs Tim X)" class="px-4 py-2 border border-amber-300 rounded-lg">
-                <select id="galleryCategory" class="px-4 py-2 border border-amber-300 rounded-lg bg-white">
-                    <option value="match">📸 Momen Match</option>
-                    <option value="jersey">👕 Koleksi Jersey</option>
-                    <option value="venue">🏟️ Venue / Lapangan</option>
-                    <option value="other">🎗️ Lainnya</option>
-                </select>
-            </div>
-            <div class="grid grid-cols-1 gap-4 mb-4">
-                <input type="text" id="galleryImage" placeholder="URL Foto (https://...)" class="px-4 py-2 border border-amber-300 rounded-lg">
-                <textarea id="galleryDesc" placeholder="Deskripsi singkat..." class="px-4 py-2 border border-amber-300 rounded-lg h-20"></textarea>
-            </div>
-            <button onclick="addGalleryItem()" class="w-full gold-gradient text-white px-4 py-3 rounded-lg hover:opacity-90 font-semibold shadow-md"> 📤 Upload ke Galeri </button>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4"><input type="text" id="galleryTitle" placeholder="Judul Foto (Misal: Final Match vs Tim X)" class="px-4 py-2 border border-amber-300 rounded-lg"><select id="galleryCategory" class="px-4 py-2 border border-amber-300 rounded-lg bg-white"><option value="match">📸 Momen Match</option><option value="jersey">👕 Koleksi Jersey</option><option value="venue">🏟️ Venue / Lapangan</option><option value="other">🎗️ Lainnya</option></select></div>
+            <div class="grid grid-cols-1 gap-4 mb-4"><input type="text" id="galleryImage" placeholder="URL Foto (https://...)" class="px-4 py-2 border border-amber-300 rounded-lg"><textarea id="galleryDesc" placeholder="Deskripsi singkat..." class="px-4 py-2 border border-amber-300 rounded-lg h-20"></textarea></div><button onclick="addGalleryItem()" class="w-full gold-gradient text-white px-4 py-3 rounded-lg hover:opacity-90 font-semibold shadow-md"> 📤 Upload ke Galeri </button>
         </div>
     </div>
    </main>
@@ -663,53 +523,12 @@
   <!-- MODALS -->
   <div id="loginModal" class="hidden fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm"><div class="bg-white p-6 rounded-xl shadow-2xl w-80 text-center border-2 border-amber-400"><h3 class="text-xl font-bold text-amber-600 mb-4 font-arabic">🔑 Login Admin</h3><input type="password" id="adminPassInput" placeholder="Masukkan Password..." class="w-full px-4 py-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:border-amber-500"><div class="flex gap-2"><button onclick="submitLogin()" class="flex-1 bg-amber-500 text-white py-2 rounded-lg hover:bg-amber-600 font-bold">Masuk</button> <button onclick="closeAdminModal()" class="flex-1 bg-gray-200 text-gray-700 py-2 rounded-lg hover:bg-gray-300">Batal</button></div></div></div>
   <div id="editInventoryModal" class="hidden fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm"><div class="bg-white p-6 rounded-xl shadow-2xl w-96 border-2 border-blue-400"><h3 class="text-xl font-bold text-blue-600 mb-4">✏️ Edit Inventaris</h3><div class="space-y-3"><input type="text" id="editItemName" placeholder="Nama Item" class="w-full px-4 py-2 border border-gray-300 rounded-lg"> <input type="text" id="editItemImage" placeholder="Link Foto (opsional)" class="w-full px-4 py-2 border border-gray-300 rounded-lg"> <input type="number" id="editItemQuantity" placeholder="Jumlah" class="w-full px-4 py-2 border border-gray-300 rounded-lg"> <select id="editItemCondition" class="w-full px-4 py-2 border border-gray-300 rounded-lg"> <option value="Baik">Baik</option> <option value="Cukup">Cukup</option> <option value="Perlu Diganti">Perlu Diganti</option> </select></div><div class="flex gap-2 mt-4"><button onclick="saveEditInventory()" class="flex-1 bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 font-bold">💾 Simpan</button> <button onclick="closeEditInventoryModal()" class="flex-1 bg-gray-200 text-gray-700 py-2 rounded-lg hover:bg-gray-300">Batal</button></div></div></div>
-  
-  <!-- EDIT SPONSOR MODAL -->
-  <div id="editSponsorModal" class="hidden fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm">
-      <div class="bg-white p-6 rounded-xl shadow-2xl w-96 border-2 border-pink-400">
-          <h3 class="text-xl font-bold text-pink-600 mb-4">✏️ Edit Sponsor</h3>
-          <div class="space-y-3">
-              <input type="text" id="editSponsorName" placeholder="Nama Sponsor" class="w-full px-4 py-2 border border-gray-300 rounded-lg"> 
-              <input type="text" id="editSponsorImage" placeholder="Link Logo (https://...)" class="w-full px-4 py-2 border border-gray-300 rounded-lg"> 
-              <input type="text" id="editSponsorContact" placeholder="Kontak" class="w-full px-4 py-2 border border-gray-300 rounded-lg"> 
-              <input type="number" id="editSponsorAmount" placeholder="Jumlah Donasi (Rp)" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
-              <select id="editSponsorTier" class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50">
-                   <option value="3">Tier 3 (Silver)</option>
-                   <option value="2">Tier 2 (Gold)</option>
-                   <option value="1">Tier 1 (Platinum)</option>
-               </select>
-          </div>
-          <div class="flex gap-2 mt-4">
-              <button onclick="saveEditSponsor()" class="flex-1 bg-pink-500 text-white py-2 rounded-lg hover:bg-pink-600 font-bold">💾 Simpan</button> 
-              <button onclick="closeEditSponsorModal()" class="flex-1 bg-gray-200 text-gray-700 py-2 rounded-lg hover:bg-gray-300">Batal</button>
-          </div>
-      </div>
-  </div>
-
+  <div id="editSponsorModal" class="hidden fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm"><div class="bg-white p-6 rounded-xl shadow-2xl w-96 border-2 border-pink-400"><h3 class="text-xl font-bold text-pink-600 mb-4">✏️ Edit Sponsor</h3><div class="space-y-3"><input type="text" id="editSponsorName" placeholder="Nama Sponsor" class="w-full px-4 py-2 border border-gray-300 rounded-lg"> <input type="text" id="editSponsorImage" placeholder="Link Logo (https://...)" class="w-full px-4 py-2 border border-gray-300 rounded-lg"> <input type="text" id="editSponsorContact" placeholder="Kontak" class="w-full px-4 py-2 border border-gray-300 rounded-lg"> <input type="number" id="editSponsorAmount" placeholder="Jumlah Donasi (Rp)" class="w-full px-4 py-2 border border-gray-300 rounded-lg"><select id="editSponsorTier" class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50"><option value="3">Tier 3 (Silver)</option><option value="2">Tier 2 (Gold)</option><option value="1">Tier 1 (Platinum)</option></select></div><div class="flex gap-2 mt-4"><button onclick="saveEditSponsor()" class="flex-1 bg-pink-500 text-white py-2 rounded-lg hover:bg-pink-600 font-bold">💾 Simpan</button> <button onclick="closeEditSponsorModal()" class="flex-1 bg-gray-200 text-gray-700 py-2 rounded-lg hover:bg-gray-300">Batal</button></div></div></div>
   <div id="playerModal" class="hidden fixed inset-0 z-[9000] flex items-center justify-center bg-black/70 backdrop-blur-sm p-4"><div class="glass-effect w-full max-w-lg rounded-2xl overflow-hidden shadow-2xl relative bg-white"><button onclick="closePlayerModal()" class="absolute top-4 right-4 text-gray-500 hover:text-red-500 z-10 text-xl">✖</button><div class="bg-gradient-to-r from-amber-400 to-yellow-300 p-6 text-center"><div class="w-20 h-20 bg-white rounded-full mx-auto flex items-center justify-center text-4xl shadow-lg border-4 border-white mb-3">👤</div><h2 id="modalPlayerName" class="text-2xl font-bold text-amber-900 font-arabic">Nama Pemain</h2><p id="modalPlayerPos" class="text-amber-800 font-semibold">Posisi</p></div><div class="p-6"><div class="grid grid-cols-3 gap-2 text-center mb-6"><div class="p-2 bg-amber-50 rounded-lg"><div class="text-xs text-gray-500">Main</div><div id="modalStatsCaps" class="text-xl font-bold text-amber-600">0</div></div><div class="p-2 bg-green-50 rounded-lg"><div class="text-xs text-gray-500">Gol</div><div id="modalStatsGoals" class="text-xl font-bold text-green-600">0</div></div><div class="p-2 bg-blue-50 rounded-lg"><div class="text-xs text-gray-500">Assist</div><div id="modalStatsAssist" class="text-xl font-bold text-blue-600">0</div></div></div><h3 class="font-bold text-gray-700 mb-2 border-b pb-1">Riwayat Performa</h3><div id="modalHistoryList" class="max-h-48 overflow-y-auto space-y-2 text-sm"></div></div></div></div>
   <div id="editMemberModal" class="hidden fixed inset-0 z-[9500] flex items-center justify-center bg-black/70 backdrop-blur-sm p-4"><div class="bg-white w-full max-w-2xl rounded-2xl overflow-hidden shadow-2xl"><div class="bg-gradient-to-r from-blue-500 to-blue-400 p-4 text-center"><h3 class="text-xl font-bold text-white">✏️ Edit Data Anggota</h3></div><div class="p-6"><div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4"><input type="text" id="editMemberName" placeholder="Nama Lengkap" class="px-4 py-2 border border-gray-300 rounded-lg"> <select id="editMemberPosition" class="px-4 py-2 border border-gray-300 rounded-lg"> <option value="">Pilih Posisi</option> <option value="Kiper">Kiper</option> <option value="Bek">Bek</option> <option value="Gelandang">Gelandang</option> <option value="Striker">Striker</option> </select></div><div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4"><input type="tel" id="editMemberPhone" placeholder="No. Telepon" class="px-4 py-2 border border-gray-300 rounded-lg"> <select id="editMemberSkill" class="px-4 py-2 border border-gray-300 rounded-lg"> <option value="">Level Keahlian</option> <option value="Pemula">Pemula</option> <option value="Menengah">Menengah</option> <option value="Mahir">Mahir</option> </select></div><div class="mb-4"><input type="text" id="editMemberPhoto" placeholder="URL Foto (https://...)" class="w-full px-4 py-2 border border-gray-300 rounded-lg mb-4"> <select id="editMemberAvailability" class="w-full px-4 py-2 border border-gray-300 rounded-lg"> <option value="">Ketersediaan</option> <option value="Weekday">Weekday</option> <option value="Weekend">Weekend</option> <option value="Fleksibel">Fleksibel</option> </select></div><div class="flex gap-3"><button onclick="saveEditMember()" class="flex-1 bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600 font-bold">💾 Simpan Perubahan</button> <button onclick="closeEditMemberModal()" class="flex-1 bg-gray-200 text-gray-700 py-3 rounded-lg hover:bg-gray-300 font-bold">❌ Batal</button></div></div></div></div>
-  
-  <!-- NEW PRAYER MODAL (UPDATED WITH BUTTON) -->
-  <div id="prayerModal" class="hidden fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-    <div class="glass-effect w-full max-w-md rounded-2xl overflow-hidden shadow-2xl relative bg-white border-2 border-emerald-400 flex flex-col max-h-[90vh]">
-         <div class="bg-gradient-to-r from-emerald-600 to-green-500 p-6 text-center flex-shrink-0">
-            <div class="w-16 h-16 bg-white/20 rounded-full mx-auto flex items-center justify-center text-3xl shadow-inner backdrop-blur-sm mb-3">🤲</div>
-            <h2 id="modalPrayerTitle" class="text-xl font-bold text-white font-head tracking-wide">Judul Doa</h2>
-         </div>
-         <div class="p-6 text-center space-y-4 bg-[url('https://www.transparenttextures.com/patterns/cream-paper.png')] overflow-y-auto flex-1">
-            <p id="modalPrayerArabic" class="text-2xl font-arabic text-emerald-900 leading-loose dir-rtl"></p>
-            <div class="h-px bg-emerald-200 w-1/2 mx-auto"></div>
-            <p id="modalPrayerTrans" class="text-sm text-slate-600 italic leading-relaxed"></p>
-         </div>
-         <div class="p-4 bg-gray-50 border-t border-gray-200 flex-shrink-0">
-            <button onclick="closePrayerModal()" class="w-full bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-3 rounded-xl transition-colors shadow-sm">
-                Tutup Kartu Doa
-            </button>
-         </div>
-    </div>
-  </div>
+  <div id="prayerModal" class="hidden fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"><div class="glass-effect w-full max-w-md rounded-2xl overflow-hidden shadow-2xl relative bg-white border-2 border-emerald-400 flex flex-col max-h-[90vh]"><div class="bg-gradient-to-r from-emerald-600 to-green-500 p-6 text-center flex-shrink-0"><div class="w-16 h-16 bg-white/20 rounded-full mx-auto flex items-center justify-center text-3xl shadow-inner backdrop-blur-sm mb-3">🤲</div><h2 id="modalPrayerTitle" class="text-xl font-bold text-white font-head tracking-wide">Judul Doa</h2></div><div class="p-6 text-center space-y-4 bg-[url('https://www.transparenttextures.com/patterns/cream-paper.png')] overflow-y-auto flex-1"><p id="modalPrayerArabic" class="text-2xl font-arabic text-emerald-900 leading-loose dir-rtl"></p><div class="h-px bg-emerald-200 w-1/2 mx-auto"></div><p id="modalPrayerTrans" class="text-sm text-slate-600 italic leading-relaxed"></p></div><div class="p-4 bg-gray-50 border-t border-gray-200 flex-shrink-0"><button onclick="closePrayerModal()" class="w-full bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-3 rounded-xl transition-colors shadow-sm">Tutup Kartu Doa</button></div></div></div>
 
-  <!-- MATCH REGISTRATION & TEAM GENERATOR MODAL (UPDATED with CHECKLIST) -->
+  <!-- MATCH REGISTRATION & TEAM GENERATOR MODAL -->
   <div id="matchRegModal" class="hidden fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
       <div class="bg-white w-full max-w-lg rounded-2xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
           <div class="bg-gradient-to-r from-amber-500 to-amber-600 p-4 flex justify-between items-center text-white">
@@ -724,32 +543,33 @@
               </div>
           </div>
 
-          <!-- Existing List of Registered Players -->
           <div class="px-4 py-2 bg-gray-50 text-xs font-bold text-gray-500 border-b">SUDAH TERDAFTAR</div>
-          <div id="regRegisteredList" class="max-h-[150px] overflow-y-auto p-2 space-y-1 bg-white border-b">
-              <!-- Registered list injected here -->
-          </div>
+          <div id="regRegisteredList" class="max-h-[150px] overflow-y-auto p-2 space-y-1 bg-white border-b"></div>
 
-          <!-- New Player Selection Area (CHECKLIST) -->
-          <div class="px-4 py-2 bg-gray-50 flex justify-between items-center border-b">
-               <span class="text-xs font-bold text-gray-500">TAMBAH PEMAIN BARU</span>
-          </div>
-          <div class="px-4 py-2 border-b">
-             <input type="text" id="regPlayerSearch" onkeyup="filterPlayerChecklist()" placeholder="Cari nama pemain..." class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500">
-          </div>
-          
-          <div id="regPlayerChecklist" class="flex-1 overflow-y-auto p-4 space-y-2 bg-white min-h-[200px]">
-              <!-- Checklist of available players injected here -->
-          </div>
-
-          <div class="p-4 border-t bg-gray-50 flex flex-col gap-2">
-              <button onclick="addBulkRegistration()" class="w-full bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg font-bold text-sm shadow-md transition transform active:scale-95">
-                  + Tambahkan Pemain Terpilih
-              </button>
+          <!-- ADMIN ONLY CONTROLS FOR ADDING PLAYERS -->
+          <div class="admin-only">
+              <div class="px-4 py-2 bg-gray-50 flex justify-between items-center border-b">
+                   <span class="text-xs font-bold text-gray-500">TAMBAH PEMAIN BARU</span>
+              </div>
+              <div class="px-4 py-2 border-b">
+                 <input type="text" id="regPlayerSearch" onkeyup="filterPlayerChecklist()" placeholder="Cari nama pemain..." class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500">
+              </div>
               
-              <button onclick="openTeamGenerator()" class="admin-only w-full bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg font-bold text-sm shadow-md transition mt-2">
-                  ⚙️ Generate Tim Otomatis
-              </button>
+              <div id="regPlayerChecklist" class="flex-1 overflow-y-auto p-4 space-y-2 bg-white min-h-[200px]"></div>
+    
+              <div class="p-4 border-t bg-gray-50 flex flex-col gap-2">
+                  <button onclick="addBulkRegistration()" class="w-full bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg font-bold text-sm shadow-md transition transform active:scale-95">
+                      + Tambahkan Pemain Terpilih
+                  </button>
+                  
+                  <button onclick="openTeamGenerator()" class="w-full bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg font-bold text-sm shadow-md transition mt-2">
+                      ⚙️ Generate Tim Otomatis
+                  </button>
+              </div>
+          </div>
+          <!-- NON-ADMIN MESSAGE -->
+          <div class="p-4 text-center text-gray-400 text-xs italic admin-only:hidden">
+              Hubungi Admin untuk mendaftar atau mengelola pemain.
           </div>
       </div>
   </div>
@@ -765,7 +585,8 @@
             <button onclick="closeTeamGeneratorModal()" class="text-gray-400 hover:text-white text-2xl font-bold transition">✕</button>
         </div>
         
-        <div class="p-4 border-b bg-gray-50 flex gap-4 overflow-x-auto items-end">
+        <!-- ADMIN CONTROLS: GENERATE & SAVE -->
+        <div class="admin-only p-4 border-b bg-gray-50 flex gap-4 overflow-x-auto items-end">
              <div class="flex-1 min-w-[200px]">
                  <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Formasi Dasar</label>
                  <select id="genFormation" class="w-full border-2 border-gray-200 rounded-xl p-2.5 text-sm font-semibold text-gray-700 focus:border-purple-500 outline-none" onchange="renderGeneratedTeams(tempGeneratedTeams)">
@@ -790,8 +611,7 @@
 
         <div class="p-5 border-t bg-white flex justify-end gap-3 z-10 shadow-[0_-5px_20px_rgba(0,0,0,0.05)]">
              <button onclick="closeTeamGeneratorModal()" class="px-6 py-2.5 rounded-xl text-gray-600 font-bold hover:bg-gray-100 transition">Tutup</button>
-             <!-- Removed "Simpan & Finalisasi" because "Simpan Permanen" above handles persistence, "Kirim ke Match" can be separate or done -->
-             <button onclick="pushToMatchRecap()" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2.5 rounded-xl font-bold shadow-lg transition">
+             <button onclick="pushToMatchRecap()" class="admin-only bg-green-600 hover:bg-green-700 text-white px-6 py-2.5 rounded-xl font-bold shadow-lg transition">
                  🚀 Kirim ke Match History
              </button>
         </div>
@@ -814,7 +634,6 @@
       measurementId: "G-6X09T9TVMJ"
     };
 
-    // --- SYSTEM SETUP ---
     let firebaseConfig;
     if (typeof __firebase_config !== 'undefined') {
         firebaseConfig = JSON.parse(__firebase_config);
@@ -879,7 +698,6 @@
         });
     }
 
-    // --- GLOBAL SEARCH LOGIC ---
     window.handleGlobalSearch = function() {
         const input = document.getElementById('globalSearchInput');
         searchQuery = input.value.toLowerCase();
@@ -897,7 +715,6 @@
         else if(currentMenu === 'galeri') renderGallery(); 
     }
 
-    // --- CRUD WRAPPERS ---
     async function createData(data) {
         if (!currentUser) return;
         try {
@@ -920,7 +737,6 @@
         }
     }
     
-    // Explicit updateDoc function wrapper
     async function updateDocWrapper(id, data) {
         if (!currentUser) return;
         try {
@@ -940,7 +756,6 @@
         }
     }
 
-    // --- APP LOGIC ---
     const hadistDatabase = [ 
         "Mukmin yang kuat lebih baik dan lebih dicintai Allah daripada mukmin yang lemah. (HR. Muslim)",
         "Sebaik-baik manusia adalah yang paling bermanfaat bagi manusia lainnya. (HR. Ahmad)",
@@ -954,7 +769,6 @@
       displayRenungan(); 
       renderPrayerSchedule();
       getOnlineDoa(); 
-      
       showMenu('dashboard');
       
       document.querySelectorAll('.menu-item').forEach(card => card.addEventListener('click', () => {
@@ -962,9 +776,6 @@
         if(card.dataset.menu === 'islami') getOnlineDoa(); 
       }));
       
-      // Auto-logout admin on reload (security feature)
-      // Remove admin status from previous session if any
-      // But if user wants persistence, we use localStorage. User asked NOT to persist.
       localStorage.removeItem('isAdmin'); 
       if(document.body.classList.contains('is-admin')) {
           document.body.classList.remove('is-admin');
@@ -998,11 +809,9 @@
         if(menu === 'statistik') updatePlayerDropdown(); 
     }
     
-    // --- DASHBOARD ---
     function updateDashboard() {
         const members = allData.filter(d=>d.type==='member'); 
         const matches = allData.filter(d=>d.type==='match');
-        
         if(document.getElementById('totalAnggota')) document.getElementById('totalAnggota').textContent = members.length;
         if(document.getElementById('totalMatches')) document.getElementById('totalMatches').textContent = matches.length;
         
@@ -1062,7 +871,6 @@
         }
     }
 
-    // --- ISLAMI ---
     async function getAutoPrayerTimes() {
       const date = new Date(); const d = String(date.getDate()).padStart(2,'0'); const m = String(date.getMonth()+1).padStart(2,'0'); const y = date.getFullYear();
       try { const res = await fetch(`https://api.aladhan.com/v1/timings/${d}-${m}-${y}?latitude=-6.9175&longitude=107.6191&method=20`); const json = await res.json(); const t = json.data.timings; return [{prayer:"Subuh",prayer_time:t.Fajr},{prayer:"Dzuhur",prayer_time:t.Dhuhr},{prayer:"Ashar",prayer_time:t.Asr},{prayer:"Maghrib",prayer_time:t.Maghrib},{prayer:"Isya",prayer_time:t.Isha}]; } catch(e){ return null; }
@@ -1141,20 +949,8 @@
     window.addMember = async function() { 
         const name = document.getElementById('memberName').value; 
         if(!name) return; 
-        
-        await createData({ 
-            type:'member', 
-            name, 
-            position:document.getElementById('memberPosition').value, 
-            phone:document.getElementById('memberPhone').value, 
-            skill_level:document.getElementById('memberSkill').value, 
-            availability:document.getElementById('memberAvailability').value,
-            photo: document.getElementById('memberPhoto').value, 
-            createdAt: new Date().toISOString() 
-        }); 
-        
-        document.getElementById('memberName').value=''; 
-        document.getElementById('memberPhoto').value=''; 
+        await createData({ type:'member', name, position:document.getElementById('memberPosition').value, phone:document.getElementById('memberPhone').value, skill_level:document.getElementById('memberSkill').value, availability:document.getElementById('memberAvailability').value, photo: document.getElementById('memberPhoto').value, createdAt: new Date().toISOString() }); 
+        document.getElementById('memberName').value=''; document.getElementById('memberPhoto').value=''; 
         showToast('Anggota ditambah'); 
     }
     
@@ -1187,83 +983,41 @@
     window.showPlayerDetail = function(id) { document.getElementById('playerModal').classList.remove('hidden'); const m = allData.find(d=>d.__backendId===id); if(m) { document.getElementById('modalPlayerName').textContent=m.name; document.getElementById('modalPlayerPos').textContent=m.position; const pStats = allData.filter(d=>d.type==='stats' && d.member_id===id); const totalGoals = pStats.reduce((a,b)=>a+(parseInt(b.goals)||0),0); const totalAssists = pStats.reduce((a,b)=>a+(parseInt(b.assists)||0),0); document.getElementById('modalStatsCaps').textContent = pStats.length; document.getElementById('modalStatsGoals').textContent = totalGoals; document.getElementById('modalStatsAssist').textContent = totalAssists; document.getElementById('modalHistoryList').innerHTML = pStats.map(s => `<div class="flex justify-between border-b py-1"><span>${s.date}</span><span class="font-bold">${s.totalPoints} pts</span></div>`).join(''); } }
     window.closePlayerModal = function() { document.getElementById('playerModal').classList.add('hidden'); }
 
-    // --- TAMBAHAN FITUR CSV (FIX) ---
     window.exportMembersCSV = function() {
         const members = allData.filter(d => d.type === 'member');
         if (members.length === 0) { showToast('Data kosong', 'error'); return; }
-        
-        let csvContent = "data:text/csv;charset=utf-8,";
-        csvContent += "Nama,Posisi,NoHP,Skill,Ketersediaan\n"; // Header
-
-        members.forEach(function(m) {
-            const row = [
-                `"${m.name}"`, 
-                m.position, 
-                `'${m.phone}`, // Kasih kutip biar gak jadi format ilmiah di excel
-                m.skill_level, 
-                m.availability
-            ].join(",");
-            csvContent += row + "\n";
-        });
-
-        const encodedUri = encodeURI(csvContent);
-        const link = document.createElement("a");
-        link.setAttribute("href", encodedUri);
-        link.setAttribute("download", "Squad_Muslim_Footballers.csv");
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        let csvContent = "data:text/csv;charset=utf-8,Nama,Posisi,NoHP,Skill,Ketersediaan\n"; 
+        members.forEach(function(m) { const row = [`"${m.name}"`, m.position, `'${m.phone}`, m.skill_level, m.availability].join(","); csvContent += row + "\n"; });
+        const encodedUri = encodeURI(csvContent); const link = document.createElement("a"); link.setAttribute("href", encodedUri); link.setAttribute("download", "Squad_Muslim_Footballers.csv"); document.body.appendChild(link); link.click(); document.body.removeChild(link);
     }
 
     window.processImport = function(event) {
         const file = event.target.files[0];
         if (!file) return;
-
         const reader = new FileReader();
         reader.onload = async function(e) {
             const text = e.target.result;
-            const rows = text.split("\n").slice(1); // Hapus header
-            
+            const rows = text.split("\n").slice(1);
             let count = 0;
             for (let row of rows) {
                 if (!row.trim()) continue;
-                // Logika split CSV sederhana (perlu hati-hati jika ada koma dalam nama)
-                // Ini asumsi format bersih
                 const cols = row.split(","); 
                 if (cols.length >= 2) {
                     const name = cols[0].replace(/"/g, "").trim();
-                    const position = cols[1].trim();
-                    const phone = cols[2] ? cols[2].replace(/'/g, "").trim() : "";
-                    const skill = cols[3] ? cols[3].trim() : "Pemula";
-                    const avail = cols[4] ? cols[4].trim() : "Fleksibel";
-
-                    // Cek duplikasi sederhana berdasarkan nama
                     if(!allData.find(d=>d.type==='member' && d.name===name)){
-                        await createData({
-                            type: 'member',
-                            name: name,
-                            position: position,
-                            phone: phone,
-                            skill_level: skill,
-                            availability: avail,
-                            photo: '',
-                            createdAt: new Date().toISOString()
-                        });
+                        await createData({ type: 'member', name: name, position: cols[1].trim(), phone: cols[2] ? cols[2].replace(/'/g, "").trim() : "", skill_level: cols[3] ? cols[3].trim() : "Pemula", availability: cols[4] ? cols[4].trim() : "Fleksibel", photo: '', createdAt: new Date().toISOString() });
                         count++;
                     }
                 }
             }
             showToast(`${count} data berhasil diimpor!`);
-            event.target.value = ''; // Reset input file
+            event.target.value = '';
         };
         reader.readAsText(file);
     }
-    window.backupMembersJSON = function() { const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(allData.filter(d=>d.type==='member'))); const link = document.createElement("a"); link.setAttribute("href", dataStr); link.setAttribute("download", "backup_anggota.json"); document.body.appendChild(link); link.click(); document.body.removeChild(link); }
-
-    // --- JADWAL ---
+    
     window.addSchedule = async function() { await createData({ type:'schedule', schedule_type:document.getElementById('scheduleType').value, name:document.getElementById('scheduleName').value, date:document.getElementById('scheduleDate').value, time:document.getElementById('scheduleTime').value, location:document.getElementById('scheduleLocation').value, createdAt:new Date().toISOString() }); showToast('Jadwal disimpan'); }
     
-    // -- MATCH REGISTRATION --
     window.openMatchRegModal = function(scheduleId) {
         currentMatchIdForReg = scheduleId;
         renderMatchRegModal(scheduleId);
@@ -1297,7 +1051,7 @@
         document.getElementById('regQuotaBadge').className = `text-xs font-bold px-3 py-1 rounded-full border ${badgeColor}`;
         const regListContainer = document.getElementById('regRegisteredList');
         if (playerCount === 0) { regListContainer.innerHTML = '<div class="text-center text-gray-400 py-2 text-xs italic">Belum ada pemain terdaftar.</div>'; } else {
-            regListContainer.innerHTML = registrations.map((r, i) => `<div class="flex justify-between items-center bg-gray-50 p-2 rounded border border-gray-100 mb-1"><div><span class="text-xs font-bold text-gray-700">${i+1}. ${r.member_name}</span><span class="text-[10px] text-gray-500 block">Posisi: ${r.position_played || '-'}</span></div><button onclick="deleteRegistration('${r.__backendId}')" class="text-red-500 hover:text-red-700 text-xs px-2">✕</button></div>`).join('');
+            regListContainer.innerHTML = registrations.map((r, i) => `<div class="flex justify-between items-center bg-gray-50 p-2 rounded border border-gray-100 mb-1"><div><span class="text-xs font-bold text-gray-700">${i+1}. ${r.member_name}</span><span class="text-[10px] text-gray-500 block">Posisi: ${r.position_played || '-'}</span></div><button onclick="deleteRegistration('${r.__backendId}')" class="admin-only text-red-500 hover:text-red-700 text-xs px-2">✕</button></div>`).join('');
         }
         const allMembers = allData.filter(d => d.type === 'member');
         const registeredIds = registrations.map(r => r.member_id);
@@ -1344,7 +1098,6 @@
     }
     window.deleteRegistration = async function(regId) { if(confirm('Hapus pemain?')) await deleteData(regId); }
 
-    // --- TEAM GENERATOR ---
     window.openTeamGenerator = function(id) {
         if(id) currentMatchIdForReg = id;
         if(!currentMatchIdForReg) return;
@@ -1382,15 +1135,12 @@
         showToast('Formasi Tim tersimpan permanen!');
     }
     
-    // --- INTEGRASI KE REKAP MATCH (DIPERBAIKI) ---
     window.pushToMatchRecap = async function() {
-        if(!currentMatchIdForReg) { showToast('Error: ID Jadwal hilang', 'error'); return; } // SAFETY CHECK ADDED
-        
+        if(!currentMatchIdForReg) { showToast('Error: ID Jadwal hilang', 'error'); return; } 
         if(tempGeneratedTeams.length === 0) { showToast('Generate tim dulu!', 'error'); return; }
         await saveGeneratedTeams(); 
         const schedule = allData.find(d => d.__backendId === currentMatchIdForReg);
         if (!schedule) return;
-
         if(tempGeneratedTeams.length === 2) {
              await createData({ type: 'match', opponent: tempGeneratedTeams[1].name + " (Away)", date: schedule.date, location: schedule.location, match_type: schedule.schedule_type, score_us: 0, score_opponent: 0, description: `Generated: ${tempGeneratedTeams[0].name} vs ${tempGeneratedTeams[1].name}`, createdAt: new Date().toISOString() });
         } else {
@@ -1417,7 +1167,7 @@
                 <div class="relative z-10">
                     <div class="text-center mb-6">
                         <div class="inline-block px-3 py-1 ${badgeBg} text-white text-[10px] font-bold uppercase tracking-widest rounded-full mb-2 shadow-lg border border-white/20">${formation}</div>
-                        <input type="text" value="${t.name}" onchange="updateTeamName(${idx}, this.value)" class="w-full font-head font-bold text-3xl text-white bg-transparent border-b-2 border-white/10 focus:border-amber-400 focus:outline-none text-center pb-2 transition-colors placeholder-white/30 hover:border-white/30">
+                        <input type="text" value="${t.name}" onchange="updateTeamName(${idx}, this.value)" class="w-full font-head font-bold text-3xl text-white bg-transparent border-b-2 border-white/10 focus:border-amber-400 focus:outline-none text-center pb-2 transition-colors placeholder-white/30 hover:border-white/30 admin-only:pointer-events-none">
                     </div>
                     <div class="space-y-2 max-h-[350px] overflow-y-auto pr-2 custom-scrollbar">
                         ${t.players.map((p, pIdx) => `<div class="flex items-center gap-3 bg-white/5 hover:bg-white/10 p-2.5 rounded-xl border border-white/5 transition-all group-hover:border-white/20"><div class="w-8 h-8 rounded-full bg-gradient-to-br from-white/10 to-white/5 flex items-center justify-center text-xs font-bold text-white shadow-inner border border-white/10">${pIdx + 1}</div><div class="flex-1"><div class="text-sm font-semibold text-gray-100 tracking-wide">${p.member_name}</div><div class="text-[10px] text-gray-400 uppercase tracking-wider">${p.position_played || 'PLAYER'}</div></div>${pIdx === 0 ? '<span class="text-base animate-pulse" title="Captain">©️</span>' : ''}</div>`).join('')}
@@ -1489,8 +1239,8 @@
                             <div class="flex items-center gap-1.5 max-w-[200px] truncate"><span>📍</span> <span>${s.location}</span></div>
                         </div>
                         <div class="w-full bg-black/20 rounded-full h-8 relative flex items-center px-3 border border-white/10 cursor-pointer hover:bg-black/30 transition mb-2" onclick="openMatchRegModal('${s.__backendId}')">
-                            <div class="text-[10px] text-white/80 z-10 flex-1">👥 Terdaftar: <span class="font-bold text-amber-400">${currentRegs}</span> / ${limit}</div>
-                            <button class="bg-white/20 text-white text-[10px] font-bold px-2 py-0.5 rounded hover:bg-amber-500 hover:text-black transition">${currentRegs >= limit ? 'PENUH' : '+ DAFTAR'}</button>
+                            <div class="text-[10px] text-white/80 z-10 flex-1">👥 Squad: <span class="font-bold text-amber-400">${currentRegs}</span> Pemain</div>
+                            <button class="bg-white/20 text-white text-[10px] font-bold px-2 py-0.5 rounded hover:bg-amber-500 hover:text-black transition">LIHAT / KELOLA</button>
                         </div>
                         ${teamPreview}
                     </div>
@@ -1551,7 +1301,6 @@
     window.deleteSponsor = async function(id) { if(confirm('Hapus?')) await deleteData(id); }
     window.handleManageSponsor = function() { if(document.body.classList.contains('is-admin')){ document.getElementById('sponsorSectionAdmin').scrollIntoView({behavior: 'smooth'}); } else { showToast('Silakan Login sebagai Admin', 'error'); toggleAdmin(); } }
 
-    // --- GALLERY LOGIC ---
     window.addGalleryItem = async function() { await createData({ type:'gallery_item', title:document.getElementById('galleryTitle').value, category:document.getElementById('galleryCategory').value, image:document.getElementById('galleryImage').value, description:document.getElementById('galleryDesc').value, createdAt:new Date().toISOString() }); showToast('Foto ditambahkan'); }
     window.filterGallery = function(filter) { currentGalleryFilter = filter; document.querySelectorAll('.gallery-filter').forEach(btn => { if(btn.id === `btn-filter-${filter}`) { btn.classList.remove('bg-white','text-gray-600','border-gray-200'); btn.classList.add('bg-slate-800','text-white','border-slate-700'); } else { btn.classList.add('bg-white','text-gray-600','border-gray-200'); btn.classList.remove('bg-slate-800','text-white','border-slate-700'); } }); renderGallery(); }
     function renderGallery() { const grid = document.getElementById('galleryGrid'); if(!grid) return; let items = allData.filter(d => d.type === 'gallery_item'); if (currentGalleryFilter !== 'all') { items = items.filter(d => d.category === currentGalleryFilter); } if (items.length === 0) { grid.innerHTML = `<div class="col-span-full text-center py-10 text-gray-500 italic">Belum ada foto di kategori ini.</div>`; return; } grid.innerHTML = items.map(item => `<div class="mb-4 break-inside-avoid relative group rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 bg-white"><img src="${item.image}" class="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-700" onerror="this.src='https://via.placeholder.com/400x300?text=No+Image'"><div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4"><span class="text-[10px] font-bold uppercase tracking-wider text-amber-400 mb-1">${item.category}</span><h3 class="text-white font-bold text-lg leading-tight mb-1">${item.title}</h3><p class="text-gray-300 text-xs line-clamp-2">${item.description}</p><button onclick="deleteGalleryItem('${item.__backendId}')" class="admin-only absolute top-2 right-2 bg-white/20 hover:bg-red-500 text-white p-2 rounded-full backdrop-blur transition">🗑️</button></div></div>`).join(''); }
