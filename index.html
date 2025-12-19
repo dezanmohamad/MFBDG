@@ -17,18 +17,42 @@
     .font-head { font-family: 'Oswald', sans-serif; }
     
     .glass-effect { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border: 1px solid rgba(218, 165, 32, 0.2); }
-    .glass-dark { background: rgba(30, 41, 59, 0.9); backdrop-filter: blur(10px); border: 1px solid rgba(255, 215, 0, 0.1); color: white; }
+    .glass-nav { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.5); box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
     
     .gold-gradient { background: linear-gradient(135deg, #DAA520 0%, #FFD700 100%); }
-    .green-gradient { background: linear-gradient(135deg, #059669 0%, #10B981 100%); }
-    .emerald-glass { background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.1) 100%); border: 1px solid rgba(16, 185, 129, 0.2); backdrop-filter: blur(5px); }
+    .platinum-gradient { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 1px solid #475569; }
     
     .hover-lift { transition: all 0.3s ease; }
     .hover-lift:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(218, 165, 32, 0.3); }
     
-    .menu-card { transition: all 0.3s ease; cursor: pointer; }
-    .menu-card:hover { transform: translateY(-2px); box-shadow: 0 8px 16px rgba(218, 165, 32, 0.3); }
-    .menu-card.active { background: linear-gradient(135deg, #DAA520 0%, #FFD700 100%); color: white; transform: scale(1.05); border: none; }
+    /* Menu Styles Revised */
+    .menu-item { 
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+        cursor: pointer; 
+        position: relative;
+        overflow: hidden;
+    }
+    .menu-item:hover { background-color: rgba(218, 165, 32, 0.1); }
+    
+    /* Active State: Platinum Style */
+    .menu-item.active { 
+        background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); 
+        color: white; 
+        transform: translateY(-2px);
+        box-shadow: 0 8px 16px rgba(15, 23, 42, 0.2);
+        border: 1px solid rgba(218, 165, 32, 0.3);
+    }
+    
+    /* Gold Accent for Active Item */
+    .menu-item.active::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: linear-gradient(90deg, #DAA520, #FFD700);
+    }
     
     .islamic-pattern { 
         background-color: #fdfbf7;
@@ -72,173 +96,172 @@
     .toast { animation: fadeIn 0.3s, fadeOut 0.3s 2.5s forwards; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes fadeOut { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-20px); } }
+    
+    /* Hide Scrollbar but keep functionality */
+    .hide-scrollbar::-webkit-scrollbar { display: none; }
+    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
  </head>
  <body class="h-full islamic-pattern text-slate-800">
   <div id="app" class="h-full w-full overflow-auto">
    
-   <!-- HEADER -->
-   <header class="glass-effect shadow-md sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-4 py-4">
-     <div class="flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 bg-gradient-to-br from-green-600 to-emerald-400 rounded-full flex items-center justify-center text-white text-xl shadow-lg border-2 border-amber-400">⚽</div>
-        <div>
-           <h1 id="appTitle" class="text-xl md:text-2xl font-bold text-slate-800 font-head tracking-wide">MUSLIM FOOTBALLERS <span class="text-amber-600">BDG</span></h1>
-           <p id="greetingText" class="text-xs text-amber-600 font-bold font-arabic">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيم</p>
+   <!-- HEADER WITH SEARCH -->
+   <header class="glass-effect shadow-sm sticky top-0 z-50 border-b border-amber-100/50">
+    <div class="max-w-7xl mx-auto px-4 py-3 md:py-4">
+     <div class="flex items-center justify-between gap-4">
+      <div class="flex items-center gap-3 flex-shrink-0">
+        <div class="w-10 h-10 bg-gradient-to-br from-slate-800 to-slate-900 rounded-full flex items-center justify-center text-white text-xl shadow-lg border-2 border-amber-400">⚽</div>
+        <div class="hidden md:block">
+           <h1 id="appTitle" class="text-lg md:text-2xl font-bold text-slate-900 font-head tracking-wide uppercase">Muslim Footballers <span class="text-amber-600">BDG</span></h1>
+           <p id="greetingText" class="text-[10px] md:text-xs text-amber-700 font-bold font-arabic tracking-wider">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيم</p>
         </div>
       </div>
-      <div class="text-right hidden md:block">
+      
+      <!-- SEARCH BAR -->
+      <div class="flex-1 max-w-md">
+          <div class="relative group">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <span class="text-gray-400 group-focus-within:text-amber-500 transition-colors">🔍</span>
+              </div>
+              <input type="text" id="globalSearchInput" onkeyup="handleGlobalSearch()" 
+                     class="block w-full pl-10 pr-3 py-2 border border-gray-200 rounded-full leading-5 bg-gray-50 placeholder-gray-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-amber-400 focus:border-transparent transition-all sm:text-sm shadow-inner" 
+                     placeholder="Cari Pemain, Aset, atau Sponsor...">
+          </div>
+      </div>
+
+      <div class="text-right hidden md:block flex-shrink-0">
        <div class="text-sm font-bold text-slate-700" id="currentDate"></div>
        <div class="text-xs text-amber-600 font-semibold" id="hijriDate"></div>
       </div>
-      <div class="md:hidden text-2xl cursor-pointer" onclick="toggleMobileMenu()">🍔</div>
      </div>
     </div>
    </header>
 
-   <!-- MENU NAVIGASI (Horizontal Scroll on Mobile) -->
-   <div class="max-w-7xl mx-auto px-4 pt-6 pb-2">
-    <div class="flex md:grid md:grid-cols-8 gap-3 overflow-x-auto pb-4 md:pb-0 hide-scrollbar" style="-webkit-overflow-scrolling: touch;">
-     <div class="menu-card glass-effect rounded-xl p-3 min-w-[90px] text-center flex-shrink-0" data-menu="dashboard">
-        <div class="text-2xl mb-1">📊</div><div class="text-xs font-bold uppercase">Dashboard</div>
-     </div>
-     <div class="menu-card glass-effect rounded-xl p-3 min-w-[90px] text-center active flex-shrink-0" data-menu="islami">
-        <div class="text-2xl mb-1">🕌</div><div class="text-xs font-bold uppercase">Islami</div>
-     </div>
-     <div class="menu-card glass-effect rounded-xl p-3 min-w-[90px] text-center flex-shrink-0" data-menu="anggota">
-        <div class="text-2xl mb-1">👥</div><div class="text-xs font-bold uppercase">Squad</div>
-     </div>
-     <div class="menu-card glass-effect rounded-xl p-3 min-w-[90px] text-center flex-shrink-0" data-menu="jadwal">
-        <div class="text-2xl mb-1">📅</div><div class="text-xs font-bold uppercase">Jadwal</div>
-     </div>
-     <div class="menu-card glass-effect rounded-xl p-3 min-w-[90px] text-center flex-shrink-0" data-menu="match">
-        <div class="text-2xl mb-1">⚽</div><div class="text-xs font-bold uppercase">Match</div>
-     </div>
-     <div class="menu-card glass-effect rounded-xl p-3 min-w-[90px] text-center flex-shrink-0" data-menu="statistik">
-        <div class="text-2xl mb-1">📈</div><div class="text-xs font-bold uppercase">Stats</div>
-     </div>
-     <div class="menu-card glass-effect rounded-xl p-3 min-w-[90px] text-center flex-shrink-0" data-menu="inventaris">
-        <div class="text-2xl mb-1">📦</div><div class="text-xs font-bold uppercase">Aset</div>
-     </div>
-     <div class="menu-card glass-effect rounded-xl p-3 min-w-[90px] text-center flex-shrink-0" data-menu="sponsor">
-        <div class="text-2xl mb-1">🤝</div><div class="text-xs font-bold uppercase">Sponsor</div>
-     </div>
+   <!-- MENU NAVIGASI (FLOATING DOCK STYLE) -->
+   <div class="max-w-7xl mx-auto px-4 pt-4 pb-2 sticky top-[70px] z-40">
+    <div class="glass-nav rounded-2xl p-2 shadow-lg">
+        <div class="flex md:grid md:grid-cols-8 gap-2 overflow-x-auto pb-1 md:pb-0 hide-scrollbar" style="-webkit-overflow-scrolling: touch;">
+            <div class="menu-item rounded-xl p-2 min-w-[85px] text-center active flex-shrink-0" data-menu="dashboard">
+                <div class="text-xl mb-1 filter drop-shadow-sm">📊</div><div class="text-[10px] font-bold uppercase tracking-wider">Beranda</div>
+            </div>
+            <div class="menu-item rounded-xl p-2 min-w-[85px] text-center flex-shrink-0" data-menu="islami">
+                <div class="text-xl mb-1 filter drop-shadow-sm">🕌</div><div class="text-[10px] font-bold uppercase tracking-wider">Islami</div>
+            </div>
+            <div class="menu-item rounded-xl p-2 min-w-[85px] text-center flex-shrink-0" data-menu="anggota">
+                <div class="text-xl mb-1 filter drop-shadow-sm">👥</div><div class="text-[10px] font-bold uppercase tracking-wider">Squad</div>
+            </div>
+            <div class="menu-item rounded-xl p-2 min-w-[85px] text-center flex-shrink-0" data-menu="jadwal">
+                <div class="text-xl mb-1 filter drop-shadow-sm">📅</div><div class="text-[10px] font-bold uppercase tracking-wider">Jadwal</div>
+            </div>
+            <div class="menu-item rounded-xl p-2 min-w-[85px] text-center flex-shrink-0" data-menu="match">
+                <div class="text-xl mb-1 filter drop-shadow-sm">⚽</div><div class="text-[10px] font-bold uppercase tracking-wider">Match</div>
+            </div>
+            <div class="menu-item rounded-xl p-2 min-w-[85px] text-center flex-shrink-0" data-menu="statistik">
+                <div class="text-xl mb-1 filter drop-shadow-sm">📈</div><div class="text-[10px] font-bold uppercase tracking-wider">Stats</div>
+            </div>
+            <div class="menu-item rounded-xl p-2 min-w-[85px] text-center flex-shrink-0" data-menu="inventaris">
+                <div class="text-xl mb-1 filter drop-shadow-sm">📦</div><div class="text-[10px] font-bold uppercase tracking-wider">Aset</div>
+            </div>
+            <div class="menu-item rounded-xl p-2 min-w-[85px] text-center flex-shrink-0" data-menu="sponsor">
+                <div class="text-xl mb-1 filter drop-shadow-sm">🤝</div><div class="text-[10px] font-bold uppercase tracking-wider">Sponsor</div>
+            </div>
+        </div>
     </div>
    </div>
 
-   <main class="max-w-7xl mx-auto px-4 pb-20">
+   <main class="max-w-7xl mx-auto px-4 pb-24 pt-4">
     
     <!-- DASHBOARD VIEW -->
     <div id="dashboardView" class="view-content hidden">
-      <!-- HERO SECTION: NEXT MATCH & WELCOME -->
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-        <!-- Next Match Card -->
-        <div class="lg:col-span-2 relative rounded-2xl overflow-hidden shadow-2xl group min-h-[200px]">
-            <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1556056504-5c7696c4c28d?q=80&w=2000')] bg-cover bg-center"></div>
+      <!-- HERO SECTION: NEXT MATCH (FULL WIDTH) -->
+      <div class="mb-8">
+        <div class="relative rounded-2xl overflow-hidden shadow-2xl group min-h-[220px] hover:shadow-amber-500/20 transition-all duration-500 w-full">
+            <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1556056504-5c7696c4c28d?q=80&w=2000')] bg-cover bg-center transition-transform duration-700 group-hover:scale-105"></div>
             <div class="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/80 to-transparent"></div>
-            <div class="relative p-6 md:p-8 h-full flex flex-col justify-center text-white">
-                <div class="flex items-center gap-2 mb-2">
-                    <span class="bg-amber-500 text-black text-xs font-bold px-2 py-1 rounded uppercase tracking-wider animate-pulse">Next Match</span>
-                    <span id="nextMatchDate" class="text-sm text-gray-300">Memuat jadwal...</span>
+            <div class="relative p-6 md:p-10 h-full flex flex-col justify-center text-white">
+                <div class="flex items-center gap-3 mb-2">
+                    <span class="bg-amber-500 text-slate-900 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider animate-pulse shadow-[0_0_10px_rgba(218,165,32,0.6)]">Next Match</span>
+                    <span id="nextMatchDate" class="text-sm text-gray-300 font-medium">Memuat jadwal...</span>
                 </div>
-                <h2 id="nextMatchTitle" class="text-3xl md:text-4xl font-head font-bold text-white mb-2 uppercase italic leading-none">Menunggu Jadwal</h2>
-                <div class="flex items-center gap-4 mt-2">
-                    <div class="text-center">
-                        <div class="text-2xl font-bold font-mono text-amber-400" id="countdownDays">00</div>
-                        <div class="text-[10px] uppercase text-gray-400">Hari</div>
+                <h2 id="nextMatchTitle" class="text-3xl md:text-5xl font-head font-bold text-white mb-3 uppercase italic leading-none drop-shadow-lg">Menunggu Jadwal</h2>
+                <div class="flex items-center gap-6 mt-4">
+                    <div class="text-center bg-white/10 backdrop-blur rounded-lg p-2 min-w-[70px] border border-white/10">
+                        <div class="text-3xl font-bold font-mono text-amber-400" id="countdownDays">00</div>
+                        <div class="text-[10px] uppercase text-gray-300 tracking-widest">Hari</div>
                     </div>
-                    <div class="text-2xl font-bold text-gray-600">:</div>
-                    <div class="text-center">
-                        <div class="text-2xl font-bold font-mono text-amber-400" id="countdownHours">00</div>
-                        <div class="text-[10px] uppercase text-gray-400">Jam</div>
-                    </div>
-                </div>
-                <button onclick="showMenu('jadwal')" class="absolute bottom-6 right-6 bg-white/10 hover:bg-white/20 backdrop-blur border border-white/30 text-white px-4 py-2 rounded-full text-sm font-semibold transition-all">Lihat Detail →</button>
-            </div>
-        </div>
-
-        <!-- Quick Stats / Form Guide -->
-        <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 flex flex-col justify-between">
-            <div>
-                <h3 class="text-lg font-bold text-slate-800 mb-4 border-l-4 border-amber-500 pl-3">Performa Tim</h3>
-                <div class="flex items-center justify-between mb-4">
-                    <span class="text-sm text-gray-500">5 Laga Terakhir</span>
-                    <div id="formGuide" class="flex gap-1">
-                        <span class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-xs font-bold text-gray-400">-</span>
-                        <span class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-xs font-bold text-gray-400">-</span>
-                        <span class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-xs font-bold text-gray-400">-</span>
-                        <span class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-xs font-bold text-gray-400">-</span>
-                        <span class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-xs font-bold text-gray-400">-</span>
+                    <div class="text-2xl font-bold text-gray-500 mb-2">:</div>
+                    <div class="text-center bg-white/10 backdrop-blur rounded-lg p-2 min-w-[70px] border border-white/10">
+                        <div class="text-3xl font-bold font-mono text-amber-400" id="countdownHours">00</div>
+                        <div class="text-[10px] uppercase text-gray-300 tracking-widest">Jam</div>
                     </div>
                 </div>
-                <div class="grid grid-cols-2 gap-3 text-center">
-                    <div class="bg-green-50 rounded-lg p-2">
-                        <div id="totalWins" class="text-xl font-bold text-green-600">0</div>
-                        <div class="text-xs text-green-800">Menang</div>
-                    </div>
-                    <div class="bg-red-50 rounded-lg p-2">
-                        <div id="totalLoss" class="text-xl font-bold text-red-600">0</div>
-                        <div class="text-xs text-red-800">Kalah</div>
-                    </div>
-                </div>
-            </div>
-            <div class="mt-4 pt-4 border-t border-gray-100">
-                <div class="text-xs text-gray-400 mb-1">Total Kas Tim (Mockup)</div>
-                <div class="text-2xl font-bold text-slate-800 font-mono tracking-tight">Rp <span id="totalCashDisplay">0</span></div>
+                <button onclick="showMenu('jadwal')" class="absolute bottom-6 right-6 bg-amber-500 hover:bg-amber-400 text-slate-900 px-6 py-2 rounded-full text-sm font-bold transition-all shadow-lg transform hover:scale-105">Lihat Detail →</button>
             </div>
         </div>
       </div>
 
-      <!-- MAIN STATS CARDS -->
-      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-all group cursor-pointer" onclick="showMenu('anggota')">
-            <div class="flex justify-between items-start mb-2">
-                <div class="p-2 bg-blue-50 rounded-lg text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
-                </div>
-                <span class="text-xs font-semibold text-gray-400 bg-gray-50 px-2 py-1 rounded">Squad</span>
-            </div>
-            <h3 id="totalAnggota" class="text-3xl font-bold text-slate-800">0</h3>
-            <p class="text-xs text-gray-500 mt-1">Pemain Terdaftar</p>
-        </div>
-
-        <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-all group cursor-pointer" onclick="showMenu('match')">
-            <div class="flex justify-between items-start mb-2">
-                <div class="p-2 bg-purple-50 rounded-lg text-purple-600 group-hover:bg-purple-600 group-hover:text-white transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg>
-                </div>
-                <span class="text-xs font-semibold text-gray-400 bg-gray-50 px-2 py-1 rounded">Matches</span>
-            </div>
-            <h3 id="totalMatches" class="text-3xl font-bold text-slate-800">0</h3>
-            <p class="text-xs text-gray-500 mt-1">Laga Dimainkan</p>
-        </div>
-
-        <!-- Top Scorer Special Card -->
-        <div class="col-span-2 md:col-span-1 bg-gradient-to-br from-amber-500 to-yellow-400 p-5 rounded-2xl shadow-lg shadow-amber-200/50 text-white relative overflow-hidden group hover-lift cursor-pointer" onclick="showMenu('statistik')">
-             <div class="absolute -right-4 -bottom-4 text-9xl text-white opacity-20 transform rotate-12 transition-transform group-hover:scale-110">⚽</div>
-             <div class="relative z-10">
-                <div class="text-xs font-bold bg-black/20 inline-block px-2 py-1 rounded mb-2 text-amber-100">👑 TOP SCORER</div>
-                <div class="flex items-center gap-3">
-                    <div id="topScorerAvatar" class="w-12 h-12 rounded-full bg-white text-amber-600 flex items-center justify-center font-bold text-xl border-2 border-white shadow-sm">?</div>
+      <!-- MAIN STATS CARDS (UNIFIED DESIGN) -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        
+        <!-- Squad Card -->
+        <div class="bg-gradient-to-br from-blue-600 to-blue-800 p-5 rounded-2xl shadow-lg shadow-blue-500/20 text-white relative overflow-hidden group hover-lift cursor-pointer border border-blue-500/30" onclick="showMenu('anggota')">
+            <div class="absolute -right-4 -bottom-4 text-9xl text-white opacity-10 transform rotate-12 transition-transform group-hover:scale-110">👥</div>
+            <div class="relative z-10">
+                <div class="text-[10px] font-bold bg-white/20 text-blue-100 inline-block px-2 py-1 rounded mb-3 shadow-sm backdrop-blur">SQUAD TIM</div>
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center font-bold text-2xl border border-white/20 shadow-inner">
+                        👕
+                    </div>
                     <div>
-                        <h3 id="topScorer" class="text-xl font-bold font-head leading-none">Belum Ada</h3>
-                        <p id="topScorerGoals" class="text-sm font-semibold opacity-90">0 Goals</p>
+                        <h3 id="totalAnggota" class="text-3xl font-bold font-head leading-none text-white">0</h3>
+                        <p class="text-xs font-semibold text-blue-100 opacity-80">Pemain Terdaftar</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Matches Card -->
+        <div class="bg-gradient-to-br from-purple-600 to-purple-800 p-5 rounded-2xl shadow-lg shadow-purple-500/20 text-white relative overflow-hidden group hover-lift cursor-pointer border border-purple-500/30" onclick="showMenu('match')">
+            <div class="absolute -right-4 -bottom-4 text-9xl text-white opacity-10 transform rotate-12 transition-transform group-hover:scale-110">⚽</div>
+            <div class="relative z-10">
+                <div class="text-[10px] font-bold bg-white/20 text-purple-100 inline-block px-2 py-1 rounded mb-3 shadow-sm backdrop-blur">MATCHES</div>
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center font-bold text-2xl border border-white/20 shadow-inner">
+                        🏟️
+                    </div>
+                    <div>
+                        <h3 id="totalMatches" class="text-3xl font-bold font-head leading-none text-white">0</h3>
+                        <p class="text-xs font-semibold text-purple-100 opacity-80">Laga Dimainkan</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Top Scorer Card -->
+        <div class="bg-gradient-to-br from-amber-500 to-orange-600 p-5 rounded-2xl shadow-lg shadow-amber-500/20 text-white relative overflow-hidden group hover-lift cursor-pointer border border-amber-500/30" onclick="showMenu('statistik')">
+             <div class="absolute -right-4 -bottom-4 text-9xl text-white opacity-10 transform rotate-12 transition-transform group-hover:scale-110">👑</div>
+             <div class="relative z-10">
+                <div class="text-[10px] font-bold bg-black/20 text-amber-100 inline-block px-2 py-1 rounded mb-3 shadow-sm backdrop-blur">TOP SCORER</div>
+                <div class="flex items-center gap-4">
+                    <div id="topScorerAvatar" class="w-12 h-12 rounded-full bg-white text-orange-600 flex items-center justify-center font-bold text-xl border-2 border-orange-300 shadow-lg">?</div>
+                    <div class="overflow-hidden">
+                        <h3 id="topScorer" class="text-xl font-bold font-head leading-none text-white truncate w-full">Belum Ada</h3>
+                        <p id="topScorerGoals" class="text-xs font-semibold opacity-90 mt-1">0 Goals</p>
                     </div>
                 </div>
              </div>
         </div>
 
-         <!-- Top Assist Special Card -->
-         <div class="col-span-2 md:col-span-1 bg-gradient-to-br from-cyan-500 to-blue-500 p-5 rounded-2xl shadow-lg shadow-blue-200/50 text-white relative overflow-hidden group hover-lift cursor-pointer" onclick="showMenu('statistik')">
-            <div class="absolute -right-4 -bottom-4 text-9xl text-white opacity-20 transform rotate-12 transition-transform group-hover:scale-110">🎯</div>
+         <!-- Top Assist Card -->
+         <div class="bg-gradient-to-br from-cyan-500 to-teal-600 p-5 rounded-2xl shadow-lg shadow-cyan-500/20 text-white relative overflow-hidden group hover-lift cursor-pointer border border-cyan-500/30" onclick="showMenu('statistik')">
+            <div class="absolute -right-4 -bottom-4 text-9xl text-white opacity-10 transform rotate-12 transition-transform group-hover:scale-110">🎯</div>
             <div class="relative z-10">
-               <div class="text-xs font-bold bg-black/20 inline-block px-2 py-1 rounded mb-2 text-cyan-100">🪄 TOP ASSIST</div>
-               <div class="flex items-center gap-3">
-                   <div id="topAssistAvatar" class="w-12 h-12 rounded-full bg-white text-blue-600 flex items-center justify-center font-bold text-xl border-2 border-white shadow-sm">?</div>
-                   <div>
-                       <h3 id="topAssist" class="text-xl font-bold font-head leading-none">Belum Ada</h3>
-                       <p id="topAssistCount" class="text-sm font-semibold opacity-90">0 Assists</p>
+               <div class="text-[10px] font-bold bg-black/20 text-cyan-100 inline-block px-2 py-1 rounded mb-3 shadow-sm backdrop-blur">TOP ASSIST</div>
+               <div class="flex items-center gap-4">
+                   <div id="topAssistAvatar" class="w-12 h-12 rounded-full bg-white text-teal-600 flex items-center justify-center font-bold text-xl border-2 border-teal-300 shadow-lg">?</div>
+                   <div class="overflow-hidden">
+                       <h3 id="topAssist" class="text-xl font-bold font-head leading-none text-white truncate w-full">Belum Ada</h3>
+                       <p id="topAssistCount" class="text-xs font-semibold opacity-90 mt-1">0 Assists</p>
                    </div>
                </div>
             </div>
@@ -280,7 +303,7 @@
         <div class="lg:col-span-2 glass-effect rounded-xl p-0 overflow-hidden shadow-lg border-t-4 border-amber-500">
             <div class="bg-amber-50 p-4 border-b border-amber-100 flex justify-between items-center">
                 <h3 class="font-bold text-amber-800 flex items-center gap-2">💎 Renungan Hari Ini</h3>
-                <button onclick="refreshRenungan()" class="text-xs bg-white border border-amber-300 px-3 py-1 rounded-full hover:bg-amber-100 text-amber-700 transition">🔄 Refresh Ayat</button>
+                <button onclick="refreshRenungan()" class="text-xs bg-white border border-amber-300 px-3 py-1 rounded-full hover:bg-amber-100 text-amber-700 transition shadow-sm">🔄 Refresh Ayat</button>
             </div>
             <div class="p-6 md:p-8 bg-[url('https://www.transparenttextures.com/patterns/cream-paper.png')]">
                  <div class="mb-6 text-center">
@@ -303,7 +326,7 @@
              <div class="glass-effect rounded-xl p-5 shadow-md">
                 <div class="flex justify-between items-center mb-3">
                     <h3 class="font-bold text-emerald-700 flex items-center gap-2">🤲 Doa Harian Online</h3>
-                    <button onclick="getOnlineDoa()" class="text-xs text-emerald-600 hover:text-emerald-800">🔄 Reload</button>
+                    <button onclick="getOnlineDoa()" class="text-xs text-emerald-600 hover:text-emerald-800 font-semibold bg-emerald-50 px-2 py-1 rounded">🔄 Reload</button>
                 </div>
                 <!-- Container Doa -->
                 <div id="doaListContainer" class="space-y-2 max-h-[300px] overflow-y-auto pr-1">
@@ -345,39 +368,130 @@
 
     </div>
 
-    <!-- ANGGOTA VIEW (MODIFIED FOR PUBLIC) -->
+    <!-- ANGGOTA VIEW (REVAMPED: PLAYER GALLERY) -->
     <div id="anggotaView" class="view-content hidden">
-      <div class="glass-effect rounded-xl p-6 mb-6">
-       <h2 class="text-xl font-bold text-amber-600 mb-4">➕ Daftar Sebagai Anggota</h2>
-       <div class="bg-blue-50 p-3 rounded-lg border border-blue-200 mb-4 text-sm text-blue-800">
-        📢 <b>Halo!</b> Silakan isi data diri Anda di sini untuk bergabung ke dalam database tim. Data akan langsung muncul di daftar anggota.
-       </div>
-       <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4"><input type="text" id="memberName" placeholder="Nama Lengkap" class="px-4 py-2 border border-amber-300 rounded-lg"> <select id="memberPosition" class="px-4 py-2 border border-amber-300 rounded-lg"> <option value="">Pilih Posisi</option> <option value="Kiper">Kiper</option> <option value="Bek">Bek</option> <option value="Gelandang">Gelandang</option> <option value="Striker">Striker</option> </select> <input type="tel" id="memberPhone" placeholder="No. Telepon" class="px-4 py-2 border border-amber-300 rounded-lg"></div>
-       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4"><select id="memberSkill" class="px-4 py-2 border border-amber-300 rounded-lg"> <option value="">Level Keahlian</option> <option value="Pemula">Pemula</option> <option value="Menengah">Menengah</option> <option value="Mahir">Mahir</option> </select> <select id="memberAvailability" class="px-4 py-2 border border-amber-300 rounded-lg"> <option value="">Ketersediaan</option> <option value="Weekday">Weekday</option> <option value="Weekend">Weekend</option> <option value="Fleksibel">Fleksibel</option> </select></div><button onclick="addMember()" class="w-full gold-gradient text-white px-4 py-3 rounded-lg hover:opacity-90 font-semibold"> ➕ Gabung Tim Sekarang </button>
-      </div>
       
-      <div class="glass-effect rounded-xl p-6">
-       <div class="flex items-center justify-between mb-4 flex-wrap gap-3">
-        <h2 class="text-xl font-bold text-amber-600">👥 Daftar Anggota</h2>
-        <div class="gap-2 flex-wrap admin-only hidden">
-         <button onclick="exportMembersCSV()" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 text-sm font-semibold"> 📥 Export CSV </button> 
-         <button onclick="backupMembersJSON()" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 text-sm font-semibold"> 💾 Backup JSON </button> 
-         <label class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 text-sm font-semibold cursor-pointer"> 📤 Import CSV <input type="file" accept=".csv" onchange="processImport(event)" class="hidden"> </label>
-        </div>
-       </div>
-       <div id="memberList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+      <!-- Hero Squad -->
+      <div class="relative rounded-2xl overflow-hidden mb-8 shadow-xl bg-slate-900 text-white min-h-[220px] flex items-center">
+          <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1579952363873-27f3bade9f55?q=80&w=2000')] bg-cover bg-center opacity-40"></div>
+          <div class="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/80 to-transparent"></div>
+          <div class="relative p-8 z-10 max-w-2xl">
+              <span class="text-amber-400 font-bold tracking-widest text-xs uppercase mb-2 block">Daftar Pemain Resmi</span>
+              <h2 class="text-4xl md:text-5xl font-head font-bold leading-tight mb-2">The Squad</h2>
+              <p class="text-gray-300 text-sm mb-6 max-w-md">Barisan pejuang lapangan hijau. Menjunjung tinggi sportivitas dan ukhuwah islamiyah.</p>
+              <button onclick="document.getElementById('joinFormSection').scrollIntoView({behavior: 'smooth'})" class="bg-amber-500 hover:bg-amber-600 text-slate-900 px-6 py-2 rounded-full font-bold text-sm transition shadow-lg transform hover:scale-105">Gabung Tim</button>
+          </div>
+      </div>
+
+      <!-- Player Gallery (FUT Style Grid) -->
+      <div class="mb-10">
+          <h3 class="text-xl font-bold text-slate-800 mb-6 flex items-center gap-2 border-l-4 border-amber-500 pl-3">
+              <span>👥</span> Galeri Pemain
+          </h3>
+          
+          <div class="flex items-center justify-between mb-4 px-2">
+              <span class="text-xs text-gray-500 font-semibold" id="totalPlayerCount">Memuat pemain...</span>
+              <div class="admin-only flex gap-2">
+                 <button onclick="exportMembersCSV()" class="bg-green-100 text-green-700 px-3 py-1 rounded-lg text-xs font-bold hover:bg-green-200">📥 CSV</button> 
+                 <label class="bg-blue-100 text-blue-700 px-3 py-1 rounded-lg text-xs font-bold hover:bg-blue-200 cursor-pointer">📤 Import <input type="file" accept=".csv" onchange="processImport(event)" class="hidden"></label>
+              </div>
+          </div>
+
+          <div id="memberList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+              <!-- Cards Rendered via JS -->
+          </div>
+      </div>
+
+      <!-- Join Form Section -->
+      <div id="joinFormSection" class="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 relative overflow-hidden">
+         <div class="absolute top-0 right-0 p-10 opacity-5 text-9xl rotate-12">📝</div>
+         <div class="relative z-10">
+             <h2 class="text-2xl font-bold text-slate-800 mb-2 font-head">Formulir Pendaftaran</h2>
+             <p class="text-gray-500 text-sm mb-6">Isi data diri Anda dengan lengkap untuk bergabung.</p>
+             
+             <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+                 <div class="col-span-1 md:col-span-2">
+                     <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Nama Lengkap</label>
+                     <input type="text" id="memberName" placeholder="Masukkan nama..." class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-amber-400 focus:border-transparent bg-gray-50">
+                 </div>
+                 
+                 <div>
+                     <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Posisi Utama</label>
+                     <select id="memberPosition" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-amber-400 bg-white"> 
+                        <option value="Gelandang">Gelandang (MID)</option> 
+                        <option value="Striker">Striker (FWD)</option> 
+                        <option value="Bek">Bek (DEF)</option> 
+                        <option value="Kiper">Kiper (GK)</option> 
+                     </select> 
+                 </div>
+                 
+                 <div>
+                     <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Nomor WhatsApp</label>
+                     <input type="tel" id="memberPhone" placeholder="08..." class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-amber-400 bg-gray-50">
+                 </div>
+
+                 <div>
+                     <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Skill Level</label>
+                     <select id="memberSkill" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-amber-400 bg-white"> 
+                        <option value="Pemula">⭐ Pemula</option> 
+                        <option value="Menengah">⭐⭐ Menengah</option> 
+                        <option value="Mahir">⭐⭐⭐ Mahir</option> 
+                     </select> 
+                 </div>
+
+                 <div>
+                     <label class="block text-xs font-bold text-gray-500 uppercase mb-1">URL Foto Profil (Opsional)</label>
+                     <input type="text" id="memberPhoto" placeholder="https://..." class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-amber-400 bg-gray-50">
+                 </div>
+                 
+                 <div class="col-span-1 md:col-span-2">
+                     <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Ketersediaan</label>
+                     <select id="memberAvailability" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-amber-400 bg-white"> 
+                        <option value="Fleksibel">Fleksibel</option> 
+                        <option value="Weekend">Weekend Only</option> 
+                        <option value="Weekday">Weekday Only</option> 
+                     </select> 
+                 </div>
+             </div>
+             
+             <button onclick="addMember()" class="w-full bg-gradient-to-r from-amber-500 to-amber-600 text-white font-bold py-4 rounded-xl shadow-lg hover:shadow-amber-500/30 transform hover:-translate-y-1 transition-all"> 
+                ➕ Simpan Data Pemain 
+             </button>
+         </div>
       </div>
     </div>
 
-    <!-- JADWAL VIEW -->
+    <!-- JADWAL VIEW (REVAMPED) -->
     <div id="jadwalView" class="view-content hidden">
-      <div class="glass-effect rounded-xl p-6 mb-6 admin-only">
-       <h2 class="text-xl font-bold text-amber-600 mb-4">📅 Tambah Jadwal Pertandingan</h2>
-       <div class="mb-4"><select id="scheduleType" class="w-full px-4 py-2 border border-amber-300 rounded-lg bg-white font-semibold text-gray-700"> <option value="">-- Pilih Jenis Pertandingan --</option> <option value="Friendly Match">🤝 Friendly Match</option> <option value="Fun Football">⚽ Fun Football Internal</option> </select></div>
-       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4"><input type="text" id="scheduleName" placeholder="Nama Kegiatan / Lawan" class="px-4 py-2 border border-amber-300 rounded-lg"> <input type="date" id="scheduleDate" class="px-4 py-2 border border-amber-300 rounded-lg"></div>
-       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4"><input type="time" id="scheduleTime" class="px-4 py-2 border border-amber-300 rounded-lg"> <input type="text" id="scheduleLocation" placeholder="Lokasi" class="px-4 py-2 border border-amber-300 rounded-lg"></div><button onclick="addSchedule()" class="w-full gold-gradient text-white px-4 py-3 rounded-lg hover:opacity-90 font-semibold"> 💾 Simpan Jadwal </button>
+      <!-- Hero Section -->
+      <div class="relative rounded-2xl overflow-hidden mb-8 shadow-xl bg-slate-900 text-white min-h-[200px] flex items-center">
+          <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1522778119026-d647f0565c6d?q=80&w=2000')] bg-cover bg-center opacity-40"></div>
+          <div class="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/80 to-transparent"></div>
+          <div class="relative p-8 z-10 max-w-2xl">
+              <span class="text-amber-400 font-bold tracking-widest text-xs uppercase mb-2 block">Kalender Kegiatan</span>
+              <h2 class="text-3xl md:text-4xl font-head font-bold leading-tight mb-4">Jadwal Pertandingan <br>& Latihan</h2>
+              <p class="text-gray-300 text-sm mb-6">Jangan lewatkan setiap momen perjuangan tim. Catat tanggalnya!</p>
+              <button onclick="document.getElementById('scheduleSectionAdmin').scrollIntoView({behavior: 'smooth'})" class="admin-only bg-amber-500 hover:bg-amber-600 text-slate-900 px-6 py-2 rounded-full font-bold text-sm transition shadow-lg">Tambah Jadwal</button>
+          </div>
       </div>
-      <div class="glass-effect rounded-xl p-6"><h2 class="text-xl font-bold text-amber-600 mb-4">📋 Daftar Jadwal</h2><div id="scheduleList" class="space-y-3"></div></div>
+
+      <!-- Schedule List -->
+      <div class="mb-10">
+          <h3 class="text-xl font-bold text-slate-800 mb-6 flex items-center gap-2 border-l-4 border-amber-500 pl-3">
+              <span>📅</span> Agenda Mendatang
+          </h3>
+          <div id="scheduleList" class="space-y-4">
+              <!-- Rendered via JS -->
+          </div>
+      </div>
+
+      <!-- Add Schedule Form (Admin) -->
+      <div id="scheduleSectionAdmin" class="glass-effect rounded-xl p-6 mb-6 admin-only border border-amber-200">
+       <h2 class="text-xl font-bold text-amber-600 mb-4">📅 Buat Jadwal Baru</h2>
+       <div class="mb-4"><select id="scheduleType" class="w-full px-4 py-3 border border-amber-300 rounded-xl bg-white font-semibold text-gray-700 focus:ring-2 focus:ring-amber-400"> <option value="">-- Pilih Jenis Kegiatan --</option> <option value="Friendly Match">🤝 Friendly Match</option> <option value="Fun Football">⚽ Fun Football Internal</option> </select></div>
+       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4"><input type="text" id="scheduleName" placeholder="Nama Lawan / Kegiatan" class="px-4 py-3 border border-amber-300 rounded-xl focus:ring-2 focus:ring-amber-400"> <input type="date" id="scheduleDate" class="px-4 py-3 border border-amber-300 rounded-xl focus:ring-2 focus:ring-amber-400"></div>
+       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4"><input type="time" id="scheduleTime" class="px-4 py-3 border border-amber-300 rounded-xl focus:ring-2 focus:ring-amber-400"> <input type="text" id="scheduleLocation" placeholder="Lokasi Lapangan" class="px-4 py-3 border border-amber-300 rounded-xl focus:ring-2 focus:ring-amber-400"></div><button onclick="addSchedule()" class="w-full gold-gradient text-white px-4 py-3 rounded-xl hover:opacity-90 font-semibold shadow-md transform active:scale-95 transition"> 💾 Simpan Jadwal </button>
+      </div>
     </div>
 
     <!-- MATCH VIEW -->
@@ -403,24 +517,92 @@
       <div class="glass-effect rounded-xl p-6"><h2 class="text-xl font-bold text-amber-600 mb-4">📊 Klasemen Pemain</h2><div id="statsList" class="space-y-3"></div></div>
     </div>
 
-    <!-- INVENTARIS VIEW -->
+    <!-- INVENTARIS VIEW (REVAMPED) -->
     <div id="inventarisView" class="view-content hidden">
-      <div class="glass-effect rounded-xl p-6 mb-6 admin-only">
-       <h2 class="text-xl font-bold text-amber-600 mb-4">📦 Tambah Item Inventaris</h2>
-       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4"><input type="text" id="itemName" placeholder="Nama Item" class="px-4 py-2 border border-amber-300 rounded-lg"> <input type="text" id="itemImage" placeholder="Link Foto (opsional)" class="px-4 py-2 border border-amber-300 rounded-lg"></div>
-       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4"><input type="number" id="itemQuantity" placeholder="Jumlah" min="0" class="px-4 py-2 border border-amber-300 rounded-lg"> <select id="itemCondition" class="w-full px-4 py-2 border border-amber-300 rounded-lg"> <option value="">Kondisi</option> <option value="Baik">Baik</option> <option value="Cukup">Cukup</option> <option value="Perlu Diganti">Perlu Diganti</option> </select></div><button onclick="addInventory()" class="w-full gold-gradient text-white px-4 py-3 rounded-lg hover:opacity-90 font-semibold"> ➕ Tambah Item </button>
+      <!-- Header Inventaris -->
+      <div class="relative rounded-2xl overflow-hidden mb-8 shadow-xl bg-slate-800 text-white min-h-[180px] flex items-center">
+          <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1522778119026-d647f0565c6d?q=80&w=2000')] bg-cover bg-center opacity-40"></div>
+          <div class="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/80 to-transparent"></div>
+          <div class="relative p-8 z-10 max-w-2xl">
+              <span class="text-amber-400 font-bold tracking-widest text-xs uppercase mb-2 block">Gudang & Logistik</span>
+              <h2 class="text-3xl md:text-4xl font-head font-bold leading-tight mb-2">Manajemen Aset Tim</h2>
+              <p class="text-gray-300 text-sm mb-4">Pastikan perlengkapan tempur selalu siap sedia.</p>
+              <button onclick="document.getElementById('inventorySectionAdmin').scrollIntoView({behavior: 'smooth'})" class="admin-only bg-amber-500 hover:bg-amber-600 text-slate-900 px-5 py-2 rounded-full font-bold text-xs transition shadow-lg">Tambah Aset</button>
+          </div>
       </div>
-      <div class="glass-effect rounded-xl p-6"><h2 class="text-xl font-bold text-amber-600 mb-4">📋 Daftar Inventaris</h2><div id="inventoryList" class="space-y-3"></div></div>
+
+      <!-- Inventory Grid -->
+      <div class="mb-8">
+          <div id="inventoryList" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              <!-- Rendered via JS -->
+          </div>
+      </div>
+
+      <!-- Add Inventory Form (Admin Only) -->
+      <div id="inventorySectionAdmin" class="glass-effect rounded-xl p-6 mb-6 admin-only border border-amber-200">
+       <h2 class="text-xl font-bold text-amber-600 mb-4 flex items-center gap-2">📦 Catat Aset Baru</h2>
+       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+           <input type="text" id="itemName" placeholder="Nama Barang (Misal: Bola Adidas)" class="px-4 py-2 border border-amber-300 rounded-lg"> 
+           <input type="text" id="itemImage" placeholder="URL Foto Barang (https://...)" class="px-4 py-2 border border-amber-300 rounded-lg">
+       </div>
+       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+           <input type="number" id="itemQuantity" placeholder="Jumlah Stok" min="0" class="px-4 py-2 border border-amber-300 rounded-lg"> 
+           <select id="itemCondition" class="w-full px-4 py-2 border border-amber-300 rounded-lg bg-amber-50 font-semibold"> 
+                <option value="">-- Kondisi Fisik --</option> 
+                <option value="Baik">✅ Baik (Layak Pakai)</option> 
+                <option value="Cukup">⚠️ Cukup (Ada Lecet)</option> 
+                <option value="Perlu Diganti">❌ Rusak / Perlu Ganti</option> 
+           </select>
+       </div>
+       <button onclick="addInventory()" class="w-full gold-gradient text-white px-4 py-3 rounded-lg hover:opacity-90 font-semibold shadow-md"> ➕ Simpan ke Inventaris </button>
+      </div>
     </div>
 
-    <!-- SPONSOR VIEW -->
+    <!-- SPONSOR VIEW (REVAMPED CLEANED) -->
     <div id="sponsorView" class="view-content hidden">
-      <div class="glass-effect rounded-xl p-6 mb-6 admin-only">
-       <h2 class="text-xl font-bold text-amber-600 mb-4">🤝 Tambah Sponsor/Donatur</h2>
-       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4"><input type="text" id="sponsorName" placeholder="Nama Sponsor" class="px-4 py-2 border border-amber-300 rounded-lg"> <input type="text" id="sponsorImage" placeholder="Link Logo (https://...)" class="px-4 py-2 border border-amber-300 rounded-lg"></div>
-       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4"><input type="text" id="sponsorContact" placeholder="Kontak" class="px-4 py-2 border border-amber-300 rounded-lg"> <input type="number" id="sponsorAmount" placeholder="Jumlah Donasi (Rp)" min="0" class="w-full px-4 py-2 border border-amber-300 rounded-lg"></div><button onclick="addSponsor()" class="w-full gold-gradient text-white px-4 py-3 rounded-lg hover:opacity-90 font-semibold"> ➕ Tambah Sponsor </button>
+      <!-- Header Sponsor -->
+      <div class="relative rounded-2xl overflow-hidden mb-8 shadow-xl bg-slate-900 text-white min-h-[200px] flex items-center">
+          <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1517466787929-bc90951d0974?q=80&w=2000')] bg-cover bg-center opacity-40"></div>
+          <div class="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/80 to-transparent"></div>
+          <div class="relative p-8 z-10 max-w-2xl">
+              <span class="text-amber-400 font-bold tracking-widest text-xs uppercase mb-2 block">Mitra & Pendukung</span>
+              <h2 class="text-3xl md:text-4xl font-head font-bold leading-tight mb-4">Sempurnakan Do'a <br><span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-yellow-200">Maksimalkan Ikhtiar</span></h2>
+              <p class="text-gray-300 text-sm mb-6">Terima kasih kepada para donatur dan sponsor yang telah mendukung operasional Muslim Footballers Bandung.</p>
+              <button onclick="handleManageSponsor()" class="bg-amber-500 hover:bg-amber-600 text-slate-900 px-6 py-2 rounded-full font-bold text-sm transition shadow-lg transform hover:scale-105">Kelola Sponsor</button>
+          </div>
       </div>
-      <div class="glass-effect rounded-xl p-6"><h2 class="text-xl font-bold text-amber-600 mb-4">💰 Daftar Sponsor & Donatur</h2><div id="sponsorList" class="space-y-3"></div></div>
+
+      <!-- Sponsor Wall -->
+      <div class="mb-8">
+          <h3 class="text-xl font-bold text-slate-800 mb-6 flex items-center gap-2 border-l-4 border-amber-500 pl-3">
+              <span>🏆</span> Wall of Fame
+          </h3>
+          
+          <div id="sponsorListGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <!-- Rendered via JS -->
+          </div>
+      </div>
+
+      <!-- Add Sponsor Form (Admin Only) -->
+      <div id="sponsorSectionAdmin" class="glass-effect rounded-xl p-6 mb-6 admin-only border border-amber-200">
+       <h2 class="text-xl font-bold text-amber-600 mb-4">🤝 Tambah Sponsor/Donatur Baru</h2>
+       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+           <input type="text" id="sponsorName" placeholder="Nama Sponsor / Donatur" class="px-4 py-2 border border-amber-300 rounded-lg"> 
+           <input type="text" id="sponsorImage" placeholder="Link Logo (https://...)" class="px-4 py-2 border border-amber-300 rounded-lg">
+       </div>
+       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+           <input type="text" id="sponsorContact" placeholder="Kontak / Keterangan" class="px-4 py-2 border border-amber-300 rounded-lg"> 
+           <div class="flex gap-2">
+               <input type="number" id="sponsorAmount" placeholder="Jumlah Donasi (Rp)" min="0" class="w-full px-4 py-2 border border-amber-300 rounded-lg">
+               <select id="sponsorTier" class="w-full px-4 py-2 border border-amber-300 rounded-lg bg-amber-50 font-semibold">
+                   <option value="3">Tier 3 (Silver)</option>
+                   <option value="2">Tier 2 (Gold)</option>
+                   <option value="1">Tier 1 (Platinum)</option>
+               </select>
+           </div>
+       </div>
+       <button onclick="addSponsor()" class="w-full gold-gradient text-white px-4 py-3 rounded-lg hover:opacity-90 font-semibold shadow-md"> ➕ Tambah ke Database </button>
+      </div>
     </div>
    </main>
   </div>
@@ -430,9 +612,32 @@
   <!-- MODALS -->
   <div id="loginModal" class="hidden fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm"><div class="bg-white p-6 rounded-xl shadow-2xl w-80 text-center border-2 border-amber-400"><h3 class="text-xl font-bold text-amber-600 mb-4 font-arabic">🔑 Login Admin</h3><input type="password" id="adminPassInput" placeholder="Masukkan Password..." class="w-full px-4 py-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:border-amber-500"><div class="flex gap-2"><button onclick="submitLogin()" class="flex-1 bg-amber-500 text-white py-2 rounded-lg hover:bg-amber-600 font-bold">Masuk</button> <button onclick="closeAdminModal()" class="flex-1 bg-gray-200 text-gray-700 py-2 rounded-lg hover:bg-gray-300">Batal</button></div></div></div>
   <div id="editInventoryModal" class="hidden fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm"><div class="bg-white p-6 rounded-xl shadow-2xl w-96 border-2 border-blue-400"><h3 class="text-xl font-bold text-blue-600 mb-4">✏️ Edit Inventaris</h3><div class="space-y-3"><input type="text" id="editItemName" placeholder="Nama Item" class="w-full px-4 py-2 border border-gray-300 rounded-lg"> <input type="text" id="editItemImage" placeholder="Link Foto (opsional)" class="w-full px-4 py-2 border border-gray-300 rounded-lg"> <input type="number" id="editItemQuantity" placeholder="Jumlah" class="w-full px-4 py-2 border border-gray-300 rounded-lg"> <select id="editItemCondition" class="w-full px-4 py-2 border border-gray-300 rounded-lg"> <option value="Baik">Baik</option> <option value="Cukup">Cukup</option> <option value="Perlu Diganti">Perlu Diganti</option> </select></div><div class="flex gap-2 mt-4"><button onclick="saveEditInventory()" class="flex-1 bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 font-bold">💾 Simpan</button> <button onclick="closeEditInventoryModal()" class="flex-1 bg-gray-200 text-gray-700 py-2 rounded-lg hover:bg-gray-300">Batal</button></div></div></div>
-  <div id="editSponsorModal" class="hidden fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm"><div class="bg-white p-6 rounded-xl shadow-2xl w-96 border-2 border-pink-400"><h3 class="text-xl font-bold text-pink-600 mb-4">✏️ Edit Sponsor</h3><div class="space-y-3"><input type="text" id="editSponsorName" placeholder="Nama Sponsor" class="w-full px-4 py-2 border border-gray-300 rounded-lg"> <input type="text" id="editSponsorImage" placeholder="Link Logo (https://...)" class="w-full px-4 py-2 border border-gray-300 rounded-lg"> <input type="text" id="editSponsorContact" placeholder="Kontak" class="w-full px-4 py-2 border border-gray-300 rounded-lg"> <input type="number" id="editSponsorAmount" placeholder="Jumlah Donasi (Rp)" class="w-full px-4 py-2 border border-gray-300 rounded-lg"></div><div class="flex gap-2 mt-4"><button onclick="saveEditSponsor()" class="flex-1 bg-pink-500 text-white py-2 rounded-lg hover:bg-pink-600 font-bold">💾 Simpan</button> <button onclick="closeEditSponsorModal()" class="flex-1 bg-gray-200 text-gray-700 py-2 rounded-lg hover:bg-gray-300">Batal</button></div></div></div>
+  
+  <!-- EDIT SPONSOR MODAL -->
+  <div id="editSponsorModal" class="hidden fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm">
+      <div class="bg-white p-6 rounded-xl shadow-2xl w-96 border-2 border-pink-400">
+          <h3 class="text-xl font-bold text-pink-600 mb-4">✏️ Edit Sponsor</h3>
+          <div class="space-y-3">
+              <input type="text" id="editSponsorName" placeholder="Nama Sponsor" class="w-full px-4 py-2 border border-gray-300 rounded-lg"> 
+              <input type="text" id="editSponsorImage" placeholder="Link Logo (https://...)" class="w-full px-4 py-2 border border-gray-300 rounded-lg"> 
+              <input type="text" id="editSponsorContact" placeholder="Kontak" class="w-full px-4 py-2 border border-gray-300 rounded-lg"> 
+              <input type="number" id="editSponsorAmount" placeholder="Jumlah Donasi (Rp)" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+              <select id="editSponsorTier" class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50">
+                   <option value="3">Tier 3 (Silver)</option>
+                   <option value="2">Tier 2 (Gold)</option>
+                   <option value="1">Tier 1 (Platinum)</option>
+               </select>
+          </div>
+          <div class="flex gap-2 mt-4">
+              <button onclick="saveEditSponsor()" class="flex-1 bg-pink-500 text-white py-2 rounded-lg hover:bg-pink-600 font-bold">💾 Simpan</button> 
+              <button onclick="closeEditSponsorModal()" class="flex-1 bg-gray-200 text-gray-700 py-2 rounded-lg hover:bg-gray-300">Batal</button>
+          </div>
+      </div>
+  </div>
+
   <div id="playerModal" class="hidden fixed inset-0 z-[9000] flex items-center justify-center bg-black/70 backdrop-blur-sm p-4"><div class="glass-effect w-full max-w-lg rounded-2xl overflow-hidden shadow-2xl relative bg-white"><button onclick="closePlayerModal()" class="absolute top-4 right-4 text-gray-500 hover:text-red-500 z-10 text-xl">✖</button><div class="bg-gradient-to-r from-amber-400 to-yellow-300 p-6 text-center"><div class="w-20 h-20 bg-white rounded-full mx-auto flex items-center justify-center text-4xl shadow-lg border-4 border-white mb-3">👤</div><h2 id="modalPlayerName" class="text-2xl font-bold text-amber-900 font-arabic">Nama Pemain</h2><p id="modalPlayerPos" class="text-amber-800 font-semibold">Posisi</p></div><div class="p-6"><div class="grid grid-cols-3 gap-2 text-center mb-6"><div class="p-2 bg-amber-50 rounded-lg"><div class="text-xs text-gray-500">Main</div><div id="modalStatsCaps" class="text-xl font-bold text-amber-600">0</div></div><div class="p-2 bg-green-50 rounded-lg"><div class="text-xs text-gray-500">Gol</div><div id="modalStatsGoals" class="text-xl font-bold text-green-600">0</div></div><div class="p-2 bg-blue-50 rounded-lg"><div class="text-xs text-gray-500">Assist</div><div id="modalStatsAssist" class="text-xl font-bold text-blue-600">0</div></div></div><h3 class="font-bold text-gray-700 mb-2 border-b pb-1">Riwayat Performa</h3><div id="modalHistoryList" class="max-h-48 overflow-y-auto space-y-2 text-sm"></div></div></div></div>
-  <div id="editMemberModal" class="hidden fixed inset-0 z-[9500] flex items-center justify-center bg-black/70 backdrop-blur-sm p-4"><div class="bg-white w-full max-w-2xl rounded-2xl overflow-hidden shadow-2xl"><div class="bg-gradient-to-r from-blue-500 to-blue-400 p-4 text-center"><h3 class="text-xl font-bold text-white">✏️ Edit Data Anggota</h3></div><div class="p-6"><div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4"><input type="text" id="editMemberName" placeholder="Nama Lengkap" class="px-4 py-2 border border-gray-300 rounded-lg"> <select id="editMemberPosition" class="px-4 py-2 border border-gray-300 rounded-lg"> <option value="">Pilih Posisi</option> <option value="Kiper">Kiper</option> <option value="Bek">Bek</option> <option value="Gelandang">Gelandang</option> <option value="Striker">Striker</option> </select></div><div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4"><input type="tel" id="editMemberPhone" placeholder="No. Telepon" class="px-4 py-2 border border-gray-300 rounded-lg"> <select id="editMemberSkill" class="px-4 py-2 border border-gray-300 rounded-lg"> <option value="">Level Keahlian</option> <option value="Pemula">Pemula</option> <option value="Menengah">Menengah</option> <option value="Mahir">Mahir</option> </select></div><div class="mb-4"><select id="editMemberAvailability" class="w-full px-4 py-2 border border-gray-300 rounded-lg"> <option value="">Ketersediaan</option> <option value="Weekday">Weekday</option> <option value="Weekend">Weekend</option> <option value="Fleksibel">Fleksibel</option> </select></div><div class="flex gap-3"><button onclick="saveEditMember()" class="flex-1 bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600 font-bold">💾 Simpan Perubahan</button> <button onclick="closeEditMemberModal()" class="flex-1 bg-gray-200 text-gray-700 py-3 rounded-lg hover:bg-gray-300 font-bold">❌ Batal</button></div></div></div></div>
+  <!-- EDIT MEMBER MODAL (UPDATED WITH PHOTO URL) -->
+  <div id="editMemberModal" class="hidden fixed inset-0 z-[9500] flex items-center justify-center bg-black/70 backdrop-blur-sm p-4"><div class="bg-white w-full max-w-2xl rounded-2xl overflow-hidden shadow-2xl"><div class="bg-gradient-to-r from-blue-500 to-blue-400 p-4 text-center"><h3 class="text-xl font-bold text-white">✏️ Edit Data Anggota</h3></div><div class="p-6"><div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4"><input type="text" id="editMemberName" placeholder="Nama Lengkap" class="px-4 py-2 border border-gray-300 rounded-lg"> <select id="editMemberPosition" class="px-4 py-2 border border-gray-300 rounded-lg"> <option value="">Pilih Posisi</option> <option value="Kiper">Kiper</option> <option value="Bek">Bek</option> <option value="Gelandang">Gelandang</option> <option value="Striker">Striker</option> </select></div><div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4"><input type="tel" id="editMemberPhone" placeholder="No. Telepon" class="px-4 py-2 border border-gray-300 rounded-lg"> <select id="editMemberSkill" class="px-4 py-2 border border-gray-300 rounded-lg"> <option value="">Level Keahlian</option> <option value="Pemula">Pemula</option> <option value="Menengah">Menengah</option> <option value="Mahir">Mahir</option> </select></div><div class="mb-4"><input type="text" id="editMemberPhoto" placeholder="URL Foto (https://...)" class="w-full px-4 py-2 border border-gray-300 rounded-lg mb-4"> <select id="editMemberAvailability" class="w-full px-4 py-2 border border-gray-300 rounded-lg"> <option value="">Ketersediaan</option> <option value="Weekday">Weekday</option> <option value="Weekend">Weekend</option> <option value="Fleksibel">Fleksibel</option> </select></div><div class="flex gap-3"><button onclick="saveEditMember()" class="flex-1 bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600 font-bold">💾 Simpan Perubahan</button> <button onclick="closeEditMemberModal()" class="flex-1 bg-gray-200 text-gray-700 py-3 rounded-lg hover:bg-gray-300 font-bold">❌ Batal</button></div></div></div></div>
   
   <!-- NEW PRAYER MODAL (UPDATED WITH BUTTON) -->
   <div id="prayerModal" class="hidden fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
@@ -488,6 +693,7 @@
     let currentMenu = 'dashboard';
     let currentEditingRecord = null;
     let countdownInterval = null;
+    let searchQuery = ""; // GLOBAL SEARCH QUERY
     
     const initAuth = async () => {
         try {
@@ -517,19 +723,34 @@
                 __backendId: doc.id
             }));
             
-            updateDashboard();
-            renderMembers();
-            renderSchedules();
-            renderMatches();
-            renderStats();
-            renderInventory();
-            renderSponsors();
+            // Re-render current view with new data
+            renderCurrentView();
+            
+            // Updates that don't depend on view
             renderKajianList();
             renderPrayerSchedule();
+            updateDashboard(); // Always update dashboard stats in background
             if(currentMenu === 'statistik') updatePlayerDropdown();
         }, (error) => {
             console.error("Data fetch error:", error);
         });
+    }
+
+    // --- GLOBAL SEARCH LOGIC ---
+    window.handleGlobalSearch = function() {
+        const input = document.getElementById('globalSearchInput');
+        searchQuery = input.value.toLowerCase();
+        renderCurrentView();
+    }
+
+    function renderCurrentView() {
+        if(currentMenu === 'dashboard') updateDashboard();
+        else if(currentMenu === 'anggota') renderMembers();
+        else if(currentMenu === 'inventaris') renderInventory();
+        else if(currentMenu === 'sponsor') renderSponsors();
+        else if(currentMenu === 'jadwal') renderSchedules();
+        else if(currentMenu === 'match') renderMatches();
+        else if(currentMenu === 'statistik') renderStats();
     }
 
     // --- CRUD WRAPPERS ---
@@ -582,9 +803,9 @@
       renderPrayerSchedule();
       getOnlineDoa(); // Load doa online at start
       
-      document.querySelectorAll('.menu-card').forEach(card => card.addEventListener('click', () => {
+      document.querySelectorAll('.menu-item').forEach(card => card.addEventListener('click', () => {
         showMenu(card.dataset.menu);
-        if(card.dataset.menu === 'islami') getOnlineDoa(); // Reload doa when entering islami menu
+        if(card.dataset.menu === 'islami') getOnlineDoa(); 
       }));
       
       if(localStorage.getItem('isAdmin') === 'true') {
@@ -598,26 +819,43 @@
         document.getElementById('currentDate').textContent = now.toLocaleDateString('id-ID', { weekday:'long', year:'numeric', month:'long', day:'numeric' }); 
         document.getElementById('hijriDate').textContent = '1446 H';
         
-        // Also update the big display in Islami menu
         const hijriEl = document.getElementById('hijriDateDisplay');
         if(hijriEl) hijriEl.textContent = '1446 H'; 
     }
     
-    window.showMenu = function(menu) { currentMenu = menu; document.querySelectorAll('.menu-card').forEach(c => c.classList.remove('active')); document.querySelector(`[data-menu="${menu}"]`).classList.add('active'); document.querySelectorAll('.view-content').forEach(v => v.classList.add('hidden')); document.getElementById(menu + 'View').classList.remove('hidden'); if(menu === 'statistik') updatePlayerDropdown(); }
+    window.showMenu = function(menu) { 
+        currentMenu = menu; 
+        
+        // Reset Search when changing menu
+        searchQuery = "";
+        const searchInput = document.getElementById('globalSearchInput');
+        if(searchInput) searchInput.value = "";
+
+        document.querySelectorAll('.menu-item').forEach(c => c.classList.remove('active')); 
+        const activeItem = document.querySelector(`[data-menu="${menu}"]`);
+        if(activeItem) activeItem.classList.add('active'); 
+        
+        document.querySelectorAll('.view-content').forEach(v => v.classList.add('hidden')); 
+        const view = document.getElementById(menu + 'View');
+        if(view) view.classList.remove('hidden'); 
+        
+        renderCurrentView(); // Render appropriate content
+        
+        if(menu === 'statistik') updatePlayerDropdown(); 
+    }
     
     // --- DASHBOARD REVAMP LOGIC ---
     function updateDashboard() {
         // Basic Stats
         const members = allData.filter(d=>d.type==='member'); 
         const matches = allData.filter(d=>d.type==='match');
-        document.getElementById('totalAnggota').textContent = members.length; 
-        document.getElementById('totalMatches').textContent = matches.length;
         
-        // Sponsor Calc
-        const sponsors = allData.filter(d=>d.type==='sponsor');
-        const totalCash = sponsors.reduce((a,b)=>a+(parseInt(b.amount)||0),0);
-        document.getElementById('totalCashDisplay').textContent = totalCash.toLocaleString();
-
+        const elTotalAnggota = document.getElementById('totalAnggota');
+        if(elTotalAnggota) elTotalAnggota.textContent = members.length;
+        
+        const elTotalMatches = document.getElementById('totalMatches');
+        if(elTotalMatches) elTotalMatches.textContent = matches.length;
+        
         // Top Scorer & Assist Logic
         const stats = allData.filter(d=>d.type==='stats');
         const goals = {}; const assists = {};
@@ -629,42 +867,20 @@
         
         const topG = Object.values(goals).sort((a,b)=>b.val-a.val)[0]; 
         if(topG) {
-            document.getElementById('topScorer').textContent = topG.name; 
-            document.getElementById('topScorerGoals').textContent = topG.val+' Goals';
+            if(document.getElementById('topScorer')) document.getElementById('topScorer').textContent = topG.name; 
+            if(document.getElementById('topScorerGoals')) document.getElementById('topScorerGoals').textContent = topG.val+' Goals';
             // Placeholder Avatar using initials
             const initials = topG.name.split(' ').map(n=>n[0]).join('').substring(0,2);
-            document.getElementById('topScorerAvatar').innerText = initials;
+            if(document.getElementById('topScorerAvatar')) document.getElementById('topScorerAvatar').innerText = initials;
         }
 
         const topA = Object.values(assists).sort((a,b)=>b.val-a.val)[0]; 
         if(topA) {
-            document.getElementById('topAssist').textContent = topA.name; 
-            document.getElementById('topAssistCount').textContent = topA.val+' Assists';
+            if(document.getElementById('topAssist')) document.getElementById('topAssist').textContent = topA.name; 
+            if(document.getElementById('topAssistCount')) document.getElementById('topAssistCount').textContent = topA.val+' Assists';
             const initials = topA.name.split(' ').map(n=>n[0]).join('').substring(0,2);
-            document.getElementById('topAssistAvatar').innerText = initials;
+            if(document.getElementById('topAssistAvatar')) document.getElementById('topAssistAvatar').innerText = initials;
         }
-
-        // Form Guide Logic (W-D-L)
-        const sortedMatches = matches.sort((a,b) => new Date(b.date) - new Date(a.date));
-        const last5 = sortedMatches.slice(0, 5);
-        let wins = 0, loss = 0;
-        
-        const formHTML = last5.map(m => {
-            let badgeClass = 'bg-gray-200 text-gray-400';
-            let label = '-';
-            const us = parseInt(m.score_us);
-            const them = parseInt(m.score_opponent);
-            
-            if (us > them) { badgeClass = 'badge-win'; label = 'W'; wins++; }
-            else if (us < them) { badgeClass = 'badge-loss'; label = 'L'; loss++; }
-            else { badgeClass = 'badge-draw'; label = 'D'; }
-
-            return `<span class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold ${badgeClass}" title="${m.opponent}">${label}</span>`;
-        }).reverse().join(''); // Show oldest to newest left to right, or newest right? Usually left is oldest. Let's keep reverse for L-L-W-W-W style.
-        
-        if(formHTML) document.getElementById('formGuide').innerHTML = formHTML;
-        document.getElementById('totalWins').textContent = wins;
-        document.getElementById('totalLoss').textContent = loss;
 
         // Next Match Logic
         const upcomingSchedules = allData.filter(d => d.type === 'schedule' && new Date(d.date + 'T' + (d.time || '00:00')) > new Date())
@@ -672,9 +888,9 @@
         
         if (upcomingSchedules.length > 0) {
             const next = upcomingSchedules[0];
-            document.getElementById('nextMatchTitle').textContent = "vs " + next.name;
+            if(document.getElementById('nextMatchTitle')) document.getElementById('nextMatchTitle').textContent = "vs " + next.name;
             const d = new Date(next.date);
-            document.getElementById('nextMatchDate').textContent = d.toLocaleDateString('id-ID', {day:'numeric', month:'long'}) + ' @ ' + next.time;
+            if(document.getElementById('nextMatchDate')) document.getElementById('nextMatchDate').textContent = d.toLocaleDateString('id-ID', {day:'numeric', month:'long'}) + ' @ ' + next.time;
             
             // Start Countdown
             if(countdownInterval) clearInterval(countdownInterval);
@@ -686,18 +902,18 @@
                 
                 if (distance < 0) {
                     clearInterval(countdownInterval);
-                    document.getElementById('countdownDays').textContent = "0";
-                    document.getElementById('countdownHours').textContent = "0";
+                    if(document.getElementById('countdownDays')) document.getElementById('countdownDays').textContent = "0";
+                    if(document.getElementById('countdownHours')) document.getElementById('countdownHours').textContent = "0";
                 } else {
                     const days = Math.floor(distance / (1000 * 60 * 60 * 24));
                     const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                    document.getElementById('countdownDays').textContent = days;
-                    document.getElementById('countdownHours').textContent = hours;
+                    if(document.getElementById('countdownDays')) document.getElementById('countdownDays').textContent = days;
+                    if(document.getElementById('countdownHours')) document.getElementById('countdownHours').textContent = hours;
                 }
             }, 1000);
         } else {
-            document.getElementById('nextMatchTitle').textContent = "Belum Ada Jadwal";
-            document.getElementById('nextMatchDate').textContent = "-";
+            if(document.getElementById('nextMatchTitle')) document.getElementById('nextMatchTitle').textContent = "Belum Ada Jadwal";
+            if(document.getElementById('nextMatchDate')) document.getElementById('nextMatchDate').textContent = "-";
         }
     }
 
@@ -760,7 +976,7 @@
         }
     }
 
-    // --- NEW: API DOA ONLINE ---
+    // --- NEW: API DOA ONLINE (FIXED QUOTES & ESCAPING) ---
     window.getOnlineDoa = async function() {
         const container = document.getElementById('doaListContainer');
         if(!container) return;
@@ -768,23 +984,28 @@
         container.innerHTML = '<div class="text-center py-4 text-gray-500 text-sm animate-pulse">Mengambil data doa online...</div>';
         
         try {
-            // Menggunakan API doa publik
             const response = await fetch('https://open-api.my.id/api/doa');
             const data = await response.json();
             
             if(Array.isArray(data) && data.length > 0) {
-                // Acak urutan doa agar tidak bosan
                 const shuffled = data.sort(() => 0.5 - Math.random());
-                const selected = shuffled.slice(0, 5); // Ambil 5 doa acak
+                const selected = shuffled.slice(0, 5); 
                 
-                container.innerHTML = selected.map(d => `
-                    <div class="p-3 bg-white border border-green-100 rounded-lg hover:shadow-md transition cursor-pointer group" onclick="showPrayer('${d.judul}', '${d.arab}', '${d.terjemah}')">
+                container.innerHTML = selected.map(d => {
+                    // ESCAPE SINGLE QUOTES FOR ONCLICK
+                    const safeJudul = d.judul.replace(/'/g, "\\'");
+                    const safeArab = d.arab.replace(/'/g, "\\'");
+                    const safeTerjemah = d.terjemah.replace(/'/g, "\\'");
+                    
+                    return `
+                    <div class="p-3 bg-white border border-green-100 rounded-lg hover:shadow-md transition cursor-pointer group" onclick="showPrayer('${safeJudul}', '${safeArab}', '${safeTerjemah}')">
                         <div class="flex items-center gap-3">
                             <div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-xs group-hover:bg-emerald-600 group-hover:text-white transition">🤲</div>
                             <div class="text-sm font-semibold text-gray-700 truncate">${d.judul}</div>
                         </div>
                     </div>
-                `).join('');
+                    `;
+                }).join('');
             } else {
                 throw new Error("Data kosong");
             }
@@ -819,6 +1040,7 @@
     
     function renderKajianList() { 
         const listContainer = document.getElementById('kajianList');
+        if (!listContainer) return;
         const items = allData.filter(d=>d.type==='kajian').sort((a,b)=>new Date(a.kajian_date)-new Date(b.kajian_date));
         
         if(items.length === 0) {
@@ -843,8 +1065,109 @@
     window.deleteKajian = async function(id) { if(confirm('Hapus?')) await deleteData(id); }
 
     // --- ANGGOTA (IMPORT/EXPORT FIXED) ---
-    window.addMember = async function() { const name = document.getElementById('memberName').value; if(!name) return; await createData({ type:'member', name, position:document.getElementById('memberPosition').value, phone:document.getElementById('memberPhone').value, skill_level:document.getElementById('memberSkill').value, availability:document.getElementById('memberAvailability').value, createdAt: new Date().toISOString() }); document.getElementById('memberName').value=''; showToast('Anggota ditambah'); }
-    function renderMembers() { document.getElementById('memberList').innerHTML = allData.filter(d=>d.type==='member').map(m=>`<div class="glass-effect p-4 rounded hover-lift relative group" onclick="showPlayerDetail('${m.__backendId}')"><div class="font-bold text-lg">${m.name}</div><div class="text-sm text-amber-600">${m.position}</div><div class="text-xs mt-1">📞 ${m.phone}</div><div class="admin-only absolute top-2 right-2 hidden group-hover:flex gap-1"><button onclick="event.stopPropagation();editMember('${m.__backendId}')" class="text-blue-500">✏️</button><button onclick="event.stopPropagation();deleteMember('${m.__backendId}')" class="text-red-500">🗑️</button></div></div>`).join(''); }
+    window.addMember = async function() { 
+        const name = document.getElementById('memberName').value; 
+        if(!name) return; 
+        
+        await createData({ 
+            type:'member', 
+            name, 
+            position:document.getElementById('memberPosition').value, 
+            phone:document.getElementById('memberPhone').value, 
+            skill_level:document.getElementById('memberSkill').value, 
+            availability:document.getElementById('memberAvailability').value,
+            photo: document.getElementById('memberPhoto').value, 
+            createdAt: new Date().toISOString() 
+        }); 
+        
+        document.getElementById('memberName').value=''; 
+        document.getElementById('memberPhoto').value=''; 
+        showToast('Anggota ditambah'); 
+    }
+    
+    function renderMembers() { 
+        const container = document.getElementById('memberList');
+        if (!container) return;
+        const countEl = document.getElementById('totalPlayerCount');
+        
+        let members = allData.filter(d=>d.type==='member');
+        
+        // FILTER BY SEARCH
+        if (searchQuery) {
+            members = members.filter(m => m.name.toLowerCase().includes(searchQuery) || m.position.toLowerCase().includes(searchQuery));
+        }
+
+        if(countEl) countEl.innerText = `${members.length} Pemain Terdaftar`;
+        
+        if (members.length === 0) {
+            container.innerHTML = `<div class="col-span-full text-center py-12 text-gray-400">Tidak ada pemain ditemukan.</div>`;
+            return;
+        }
+
+        container.innerHTML = members.map(m => {
+            let posColor = "bg-gray-500";
+            let posGradient = "from-gray-700 to-gray-900";
+            
+            if (m.position === 'Kiper') { posColor = "bg-yellow-500"; posGradient = "from-yellow-600 to-yellow-800"; }
+            else if (m.position === 'Bek') { posColor = "bg-blue-500"; posGradient = "from-blue-600 to-blue-800"; }
+            else if (m.position === 'Gelandang') { posColor = "bg-emerald-500"; posGradient = "from-emerald-600 to-emerald-800"; }
+            else if (m.position === 'Striker') { posColor = "bg-rose-500"; posGradient = "from-rose-600 to-rose-800"; }
+
+            let stars = "⭐";
+            if (m.skill_level === 'Menengah') stars = "⭐⭐";
+            if (m.skill_level === 'Mahir') stars = "⭐⭐⭐";
+
+            const pStats = allData.filter(d=>d.type==='stats' && d.member_id===m.__backendId);
+            const caps = pStats.length;
+            const goals = pStats.reduce((a,b)=>a+(parseInt(b.goals)||0),0);
+
+            return `
+            <div class="relative bg-gradient-to-b ${posGradient} rounded-2xl p-4 text-white shadow-xl hover-lift group overflow-hidden cursor-pointer border-2 border-white/20" onclick="showPlayerDetail('${m.__backendId}')">
+                <div class="flex justify-between items-start mb-2 relative z-10">
+                    <div class="text-center">
+                        <div class="text-2xl font-bold font-head leading-none">${90 + (caps > 5 ? 5 : 0)}</div>
+                        <div class="text-[10px] opacity-75 uppercase">OVR</div>
+                    </div>
+                    <div class="text-xs font-bold bg-white/20 backdrop-blur px-2 py-1 rounded uppercase">${m.position}</div>
+                </div>
+                
+                <div class="w-24 h-24 mx-auto mb-2 relative z-10 rounded-full border-4 border-white/30 overflow-hidden bg-white/10 shadow-lg">
+                    <img src="${m.photo || 'https://via.placeholder.com/150?text=' + m.name.charAt(0)}" 
+                         class="w-full h-full object-cover" 
+                         onerror="this.src='https://via.placeholder.com/150?text=Player'">
+                </div>
+                
+                <div class="text-center relative z-10">
+                    <h3 class="font-bold font-head text-xl leading-tight truncate px-2">${m.name}</h3>
+                    <div class="text-xs text-white/70 mb-3">${stars} • ${m.availability}</div>
+                    
+                    <div class="grid grid-cols-3 gap-1 text-center bg-black/20 rounded-lg p-2 border border-white/10">
+                        <div>
+                            <div class="font-bold text-sm">${caps}</div>
+                            <div class="text-[9px] uppercase opacity-60">Main</div>
+                        </div>
+                        <div>
+                            <div class="font-bold text-sm">${goals}</div>
+                            <div class="text-[9px] uppercase opacity-60">Gol</div>
+                        </div>
+                        <div>
+                            <div class="font-bold text-sm">Active</div>
+                            <div class="text-[9px] uppercase opacity-60">Status</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="admin-only absolute top-2 right-2 z-20 hidden group-hover:flex gap-1">
+                    <button onclick="event.stopPropagation();editMember('${m.__backendId}')" class="bg-white text-blue-600 p-1.5 rounded-full text-xs shadow hover:scale-110 transition">✏️</button>
+                    <button onclick="event.stopPropagation();deleteMember('${m.__backendId}')" class="bg-white text-red-600 p-1.5 rounded-full text-xs shadow hover:scale-110 transition">🗑️</button>
+                </div>
+                
+                <div class="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20"></div>
+                <div class="absolute -bottom-10 -right-10 text-9xl opacity-5 rotate-12 font-head pointer-events-none select-none">${m.position.substring(0,3)}</div>
+            </div>
+            `;
+        }).join('');
+    }
     
     window.exportMembersCSV = function() {
         const rows = [["Nama","Posisi","Telepon","Skill","Ketersediaan"]];
@@ -875,8 +1198,31 @@
     }
 
     // --- OTHER MODAL LOGIC (Edit Member, etc) ---
-    window.editMember = function(id) { currentEditingRecord=allData.find(d=>d.__backendId===id); if(!currentEditingRecord) return; document.getElementById('editMemberName').value=currentEditingRecord.name; document.getElementById('editMemberPosition').value=currentEditingRecord.position; document.getElementById('editMemberPhone').value=currentEditingRecord.phone; document.getElementById('editMemberSkill').value=currentEditingRecord.skill_level; document.getElementById('editMemberAvailability').value=currentEditingRecord.availability; document.getElementById('editMemberModal').classList.remove('hidden'); }
-    window.saveEditMember = async function() { if(!currentEditingRecord) return; await updateData({...currentEditingRecord, name:document.getElementById('editMemberName').value, position:document.getElementById('editMemberPosition').value, phone:document.getElementById('editMemberPhone').value, skill_level:document.getElementById('editMemberSkill').value, availability:document.getElementById('editMemberAvailability').value}); showToast('Update berhasil'); closeEditMemberModal(); }
+    window.editMember = function(id) { 
+        currentEditingRecord=allData.find(d=>d.__backendId===id); 
+        if(!currentEditingRecord) return; 
+        document.getElementById('editMemberName').value=currentEditingRecord.name; 
+        document.getElementById('editMemberPosition').value=currentEditingRecord.position; 
+        document.getElementById('editMemberPhone').value=currentEditingRecord.phone; 
+        document.getElementById('editMemberSkill').value=currentEditingRecord.skill_level; 
+        document.getElementById('editMemberAvailability').value=currentEditingRecord.availability; 
+        document.getElementById('editMemberPhoto').value=currentEditingRecord.photo || ''; 
+        document.getElementById('editMemberModal').classList.remove('hidden'); 
+    }
+    
+    window.saveEditMember = async function() { 
+        if(!currentEditingRecord) return; 
+        await updateData({
+            ...currentEditingRecord, 
+            name:document.getElementById('editMemberName').value, 
+            position:document.getElementById('editMemberPosition').value, 
+            phone:document.getElementById('editMemberPhone').value, 
+            skill_level:document.getElementById('editMemberSkill').value, 
+            availability:document.getElementById('editMemberAvailability').value,
+            photo: document.getElementById('editMemberPhoto').value 
+        }); 
+        showToast('Update berhasil'); closeEditMemberModal(); 
+    }
     window.closeEditMemberModal = function() { document.getElementById('editMemberModal').classList.add('hidden'); }
     window.deleteMember = async function(id) { if(confirm('Hapus?')) await deleteData(id); }
     window.showPlayerDetail = function(id) { 
@@ -886,7 +1232,6 @@
             document.getElementById('modalPlayerName').textContent=m.name; 
             document.getElementById('modalPlayerPos').textContent=m.position;
             
-            // Calc Stats
             const pStats = allData.filter(d=>d.type==='stats' && d.member_id===id);
             const totalGoals = pStats.reduce((a,b)=>a+(parseInt(b.goals)||0),0);
             const totalAssists = pStats.reduce((a,b)=>a+(parseInt(b.assists)||0),0);
@@ -903,12 +1248,102 @@
 
     // --- JADWAL & TEAMS ---
     window.addSchedule = async function() { await createData({ type:'schedule', schedule_type:document.getElementById('scheduleType').value, name:document.getElementById('scheduleName').value, date:document.getElementById('scheduleDate').value, time:document.getElementById('scheduleTime').value, location:document.getElementById('scheduleLocation').value, createdAt:new Date().toISOString() }); showToast('Jadwal disimpan'); }
-    function renderSchedules() { document.getElementById('scheduleList').innerHTML = allData.filter(d=>d.type==='schedule').map(s=>`<div class="glass-effect p-3 mb-2 border-l-4 border-blue-500"><div class="font-bold">${s.name}</div><div class="text-xs">${s.date} @ ${s.location}</div><div class="admin-only mt-2 flex gap-2"><button class="text-red-500 text-xs" onclick="deleteSchedule('${s.__backendId}')">Hapus</button></div></div>`).join(''); }
+    function renderSchedules() { 
+        const list = document.getElementById('scheduleList');
+        if (!list) return;
+        
+        let schedules = allData.filter(d=>d.type==='schedule');
+        
+        // Filter Search
+        if (searchQuery) {
+            schedules = schedules.filter(s => s.name.toLowerCase().includes(searchQuery) || s.location.toLowerCase().includes(searchQuery));
+        }
+
+        // Sort by Date (Nearest first)
+        schedules.sort((a,b) => new Date(a.date + 'T' + (a.time || '00:00')) - new Date(b.date + 'T' + (b.time || '00:00')));
+
+        if(schedules.length === 0) {
+             list.innerHTML = `
+             <div class="text-center py-10 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200">
+                <div class="text-4xl mb-2">📅</div>
+                <p class="text-gray-500 font-semibold">Belum ada agenda.</p>
+                <p class="text-gray-400 text-sm">Istirahatlah sejenak, Baginda.</p>
+             </div>
+             `;
+             return;
+        }
+
+        list.innerHTML = schedules.map(s => {
+            // Date formatting
+            const dateObj = new Date(s.date);
+            const dayName = dateObj.toLocaleDateString('id-ID', { weekday: 'long' });
+            const dayDate = dateObj.getDate();
+            const monthName = dateObj.toLocaleDateString('id-ID', { month: 'short' });
+            
+            // Type Styling
+            let typeBadge = '';
+            let cardClass = '';
+            let dateBoxColor = '';
+            
+            if(s.schedule_type === 'Friendly Match') {
+                typeBadge = '<span class="bg-blue-100 text-blue-700 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">Friendly Match</span>';
+                cardClass = 'border-l-4 border-blue-500';
+                dateBoxColor = 'bg-blue-50 text-blue-700';
+            } else {
+                typeBadge = '<span class="bg-green-100 text-green-700 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">Fun Football</span>';
+                cardClass = 'border-l-4 border-green-500';
+                dateBoxColor = 'bg-green-50 text-green-700';
+            }
+
+            return `
+            <div class="bg-white rounded-xl shadow-sm hover:shadow-md transition-all p-4 flex items-center gap-4 ${cardClass} relative group">
+                <!-- Date Box -->
+                <div class="flex-shrink-0 w-16 h-16 ${dateBoxColor} rounded-lg flex flex-col items-center justify-center border border-gray-100">
+                    <span class="text-xs font-bold uppercase">${monthName}</span>
+                    <span class="text-2xl font-bold font-head leading-none">${dayDate}</span>
+                    <span class="text-[9px] uppercase opacity-70">${dayName.substring(0,3)}</span>
+                </div>
+                
+                <!-- Info -->
+                <div class="flex-1 min-w-0">
+                    <div class="mb-1">${typeBadge}</div>
+                    <h4 class="text-lg font-bold text-slate-800 truncate">${s.name}</h4>
+                    <div class="flex items-center gap-3 text-sm text-gray-500 mt-1">
+                        <span class="flex items-center gap-1">⏰ ${s.time} WIB</span>
+                        <span class="flex items-center gap-1 truncate">📍 ${s.location}</span>
+                    </div>
+                </div>
+                
+                <!-- Action / Countdown Placeholder -->
+                <div class="hidden sm:block text-right">
+                    <button onclick="window.open('https://maps.google.com/?q=${s.location}', '_blank')" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-600 px-3 py-1.5 rounded-full font-bold transition">
+                        🗺️ Peta
+                    </button>
+                </div>
+
+                <!-- Admin Delete -->
+                <button onclick="deleteSchedule('${s.__backendId}')" class="admin-only absolute top-2 right-2 bg-red-100 text-red-500 p-1.5 rounded-full hover:bg-red-200 transition opacity-0 group-hover:opacity-100">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                </button>
+            </div>
+            `;
+        }).join(''); 
+    }
     window.deleteSchedule = async function(id) { if(confirm('Hapus?')) await deleteData(id); }
     
     // --- MATCH ---
     window.addMatch = async function() { await createData({ type:'match', opponent:document.getElementById('matchOpponent').value, date:document.getElementById('matchDate').value, location:document.getElementById('matchLocation').value, match_type:document.getElementById('matchType').value, score_us:document.getElementById('matchScoreUs').value, score_opponent:document.getElementById('matchScoreOpponent').value, result: (parseInt(document.getElementById('matchScoreUs').value) > parseInt(document.getElementById('matchScoreOpponent').value) ? 'Menang' : 'Kalah'), createdAt:new Date().toISOString() }); showToast('Match disimpan'); }
-    function renderMatches() { document.getElementById('matchList').innerHTML = allData.filter(d=>d.type==='match').map(m=>`<div class="bg-white p-3 rounded shadow mb-2 border-l-4 border-purple-500"><div class="font-bold text-center">${m.score_us} - ${m.score_opponent}</div><div class="text-center text-xs text-gray-500">${m.match_type} vs ${m.opponent}</div><button onclick="inputStatsForMatch('${m.__backendId}')" class="w-full mt-2 bg-gray-100 text-xs py-1 rounded">Isi Statistik</button><button onclick="deleteMatch('${m.__backendId}')" class="admin-only text-red-500 text-xs float-right mt-1">Hapus</button></div>`).join(''); }
+    function renderMatches() { 
+        const list = document.getElementById('matchList');
+        if (!list) return;
+        let matches = allData.filter(d=>d.type==='match');
+        
+        if (searchQuery) {
+            matches = matches.filter(m => m.opponent.toLowerCase().includes(searchQuery) || m.location.toLowerCase().includes(searchQuery));
+        }
+
+        list.innerHTML = matches.map(m=>`<div class="bg-white p-3 rounded shadow mb-2 border-l-4 border-purple-500"><div class="font-bold text-center">${m.score_us} - ${m.score_opponent}</div><div class="text-center text-xs text-gray-500">${m.match_type} vs ${m.opponent}</div><button onclick="inputStatsForMatch('${m.__backendId}')" class="w-full mt-2 bg-gray-100 text-xs py-1 rounded">Isi Statistik</button><button onclick="deleteMatch('${m.__backendId}')" class="admin-only text-red-500 text-xs float-right mt-1">Hapus</button></div>`).join(''); 
+    }
     window.deleteMatch = async function(id) { if(confirm('Hapus?')) await deleteData(id); }
 
     // --- STATISTIK ---
@@ -926,22 +1361,206 @@
         document.getElementById('statsList').innerHTML = sorted.map((id,i)=>{ const m=allData.find(d=>d.__backendId===id); return m ? `<div class="flex justify-between p-2 border-b"><span>#${i+1} ${m.name}</span><span class="font-bold">${map[id]} pts</span></div>` : ''; }).join('');
     }
 
-    // --- INVENTARIS (FIXED EDIT & IMAGE) ---
-    window.addInventory = async function() { await createData({ type:'inventory', item_name:document.getElementById('itemName').value, item_image:document.getElementById('itemImage').value, quantity:document.getElementById('itemQuantity').value, condition:document.getElementById('itemCondition').value, createdAt:new Date().toISOString() }); showToast('Item ditambah'); document.getElementById('itemName').value=''; }
-    function renderInventory() { document.getElementById('inventoryList').innerHTML = allData.filter(d=>d.type==='inventory').map(i=>`<div class="flex gap-3 p-3 bg-white rounded border items-center hover-lift"><img src="${i.item_image||'https://via.placeholder.com/50'}" class="w-12 h-12 object-cover rounded"><div class="flex-1"><b>${i.item_name}</b> <span class="text-xs bg-gray-200 px-1 rounded">${i.condition}</span><div class="text-xs">Stok: ${i.quantity}</div></div><div class="admin-only flex gap-1"><button onclick="editInventory('${i.__backendId}')" class="text-blue-500">✏️</button><button onclick="deleteInventory('${i.__backendId}')" class="text-red-500">🗑️</button></div></div>`).join(''); }
-    window.editInventory = function(id) { currentEditingRecord=allData.find(d=>d.__backendId===id); if(!currentEditingRecord) return; document.getElementById('editItemName').value=currentEditingRecord.item_name; document.getElementById('editItemImage').value=currentEditingRecord.item_image||''; document.getElementById('editItemQuantity').value=currentEditingRecord.quantity; document.getElementById('editInventoryModal').classList.remove('hidden'); }
+    // --- INVENTARIS (REVAMPED LOGIC WITH CARDS) ---
+    window.addInventory = async function() { 
+        await createData({ 
+            type:'inventory', 
+            item_name:document.getElementById('itemName').value, 
+            item_image:document.getElementById('itemImage').value, 
+            quantity:document.getElementById('itemQuantity').value, 
+            condition:document.getElementById('itemCondition').value, 
+            createdAt:new Date().toISOString() 
+        }); 
+        showToast('Item ditambah'); 
+        document.getElementById('itemName').value='';
+        document.getElementById('itemImage').value='';
+        document.getElementById('itemQuantity').value='';
+    }
+    
+    function renderInventory() { 
+        const grid = document.getElementById('inventoryList');
+        if(!grid) return;
+        
+        let items = allData.filter(d=>d.type==='inventory');
+        
+        if (searchQuery) {
+            items = items.filter(i => i.item_name.toLowerCase().includes(searchQuery));
+        }
+        
+        if(items.length === 0) {
+            grid.innerHTML = `
+            <div class="col-span-full text-center py-10 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200">
+                <div class="text-4xl mb-2">📦</div>
+                <p class="text-gray-500 font-semibold">Tidak ada barang ditemukan.</p>
+            </div>
+            `;
+            return;
+        }
+
+        grid.innerHTML = items.map(i => {
+            let badgeColor = "bg-gray-100 text-gray-600";
+            let conditionIcon = "❓";
+            
+            if (i.condition === 'Baik') {
+                badgeColor = "bg-green-100 text-green-700 border-green-200";
+                conditionIcon = "✅";
+            } else if (i.condition === 'Cukup') {
+                badgeColor = "bg-yellow-100 text-yellow-700 border-yellow-200";
+                conditionIcon = "⚠️";
+            } else if (i.condition === 'Perlu Diganti') {
+                badgeColor = "bg-red-100 text-red-700 border-red-200";
+                conditionIcon = "❌";
+            }
+
+            return `
+            <div class="bg-white rounded-xl overflow-hidden shadow-sm hover-lift border border-gray-100 group relative flex flex-col">
+                <div class="h-40 w-full bg-gray-100 relative overflow-hidden">
+                    <img src="${i.item_image || 'https://via.placeholder.com/300x200?text=No+Image'}" 
+                         class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                         onerror="this.src='https://via.placeholder.com/300x200?text=Aset+Tim'">
+                    
+                    <div class="absolute top-2 left-2 ${badgeColor} text-[10px] font-bold px-2 py-1 rounded shadow-sm border">
+                        ${conditionIcon} ${i.condition}
+                    </div>
+                </div>
+                
+                <div class="p-4 flex-1 flex flex-col justify-between">
+                    <div>
+                        <h4 class="font-bold text-slate-800 leading-tight mb-1 line-clamp-2">${i.item_name}</h4>
+                        <div class="text-xs text-gray-500 font-mono bg-slate-50 inline-block px-2 py-1 rounded mt-1 border border-slate-100">
+                            Stok: <span class="font-bold text-slate-800 text-sm">${i.quantity}</span> pcs
+                        </div>
+                    </div>
+                    
+                    <div class="admin-only mt-3 pt-3 border-t border-gray-100 flex gap-2">
+                        <button onclick="editInventory('${i.__backendId}')" class="flex-1 bg-blue-50 text-blue-600 py-1.5 rounded text-xs font-bold hover:bg-blue-100 transition">Edit</button>
+                        <button onclick="deleteInventory('${i.__backendId}')" class="flex-1 bg-red-50 text-red-600 py-1.5 rounded text-xs font-bold hover:bg-red-100 transition">Hapus</button>
+                    </div>
+                </div>
+            </div>
+            `;
+        }).join(''); 
+    }
+    window.editInventory = function(id) { currentEditingRecord=allData.find(d=>d.__backendId===id); if(!currentEditingRecord) return; document.getElementById('editItemName').value=currentEditingRecord.item_name; document.getElementById('editItemImage').value=currentEditingRecord.item_image||''; document.getElementById('editItemQuantity').value=currentEditingRecord.quantity; document.getElementById('editItemCondition').value=currentEditingRecord.condition; document.getElementById('editInventoryModal').classList.remove('hidden'); }
     window.saveEditInventory = async function() { if(!currentEditingRecord) return; await updateData({...currentEditingRecord, item_name:document.getElementById('editItemName').value, item_image:document.getElementById('editItemImage').value, quantity:document.getElementById('editItemQuantity').value, condition:document.getElementById('editItemCondition').value }); showToast('Update berhasil'); closeEditInventoryModal(); }
     window.closeEditInventoryModal = function() { document.getElementById('editInventoryModal').classList.add('hidden'); }
     window.deleteInventory = async function(id) { if(confirm('Hapus?')) await deleteData(id); }
 
-    // --- SPONSOR (FIXED EDIT & IMAGE) ---
-    window.addSponsor = async function() { await createData({ type:'sponsor', sponsor_name:document.getElementById('sponsorName').value, sponsor_image:document.getElementById('sponsorImage').value, contact:document.getElementById('sponsorContact').value, amount:document.getElementById('sponsorAmount').value, createdAt:new Date().toISOString() }); showToast('Sponsor ditambah'); }
-    function renderSponsors() { 
-        const list = allData.filter(d=>d.type==='sponsor');
-        const total = list.reduce((a,b)=>a+(parseInt(b.amount)||0),0);
-        document.getElementById('sponsorList').innerHTML = `<div class="p-3 bg-green-100 mb-2 rounded text-center font-bold">Total: Rp ${total.toLocaleString()}</div>` + list.map(s=>`<div class="flex gap-3 p-3 bg-white rounded border items-center hover-lift"><img src="${s.sponsor_image||'https://via.placeholder.com/50'}" class="w-12 h-12 object-contain rounded"><div class="flex-1"><b>${s.sponsor_name}</b><div class="text-xs text-gray-500">${s.contact}</div></div><div class="font-bold text-green-600 text-sm">Rp ${(parseInt(s.amount)||0).toLocaleString()}</div><div class="admin-only flex gap-1 ml-2"><button onclick="editSponsor('${s.__backendId}')" class="text-blue-500 text-xs">Edit</button><button onclick="deleteSponsor('${s.__backendId}')" class="text-red-500 text-xs">Hapus</button></div></div>`).join('');
+    // --- SPONSOR (REVAMPED LOGIC WITH UNIFIED DESIGN) ---
+    window.addSponsor = async function() { 
+        await createData({ 
+            type:'sponsor', 
+            sponsor_name:document.getElementById('sponsorName').value, 
+            sponsor_image:document.getElementById('sponsorImage').value, 
+            contact:document.getElementById('sponsorContact').value, 
+            amount:document.getElementById('sponsorAmount').value,
+            tier: document.getElementById('sponsorTier').value,
+            createdAt:new Date().toISOString() 
+        }); 
+        showToast('Sponsor ditambah'); 
     }
-    window.editSponsor = function(id) { currentEditingRecord=allData.find(d=>d.__backendId===id); if(!currentEditingRecord) return; document.getElementById('editSponsorName').value=currentEditingRecord.sponsor_name; document.getElementById('editSponsorImage').value=currentEditingRecord.sponsor_image||''; document.getElementById('editSponsorContact').value=currentEditingRecord.contact; document.getElementById('editSponsorAmount').value=currentEditingRecord.amount; document.getElementById('editSponsorModal').classList.remove('hidden'); }
+    
+    function renderSponsors() { 
+        let list = allData.filter(d=>d.type==='sponsor');
+        
+        if (searchQuery) {
+            list = list.filter(s => s.sponsor_name.toLowerCase().includes(searchQuery));
+        }
+
+        list = list.sort((a,b) => {
+            const tierA = parseInt(a.tier) || 3;
+            const tierB = parseInt(b.tier) || 3;
+            if(tierA !== tierB) return tierA - tierB;
+            return (parseInt(b.amount)||0) - (parseInt(a.amount)||0);
+        });
+        
+        const grid = document.getElementById('sponsorListGrid');
+        if(!grid) return;
+
+        if(list.length === 0) {
+            grid.innerHTML = `
+            <div class="col-span-full text-center py-10 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200">
+                <div class="text-4xl mb-2">🤝</div>
+                <p class="text-gray-500 font-semibold">Tidak ada sponsor ditemukan.</p>
+            </div>
+            `;
+            return;
+        }
+
+        grid.innerHTML = list.map((s) => {
+            const tier = parseInt(s.tier) || 3;
+            let tierClass = "";
+            let badge = "";
+            let textClass = "";
+            let subTextClass = "";
+            let borderImgClass = "";
+            
+            if (tier === 1) {
+                tierClass = "bg-gradient-to-br from-slate-800 to-slate-900 border-slate-700 text-white shadow-lg";
+                badge = `<div class="absolute top-0 left-0 bg-gradient-to-r from-amber-400 to-yellow-200 text-slate-900 text-[10px] font-bold px-3 py-1 rounded-br-lg shadow-sm z-10">👑 PLATINUM</div>`;
+                textClass = "text-white";
+                subTextClass = "text-gray-400";
+                borderImgClass = "border-amber-500/30";
+            } else if (tier === 2) {
+                tierClass = "bg-gradient-to-br from-amber-500 to-yellow-600 border-amber-400 text-white shadow-lg";
+                badge = `<div class="absolute top-0 left-0 bg-white text-amber-600 text-[10px] font-bold px-3 py-1 rounded-br-lg shadow-sm z-10">⭐ GOLD</div>`;
+                textClass = "text-white";
+                subTextClass = "text-amber-100";
+                borderImgClass = "border-white/30";
+            } else {
+                tierClass = "bg-gradient-to-br from-slate-200 to-gray-300 border-gray-300 text-slate-800 shadow-md";
+                badge = `<div class="absolute top-0 left-0 bg-slate-600 text-white text-[10px] font-bold px-3 py-1 rounded-br-lg shadow-sm z-10">🥈 SILVER</div>`;
+                textClass = "text-slate-900";
+                subTextClass = "text-slate-600";
+                borderImgClass = "border-slate-400/30";
+            }
+
+            return `
+            <div class="${tierClass} relative rounded-2xl p-6 hover-lift group flex flex-col sm:flex-row items-center gap-6 min-h-[160px] overflow-hidden border">
+                ${badge}
+                
+                <div class="absolute -bottom-6 -right-6 text-8xl opacity-10 ${textClass} rotate-12 font-head pointer-events-none select-none">${tier}</div>
+                
+                <div class="admin-only absolute top-2 right-2 flex gap-1 z-20 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button onclick="editSponsor('${s.__backendId}')" class="bg-white/20 backdrop-blur text-current p-1 rounded hover:bg-white/40 text-xs">✏️</button>
+                    <button onclick="deleteSponsor('${s.__backendId}')" class="bg-red-500/80 backdrop-blur text-white p-1 rounded hover:bg-red-600 text-xs">🗑️</button>
+                </div>
+                
+                <div class="w-20 h-20 sm:w-24 sm:h-24 flex-shrink-0 relative flex items-center justify-center bg-white rounded-full p-2 shadow-xl border-4 ${borderImgClass}">
+                        <img src="${s.sponsor_image || 'https://via.placeholder.com/100?text=' + s.sponsor_name.charAt(0)}" 
+                            class="w-full h-full object-contain rounded-full" 
+                            onerror="this.src='https://via.placeholder.com/100?text=Sponsor'">
+                </div>
+                
+                <div class="text-center sm:text-left flex-1 relative z-10">
+                    <h4 class="font-bold font-head text-2xl leading-tight mb-2 tracking-wide ${textClass}">${s.sponsor_name}</h4>
+                    <p class="text-sm ${subTextClass} font-medium">${s.contact}</p>
+                </div>
+            </div>
+            `;
+        }).join('');
+        
+        // Add "Join Us" Card
+        grid.innerHTML += `
+        <div class="bg-gray-50 border-2 border-dashed border-gray-300 rounded-2xl p-6 flex flex-col items-center justify-center text-center min-h-[160px] hover:bg-gray-100 transition cursor-pointer" onclick="showToast('Hubungi Admin untuk menjadi sponsor!')">
+            <div class="text-4xl text-gray-300 mb-2 group-hover:scale-110 transition">+</div>
+            <h4 class="font-bold text-gray-500">Slot Tersedia</h4>
+            <p class="text-xs text-gray-400 mt-1">Jadilah bagian dari kami.</p>
+        </div>
+        `;
+    }
+    
+    window.editSponsor = function(id) { 
+        currentEditingRecord=allData.find(d=>d.__backendId===id); 
+        if(!currentEditingRecord) return; 
+        document.getElementById('editSponsorName').value=currentEditingRecord.sponsor_name; 
+        document.getElementById('editSponsorImage').value=currentEditingRecord.sponsor_image||''; 
+        document.getElementById('editSponsorContact').value=currentEditingRecord.contact; 
+        document.getElementById('editSponsorAmount').value=currentEditingRecord.amount;
+        document.getElementById('editSponsorTier').value=currentEditingRecord.tier || '3'; 
+        document.getElementById('editSponsorModal').classList.remove('hidden'); 
+    }
+    
     window.saveEditSponsor = async function() { 
         if(!currentEditingRecord) return; 
         await updateData({
@@ -949,12 +1568,21 @@
             sponsor_name:document.getElementById('editSponsorName').value, 
             sponsor_image:document.getElementById('editSponsorImage').value, 
             contact:document.getElementById('editSponsorContact').value, 
-            amount:document.getElementById('editSponsorAmount').value 
+            amount:document.getElementById('editSponsorAmount').value,
+            tier: document.getElementById('editSponsorTier').value 
         }); 
         showToast('Update berhasil'); closeEditSponsorModal(); 
     }
     window.closeEditSponsorModal = function() { document.getElementById('editSponsorModal').classList.add('hidden'); }
     window.deleteSponsor = async function(id) { if(confirm('Hapus?')) await deleteData(id); }
+    window.handleManageSponsor = function() {
+        if(document.body.classList.contains('is-admin')){
+            document.getElementById('sponsorSectionAdmin').scrollIntoView({behavior: 'smooth'});
+        } else {
+            showToast('Silakan Login sebagai Admin', 'error');
+            toggleAdmin();
+        }
+    }
 
     // --- SYSTEM ---
     window.showToast = function(msg, type='success') { const t = document.createElement('div'); t.className = `fixed top-4 right-4 z-[9999] px-4 py-2 rounded text-white shadow-lg toast ${type==='success'?'bg-green-500':'bg-red-500'}`; t.innerText = msg; document.body.appendChild(t); setTimeout(()=>t.remove(), 2800); }
