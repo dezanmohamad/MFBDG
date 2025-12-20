@@ -468,12 +468,32 @@
       <!-- Admin Input Form -->
       <div id="matchInputSection" class="glass-effect rounded-xl p-6 mb-6 admin-only border border-amber-200">
        <h2 class="text-xl font-bold text-amber-600 mb-4 flex items-center gap-2"><span>⚽</span> Input Hasil Pertandingan</h2>
-       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4"><input type="text" id="matchOpponent" placeholder="Nama Lawan" class="px-4 py-3 border border-amber-300 rounded-xl focus:ring-2 focus:ring-amber-400"> <input type="date" id="matchDate" class="px-4 py-3 border border-amber-300 rounded-xl focus:ring-2 focus:ring-amber-400"></div>
-       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4"><input type="text" id="matchLocation" placeholder="Lokasi" class="px-4 py-3 border border-amber-300 rounded-xl focus:ring-2 focus:ring-amber-400"> <select id="matchType" class="px-4 py-3 border border-amber-300 rounded-xl focus:ring-2 focus:ring-amber-400 bg-white"> <option value="">Jenis Match</option> <option value="Friendly">Friendly Match</option> <option value="Fun Football">Fun Football</option> </select></div>
-       <div class="grid grid-cols-2 gap-4 mb-4">
-           <div><label class="block text-xs font-bold text-gray-500 mb-1 ml-1">SKOR KITA</label><input type="number" id="matchScoreUs" placeholder="0" min="0" class="w-full px-4 py-3 border border-amber-300 rounded-xl text-center font-bold text-lg focus:ring-2 focus:ring-amber-400"></div>
-           <div><label class="block text-xs font-bold text-gray-500 mb-1 ml-1">SKOR LAWAN</label><input type="number" id="matchScoreOpponent" placeholder="0" min="0" class="w-full px-4 py-3 border border-amber-300 rounded-xl text-center font-bold text-lg focus:ring-2 focus:ring-amber-400"></div>
+       
+       <div class="mb-4">
+           <label class="block text-xs font-bold text-gray-500 uppercase mb-1">1. Pilih Jadwal Pertandingan</label>
+           <select id="matchScheduleRef" onchange="renderMatchInputForm()" class="w-full px-4 py-3 border border-amber-300 rounded-xl focus:ring-2 focus:ring-amber-400 bg-amber-50 font-bold text-slate-700">
+               <option value="">-- Pilih Jadwal --</option>
+               </select>
        </div>
+
+       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+           <select id="matchType" onchange="renderMatchInputForm()" class="px-4 py-3 border border-amber-300 rounded-xl bg-white font-bold text-gray-700"> 
+               <option value="">-- Jenis Match --</option> 
+               <option value="Friendly Match">🤝 Friendly Match</option> 
+               <option value="Fun Football">🏆 Fun Football (Internal)</option> 
+           </select>
+           <input type="date" id="matchDate" class="px-4 py-3 border border-amber-300 rounded-xl bg-gray-100" readonly>
+       </div>
+       
+       <div class="mb-4">
+            <input type="text" id="matchLocation" placeholder="Lokasi" class="w-full px-4 py-3 border border-amber-300 rounded-xl bg-gray-100" readonly>
+            <input type="text" id="matchOpponent" placeholder="Nama Lawan" class="w-full mt-2 px-4 py-3 border border-amber-300 rounded-xl hidden">
+       </div>
+
+       <div id="dynamicScoreInput" class="mb-6 bg-gray-50 p-4 rounded-xl border border-gray-200">
+           <p class="text-center text-gray-400 italic text-sm">Silakan pilih jadwal terlebih dahulu...</p>
+       </div>
+
        <button onclick="addMatch()" class="w-full gold-gradient text-white px-4 py-3 rounded-xl hover:opacity-90 font-semibold shadow-md transform active:scale-95 transition"> 💾 Simpan Hasil Match </button>
       </div>
     </div>
@@ -794,6 +814,9 @@
             updateDashboard(); 
             if(currentMenu === 'statistik') updatePlayerDropdown();
             
+            // UPDATE: Populate dropdown jadwal saat data masuk
+            populateScheduleDropdown();
+
             if(currentMatchIdForReg && !document.getElementById('matchRegModal').classList.contains('hidden')) {
                 renderMatchRegModal(currentMatchIdForReg);
             }
@@ -802,7 +825,6 @@
         });
     }
 
-    // ... other window functions ...
     window.handleGlobalSearch = function() {
         const input = document.getElementById('globalSearchInput');
         searchQuery = input.value.toLowerCase();
@@ -1365,85 +1387,282 @@
     }
     window.updateTeamName = function(idx, newName) { if(tempGeneratedTeams[idx]) tempGeneratedTeams[idx].name = newName; }
 
-    function renderSchedules() { 
-        const list = document.getElementById('scheduleList');
-        if (!list) return;
-        let schedules = allData.filter(d=>d.type==='schedule');
-        if (searchQuery) schedules = schedules.filter(s => s.name.toLowerCase().includes(searchQuery) || s.location.toLowerCase().includes(searchQuery));
-        schedules.sort((a,b) => new Date(a.date + 'T' + (a.time || '00:00')) - new Date(b.date + 'T' + (b.time || '00:00')));
-        if(schedules.length === 0) { list.innerHTML = `<div class="text-center py-10 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200"><div class="text-4xl mb-2">📅</div><p class="text-gray-500 font-semibold">Belum ada agenda.</p><p class="text-gray-400 text-sm">Istirahatlah sejenak, Baginda.</p></div>`; return; }
+    // --- NEW FUNCTIONS FOR MATCH INPUT (UPDATED) ---
+
+    window.populateScheduleDropdown = function() {
+        const select = document.getElementById('matchScheduleRef');
+        if(!select) return;
+        // Sort by date descending
+        const schedules = allData.filter(d => d.type === 'schedule').sort((a,b) => new Date(b.date) - new Date(a.date));
         
-        list.innerHTML = schedules.map(s => {
-            const dateObj = new Date(s.date); const dayName = dateObj.toLocaleDateString('id-ID', { weekday: 'long' }); const dayDate = dateObj.getDate(); const monthName = dateObj.toLocaleDateString('id-ID', { month: 'short' });
-            const today = new Date(); today.setHours(0,0,0,0); const eventDate = new Date(s.date + 'T' + (s.time || '00:00')); const diffTime = eventDate - today; const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
-            let countdownBadge = diffDays > 0 ? `<div class="absolute top-0 right-0 bg-amber-400 text-slate-900 text-[10px] font-bold px-3 py-1 rounded-bl-xl shadow-md z-20">H-${diffDays}</div>` : (diffDays === 0 ? `<div class="absolute top-0 right-0 bg-red-500 text-white text-[10px] font-bold px-3 py-1 rounded-bl-xl shadow-md z-20 animate-pulse">HARI INI!</div>` : `<div class="absolute top-0 right-0 bg-gray-600 text-gray-300 text-[10px] font-bold px-3 py-1 rounded-bl-xl shadow-md z-20">SELESAI</div>`);
-            const currentRegs = allData.filter(d => d.type === 'registration' && d.schedule_id === s.__backendId).length;
-            const viewTeamsBtn = s.generated_teams ? `<button onclick="event.stopPropagation(); openTeamGenerator('${s.__backendId}')" class="bg-purple-500 text-white text-[10px] font-bold px-2 py-0.5 rounded hover:bg-purple-600 transition ml-2">👀 LIHAT TIM</button>` : '';
-            let cardBg = s.schedule_type === 'Friendly Match' ? 'bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-900 border border-indigo-500/30' : 'bg-gradient-to-br from-emerald-800 to-teal-900 border border-emerald-500/30';
-            
-            let vsSection = s.schedule_type === 'Friendly Match' 
-                ? `<div class="flex items-center gap-3 mt-2 mb-3"><div class="text-center"><div class="w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-full flex items-center justify-center text-sm font-bold text-slate-900 shadow-lg border-2 border-amber-400">MF</div><div class="text-[9px] mt-1 font-bold tracking-wider text-amber-400">KAMI</div></div><div class="text-2xl font-bold font-head text-white/20 italic">VS</div><div class="text-center"><div class="w-10 h-10 sm:w-12 sm:h-12 bg-slate-700 rounded-full flex items-center justify-center text-lg font-bold text-white shadow-lg border-2 border-slate-500">${s.name.charAt(0).toUpperCase()}</div><div class="text-[9px] mt-1 font-bold tracking-wider text-slate-400">LAWAN</div></div></div><div class="text-lg font-bold text-white leading-tight truncate w-full text-center sm:text-left border-b border-white/10 pb-2 mb-2">${s.name}</div>`
-                : `<div class="flex items-center gap-2 mt-2 mb-3"><span class="p-2 bg-white/10 rounded-lg text-xl">⚽</span><span class="p-2 bg-white/10 rounded-lg text-xl">🏃</span><span class="p-2 bg-white/10 rounded-lg text-xl">🥅</span></div><div class="text-lg font-bold text-white leading-tight truncate w-full text-center sm:text-left border-b border-white/10 pb-2 mb-2">${s.name}</div>`;
-
-            let teamPreview = '';
-            if (s.generated_teams && Array.isArray(s.generated_teams) && s.generated_teams.length > 0) {
-                teamPreview = `
-                <div class="mt-3 w-full bg-black/40 rounded-xl p-3 border border-white/10 backdrop-blur-sm cursor-pointer hover:bg-black/50 transition group/team" onclick="event.stopPropagation(); openTeamGenerator('${s.__backendId}')">
-                    <div class="flex justify-between items-center mb-2 border-b border-white/10 pb-1">
-                        <div class="text-[9px] font-bold uppercase text-gray-400 tracking-widest">LINE-UP TERKINI</div>
-                        <div class="text-[9px] text-amber-400 group-hover/team:underline">Edit / Detail ➜</div>
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                        ${s.generated_teams.map(t => `
-                            <div class="bg-white/5 p-2 rounded border border-white/5">
-                                <div class="font-bold text-[10px] text-white truncate mb-0.5">${t.name}</div>
-                                <div class="text-[9px] text-gray-400 truncate">${t.players.length} Pemain</div>
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-                `;
-            }
-
-            // PERBAIKAN: Link Google Maps menggunakan template literal yang benar (${...})
-            return `
-            <div class="${cardBg} rounded-2xl p-5 shadow-lg relative overflow-hidden group hover:shadow-xl hover:scale-[1.01] transition-all duration-300">
-                <div class="absolute inset-0 opacity-5 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]"></div>
-                ${countdownBadge}
-                <div class="relative z-10 flex flex-col sm:flex-row items-start gap-6">
-                    <div class="flex-shrink-0 flex flex-col items-center justify-center bg-black/30 backdrop-blur-sm rounded-xl p-3 border border-white/10 w-20 h-24 sm:h-auto self-start">
-                        <span class="text-xs font-bold text-amber-400 uppercase tracking-widest mb-1">${monthName}</span>
-                        <span class="text-4xl font-bold font-head text-white leading-none mb-1">${dayDate}</span>
-                        <span class="text-[10px] text-gray-400 uppercase font-semibold">${dayName.substring(0,3)}</span>
-                    </div>
-                    <div class="flex-1 flex flex-col items-center sm:items-start w-full">
-                        <div class="flex items-center mb-1 w-full justify-between sm:justify-start">
-                            <div class="inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-white/10 text-white/80 border border-white/5">${s.schedule_type}</div>
-                            ${viewTeamsBtn}
-                        </div>
-                        ${vsSection}
-                        <div class="flex flex-wrap justify-center sm:justify-start items-center gap-4 text-sm text-gray-300 w-full mb-2">
-                            <div class="flex items-center gap-1.5 bg-black/20 px-3 py-1.5 rounded-full border border-white/5"><span class="text-amber-400">⏰</span> <span class="font-mono font-bold">${s.time} WIB</span></div>
-                            <div class="flex items-center gap-1.5 max-w-[200px] truncate"><span>📍</span> <span>${s.location}</span></div>
-                        </div>
-                        <div class="w-full bg-black/20 rounded-full h-8 relative flex items-center px-3 border border-white/10 cursor-pointer hover:bg-black/30 transition mb-2" onclick="openMatchRegModal('${s.__backendId}')">
-                            <div class="text-[10px] text-white/80 z-10 flex-1">👥 Squad: <span class="font-bold text-amber-400">${currentRegs}</span> Pemain</div>
-                            <button class="bg-white/20 text-white text-[10px] font-bold px-2 py-0.5 rounded hover:bg-amber-500 hover:text-black transition">LIHAT / KELOLA</button>
-                        </div>
-                        ${teamPreview}
-                    </div>
-                    <div class="flex sm:flex-col gap-2 mt-2 sm:mt-0 self-start">
-                        <button onclick="window.open('https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(s.location)}', '_blank')" class="w-10 h-10 rounded-full bg-white/5 hover:bg-amber-500 hover:text-slate-900 text-white flex items-center justify-center transition border border-white/10 backdrop-blur" title="Buka Peta">🗺️</button>
-                        <button onclick="deleteSchedule('${s.__backendId}')" class="admin-only w-10 h-10 rounded-full bg-red-500/20 hover:bg-red-500 text-red-300 hover:text-white flex items-center justify-center transition border border-red-500/30 backdrop-blur" title="Hapus Jadwal">🗑️</button>
-                    </div>
-                </div>
-            </div>`;
-        }).join(''); 
+        let html = '<option value="">-- Pilih Jadwal --</option>';
+        schedules.forEach(s => {
+            const hasTeams = s.generated_teams && s.generated_teams.length > 0 ? '✅ Tim Ready' : '⚠️ Belum Generate';
+            html += `<option value="${s.__backendId}">${s.name} (${s.date}) - ${hasTeams}</option>`;
+        });
+        select.innerHTML = html;
     }
 
-    window.deleteSchedule = async function(id) { if(confirm('Hapus?')) await deleteData(id); }
-    window.addMatch = async function() { await createData({ type:'match', opponent:document.getElementById('matchOpponent').value, date:document.getElementById('matchDate').value, location:document.getElementById('matchLocation').value, match_type:document.getElementById('matchType').value, score_us:document.getElementById('matchScoreUs').value, score_opponent:document.getElementById('matchScoreOpponent').value, result: (parseInt(document.getElementById('matchScoreUs').value) > parseInt(document.getElementById('matchScoreOpponent').value) ? 'Menang' : (parseInt(document.getElementById('matchScoreUs').value) == parseInt(document.getElementById('matchScoreOpponent').value) ? 'Seri' : 'Kalah')), createdAt:new Date().toISOString() }); showToast('Match disimpan'); }
-    
+    window.renderMatchInputForm = function() {
+        const scheduleId = document.getElementById('matchScheduleRef').value;
+        const type = document.getElementById('matchType').value;
+        const container = document.getElementById('dynamicScoreInput');
+        const opponentInputRef = document.getElementById('matchOpponent'); // Input global
+        
+        // Auto-fill info dasar
+        if(scheduleId) {
+            const sched = allData.find(d => d.__backendId === scheduleId);
+            if(sched) {
+                document.getElementById('matchDate').value = sched.date;
+                document.getElementById('matchLocation').value = sched.location;
+                if(!type) document.getElementById('matchType').value = sched.schedule_type;
+            }
+        }
+
+        // --- LOGIC UTAMA ---
+        if (type === 'Friendly Match') {
+            opponentInputRef.classList.remove('hidden'); // Tampilkan input nama lawan
+            
+            // 1. Cek apakah ada Tim yang sudah di-generate di Jadwal
+            let teamOptions = '<option value="">-- Pilih Tim --</option>';
+            let hasTeams = false;
+            
+            if(scheduleId) {
+                const sched = allData.find(d => d.__backendId === scheduleId);
+                if(sched && sched.generated_teams && sched.generated_teams.length > 0) {
+                    hasTeams = true;
+                    sched.generated_teams.forEach(t => {
+                        teamOptions += `<option value="${t.name}">${t.name}</option>`;
+                    });
+                    // Auto-fill nama lawan dari jadwal jika ada
+                    if(opponentInputRef.value === '') opponentInputRef.value = sched.name; 
+                }
+            }
+
+            if (!hasTeams) {
+                container.innerHTML = `<div class="bg-red-50 p-3 rounded text-red-600 text-center text-sm font-bold">⚠️ Belum ada Tim Generated di Jadwal ini.<br>Silakan ke menu JADWAL > Generate Tim dulu.</div>`;
+                return;
+            }
+
+            // 2. Render Form Rotasi (A-B-A-B)
+            container.innerHTML = `
+                <div class="mb-4 p-3 bg-blue-50 rounded-xl border border-blue-100">
+                    <p class="text-[10px] font-bold text-blue-500 uppercase mb-2">KONFIGURASI TIM INTERNAL</p>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="text-xs font-bold text-gray-500">Tim Rotasi 1 (Babak 1 & 3)</label>
+                            <select id="friend_team_a" onchange="updateFriendlyLabels()" class="w-full border rounded p-1 text-sm font-bold text-slate-700 bg-white">${teamOptions}</select>
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-gray-500">Tim Rotasi 2 (Babak 2 & 4)</label>
+                            <select id="friend_team_b" onchange="updateFriendlyLabels()" class="w-full border rounded p-1 text-sm font-bold text-slate-700 bg-white">${teamOptions}</select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center font-bold text-slate-700 mb-2 border-b pb-2">INPUT SKOR 4 BABAK</div>
+                
+                <div class="space-y-2">
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 rounded bg-slate-200 flex items-center justify-center font-bold text-xs">Q1</div>
+                        <div class="flex-1 flex items-center bg-white border rounded px-2 py-1">
+                            <span id="lbl_f_q1" class="text-xs font-bold text-blue-600 w-20 truncate">Tim A</span>
+                            <input type="number" id="sc_f_q1_us" class="w-10 text-center font-bold border-b mx-1 focus:outline-none" placeholder="0" onkeyup="calcFriendlyTotal()">
+                            <span class="text-gray-400 mx-1">:</span>
+                            <input type="number" id="sc_f_q1_op" class="w-10 text-center font-bold border-b mx-1 focus:outline-none" placeholder="0" onkeyup="calcFriendlyTotal()">
+                            <span class="text-xs text-gray-400 ml-auto">Lawan</span>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 rounded bg-slate-200 flex items-center justify-center font-bold text-xs">Q2</div>
+                        <div class="flex-1 flex items-center bg-white border rounded px-2 py-1">
+                            <span id="lbl_f_q2" class="text-xs font-bold text-green-600 w-20 truncate">Tim B</span>
+                            <input type="number" id="sc_f_q2_us" class="w-10 text-center font-bold border-b mx-1 focus:outline-none" placeholder="0" onkeyup="calcFriendlyTotal()">
+                            <span class="text-gray-400 mx-1">:</span>
+                            <input type="number" id="sc_f_q2_op" class="w-10 text-center font-bold border-b mx-1 focus:outline-none" placeholder="0" onkeyup="calcFriendlyTotal()">
+                            <span class="text-xs text-gray-400 ml-auto">Lawan</span>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 rounded bg-slate-200 flex items-center justify-center font-bold text-xs">Q3</div>
+                        <div class="flex-1 flex items-center bg-white border rounded px-2 py-1">
+                            <span id="lbl_f_q3" class="text-xs font-bold text-blue-600 w-20 truncate">Tim A</span>
+                            <input type="number" id="sc_f_q3_us" class="w-10 text-center font-bold border-b mx-1 focus:outline-none" placeholder="0" onkeyup="calcFriendlyTotal()">
+                            <span class="text-gray-400 mx-1">:</span>
+                            <input type="number" id="sc_f_q3_op" class="w-10 text-center font-bold border-b mx-1 focus:outline-none" placeholder="0" onkeyup="calcFriendlyTotal()">
+                            <span class="text-xs text-gray-400 ml-auto">Lawan</span>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 rounded bg-slate-200 flex items-center justify-center font-bold text-xs">Q4</div>
+                        <div class="flex-1 flex items-center bg-white border rounded px-2 py-1">
+                            <span id="lbl_f_q4" class="text-xs font-bold text-green-600 w-20 truncate">Tim B</span>
+                            <input type="number" id="sc_f_q4_us" class="w-10 text-center font-bold border-b mx-1 focus:outline-none" placeholder="0" onkeyup="calcFriendlyTotal()">
+                            <span class="text-gray-400 mx-1">:</span>
+                            <input type="number" id="sc_f_q4_op" class="w-10 text-center font-bold border-b mx-1 focus:outline-none" placeholder="0" onkeyup="calcFriendlyTotal()">
+                            <span class="text-xs text-gray-400 ml-auto">Lawan</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4 flex justify-between items-center bg-slate-800 text-white p-3 rounded-xl">
+                    <span class="text-xs font-bold uppercase tracking-widest text-slate-400">Total Agg</span>
+                    <div class="flex items-center gap-3">
+                        <span id="total_friendly_us" class="text-2xl font-bold font-head text-amber-400">0</span>
+                        <span class="text-sm text-gray-500">-</span>
+                        <span id="total_friendly_op" class="text-2xl font-bold font-head text-white">0</span>
+                    </div>
+                </div>
+            `;
+
+        } else if (type === 'Fun Football') {
+            opponentInputRef.classList.add('hidden'); // Sembunyikan input nama lawan
+            
+            // Ambil Tim dari Jadwal
+            let teamOptions = '<option value="">Pilih Tim...</option>';
+            if(scheduleId) {
+                const sched = allData.find(d => d.__backendId === scheduleId);
+                if(sched && sched.generated_teams && sched.generated_teams.length > 0) {
+                    sched.generated_teams.forEach(t => {
+                        teamOptions += `<option value="${t.name}">${t.name}</option>`;
+                    });
+                } else {
+                    container.innerHTML = `<div class="text-center text-red-500 bg-red-50 p-3 rounded">⚠️ Jadwal ini belum memiliki Generated Teams.</div>`;
+                    return;
+                }
+            } else {
+                container.innerHTML = `<div class="text-center text-gray-400">Pilih jadwal diatas untuk memuat tim.</div>`;
+                return;
+            }
+
+            // Render Form Fun Football (4 Match Berbeda)
+            let html = `<div class="text-center font-bold text-slate-700 mb-3 border-b pb-2">HASIL 4 MATCH (INTERNAL)</div><div class="space-y-3">`;
+            for(let i=1; i<=4; i++) {
+                html += `
+                <div class="bg-white p-3 rounded-xl border border-gray-200 shadow-sm">
+                    <div class="text-[10px] font-bold text-gray-400 mb-1">MATCH ${i}</div>
+                    <div class="flex items-center gap-2">
+                        <select id="int_m${i}_t1" class="w-full text-xs border rounded p-1 font-bold text-blue-700">${teamOptions}</select>
+                        <input type="number" id="int_m${i}_s1" class="w-12 text-center border rounded p-1 font-bold" placeholder="0">
+                        <span class="text-gray-400 font-bold">-</span>
+                        <input type="number" id="int_m${i}_s2" class="w-12 text-center border rounded p-1 font-bold" placeholder="0">
+                        <select id="int_m${i}_t2" class="w-full text-xs border rounded p-1 font-bold text-red-700">${teamOptions}</select>
+                    </div>
+                </div>`;
+            }
+            html += `</div>`;
+            container.innerHTML = html;
+        } else {
+            container.innerHTML = `<p class="text-center text-gray-400 italic text-sm">Pilih jenis match terlebih dahulu...</p>`;
+        }
+    }
+
+    // Helper: Update label saat dropdown tim berubah
+    window.updateFriendlyLabels = function() {
+        const teamA = document.getElementById('friend_team_a').value || 'Tim A';
+        const teamB = document.getElementById('friend_team_b').value || 'Tim B';
+        
+        if(document.getElementById('lbl_f_q1')) document.getElementById('lbl_f_q1').textContent = teamA;
+        if(document.getElementById('lbl_f_q2')) document.getElementById('lbl_f_q2').textContent = teamB;
+        if(document.getElementById('lbl_f_q3')) document.getElementById('lbl_f_q3').textContent = teamA;
+        if(document.getElementById('lbl_f_q4')) document.getElementById('lbl_f_q4').textContent = teamB;
+    }
+
+    // Helper: Hitung total skor realtime
+    window.calcFriendlyTotal = function() {
+        let us = 0, op = 0;
+        for(let i=1; i<=4; i++) {
+            us += parseInt(document.getElementById(`sc_f_q${i}_us`).value) || 0;
+            op += parseInt(document.getElementById(`sc_f_q${i}_op`).value) || 0;
+        }
+        document.getElementById('total_friendly_us').textContent = us;
+        document.getElementById('total_friendly_op').textContent = op;
+    }
+
+    window.addMatch = async function() { 
+        const scheduleId = document.getElementById('matchScheduleRef').value;
+        const type = document.getElementById('matchType').value;
+        const date = document.getElementById('matchDate').value;
+        const location = document.getElementById('matchLocation').value;
+        
+        if (!type || !date) { showToast('Lengkapi data match!', 'error'); return; }
+
+        let dataPayload = { 
+            type:'match', 
+            schedule_ref: scheduleId, 
+            date, 
+            location, 
+            match_type: type, 
+            createdAt: new Date().toISOString() 
+        };
+
+        if (type === 'Friendly Match') {
+            const teamA = document.getElementById('friend_team_a').value;
+            const teamB = document.getElementById('friend_team_b').value;
+            const opponentName = document.getElementById('matchOpponent').value || 'Lawan';
+
+            if(!teamA || !teamB) { showToast('Pilih Tim Rotasi A dan B', 'error'); return; }
+
+            const scores = [];
+            let totalUs = 0, totalOp = 0;
+            
+            // Loop 4 Babak
+            for(let i=1; i<=4; i++){
+                let u = parseInt(document.getElementById(`sc_f_q${i}_us`).value)||0;
+                let o = parseInt(document.getElementById(`sc_f_q${i}_op`).value)||0;
+                
+                // Tentukan siapa yang main (Ganjil=A, Genap=B)
+                let playingTeam = (i % 2 !== 0) ? teamA : teamB;
+
+                scores.push({
+                    q: i, 
+                    team_internal: playingTeam, // Simpan nama tim internal yg main
+                    us: u, 
+                    op: o
+                });
+                totalUs += u; totalOp += o;
+            }
+
+            dataPayload.opponent = opponentName;
+            dataPayload.score_us = totalUs;
+            dataPayload.score_opponent = totalOp;
+            dataPayload.details = scores;
+            dataPayload.result = totalUs > totalOp ? 'Menang' : (totalUs == totalOp ? 'Seri' : 'Kalah');
+
+        } else if (type === 'Fun Football') {
+            const matches = [];
+            for(let i=1; i<=4; i++) {
+                const t1 = document.getElementById(`int_m${i}_t1`).value;
+                const t2 = document.getElementById(`int_m${i}_t2`).value;
+                const s1 = document.getElementById(`int_m${i}_s1`).value || 0;
+                const s2 = document.getElementById(`int_m${i}_s2`).value || 0;
+                
+                if(t1 && t2) { 
+                    matches.push({ t1, t2, s1, s2 });
+                }
+            }
+            if(matches.length === 0) { showToast('Isi minimal 1 match', 'error'); return; }
+
+            dataPayload.opponent = "Internal Game";
+            dataPayload.score_us = 0;
+            dataPayload.score_opponent = 0;
+            dataPayload.details = matches;
+            dataPayload.result = 'Internal';
+        }
+
+        await createData(dataPayload); 
+        showToast('Hasil Match Disimpan!'); 
+        renderCurrentView();
+        
+        // Reset scroll
+        document.getElementById('matchInputSection').scrollIntoView();
+        document.getElementById('matchScheduleRef').value = "";
+        document.getElementById('dynamicScoreInput').innerHTML = '<p class="text-center text-gray-400 italic text-sm">Pilih jadwal...</p>';
+    }
+
     function renderMatches() { 
         const list = document.getElementById('matchList');
         if (!list) return;
@@ -1473,79 +1692,128 @@
         }
 
         list.innerHTML = matches.map(m => {
-            const us = parseInt(m.score_us) || 0;
-            const op = parseInt(m.score_opponent) || 0;
-            let resultClass = "";
-            let resultLabel = "";
-            let scoreColor = "";
-            
-            if (us > op) { 
-                resultClass = "bg-green-100 text-green-700 border-green-200"; 
-                resultLabel = "WIN"; 
-                scoreColor = "text-green-600";
-            } else if (us === op) { 
-                resultClass = "bg-gray-100 text-gray-600 border-gray-200"; 
-                resultLabel = "DRAW"; 
-                scoreColor = "text-gray-600";
-            } else { 
-                resultClass = "bg-red-100 text-red-700 border-red-200"; 
-                resultLabel = "LOSS"; 
-                scoreColor = "text-red-600";
-            }
-
             const dateObj = new Date(m.date);
             const dateStr = dateObj.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
-            
-            return `
-            <div class="bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden hover:shadow-lg transition-all relative group">
-                <div class="absolute top-0 left-0 w-1 h-full ${us > op ? 'bg-green-500' : (us === op ? 'bg-gray-400' : 'bg-red-500')}"></div>
-                <div class="p-4 sm:p-5">
-                    <div class="flex justify-between items-center mb-4">
-                        <div class="flex items-center gap-2">
-                            <span class="text-[10px] font-bold px-2 py-1 rounded border ${resultClass}">${resultLabel}</span>
-                            <span class="text-xs text-gray-400 font-medium">${m.match_type}</span>
-                        </div>
-                        <span class="text-xs text-gray-500 font-medium flex items-center gap-1">📅 ${dateStr}</span>
-                    </div>
-                    
-                    <div class="flex items-center justify-between gap-2 sm:gap-4 mb-4">
-                        <!-- Home Team -->
-                        <div class="flex-1 flex flex-col items-center justify-center text-center">
-                            <div class="w-12 h-12 sm:w-14 sm:h-14 bg-white rounded-full border-2 border-amber-400 shadow-sm flex items-center justify-center text-slate-800 font-bold text-sm mb-2">MF</div>
-                            <h4 class="text-xs sm:text-sm font-bold text-slate-800 line-clamp-1">Muslim Footballers</h4>
-                        </div>
-                        
-                        <!-- Score -->
-                        <div class="flex flex-col items-center justify-center px-2">
-                            <div class="text-3xl sm:text-4xl font-head font-bold ${scoreColor} tracking-widest">${us} - ${op}</div>
-                            <div class="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1">Full Time</div>
-                        </div>
-                        
-                        <!-- Away Team -->
-                        <div class="flex-1 flex flex-col items-center justify-center text-center">
-                            <div class="w-12 h-12 sm:w-14 sm:h-14 bg-slate-100 rounded-full border-2 border-slate-200 shadow-sm flex items-center justify-center text-slate-500 font-bold text-lg mb-2 overflow-hidden">
-                                ${m.opponent.charAt(0).toUpperCase()}
+
+            if (m.match_type === 'Friendly Match') {
+                const us = parseInt(m.score_us) || 0;
+                const op = parseInt(m.score_opponent) || 0;
+                let resultClass = us > op ? "bg-green-100 text-green-700" : (us === op ? "bg-gray-100 text-gray-600" : "bg-red-100 text-red-700");
+                let resultLabel = us > op ? "WIN" : (us === op ? "DRAW" : "LOSS");
+                
+                // Detail Per Babak dengan Nama Tim
+                let quarterDetails = '';
+                if(m.details && Array.isArray(m.details)) {
+                    quarterDetails = `<div class="mt-3 grid grid-cols-1 gap-1 bg-gray-50 p-2 rounded-lg border border-gray-100">
+                        ${m.details.map(q => `
+                            <div class="flex justify-between items-center text-xs border-b border-dashed border-gray-200 last:border-0 pb-1">
+                                <div class="flex items-center gap-2">
+                                    <span class="bg-amber-100 text-amber-800 px-1.5 rounded font-bold text-[10px]">Q${q.q}</span>
+                                    <span class="text-slate-600 font-semibold truncate max-w-[100px]">${q.team_internal || 'MF'}</span>
+                                </div>
+                                <div class="font-mono font-bold text-slate-800">${q.us} - ${q.op}</div>
                             </div>
-                            <h4 class="text-xs sm:text-sm font-bold text-slate-800 line-clamp-1">${m.opponent}</h4>
+                        `).join('')}
+                    </div>`;
+                }
+
+                return `
+                <div class="bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden hover:shadow-lg transition-all mb-4 relative">
+                    <div class="absolute top-0 left-0 w-1 h-full ${us > op ? 'bg-green-500' : (us === op ? 'bg-gray-400' : 'bg-red-500')}"></div>
+                    <div class="p-4">
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="text-[10px] font-bold px-2 py-1 rounded border ${resultClass}">${resultLabel}</span>
+                            <span class="text-xs text-gray-500">📅 ${dateStr}</span>
+                        </div>
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="text-center w-1/3"><div class="font-bold text-slate-800">MF Bandung</div><div class="text-[10px] text-gray-400">Total</div></div>
+                            <div class="text-3xl font-head font-bold text-slate-800">${us} - ${op}</div>
+                            <div class="text-center w-1/3"><div class="font-bold text-slate-800">${m.opponent}</div><div class="text-[10px] text-gray-400">Lawan</div></div>
+                        </div>
+                        
+                        ${quarterDetails}
+
+                        <div class="mt-3 pt-2 border-t flex justify-between items-center">
+                            <span class="text-xs text-gray-400">📍 ${m.location}</span>
+                            <div class="flex gap-2">
+                                <button onclick="inputStatsForMatch('${m.__backendId}')" class="text-[10px] bg-slate-100 px-2 py-1 rounded hover:bg-slate-200 border border-slate-300 font-bold">📊 Stats</button>
+                                <button onclick="deleteMatch('${m.__backendId}')" class="admin-only text-[10px] bg-red-100 text-red-600 px-2 py-1 rounded hover:bg-red-200 border border-red-200 font-bold">Hapus</button>
+                            </div>
                         </div>
                     </div>
-                    
-                    <div class="flex items-center justify-between pt-3 border-t border-gray-50">
-                        <div class="text-xs text-gray-400 flex items-center gap-1 max-w-[60%] truncate">
-                            📍 ${m.location || 'Bandung'}
-                        </div>
-                        <div class="flex gap-2">
-                            <button onclick="inputStatsForMatch('${m.__backendId}')" class="bg-slate-50 hover:bg-slate-100 text-slate-600 border border-slate-200 px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1">
-                                📊 Statistik
-                            </button>
-                            <button onclick="deleteMatch('${m.__backendId}')" class="admin-only bg-red-50 hover:bg-red-100 text-red-500 border border-red-100 px-3 py-1.5 rounded-lg text-xs font-bold transition">
-                                🗑️ Hapus
-                            </button>
+                </div>`;
+            } else {
+                 // Fallback untuk Fun Football atau Match lama
+                 const us = parseInt(m.score_us) || 0;
+                 const op = parseInt(m.score_opponent) || 0;
+                 
+                 let resultClass = "";
+                 let resultLabel = "";
+                 let scoreColor = "";
+                
+                if (us > op) { 
+                    resultClass = "bg-green-100 text-green-700 border-green-200"; 
+                    resultLabel = "WIN"; 
+                    scoreColor = "text-green-600";
+                } else if (us === op) { 
+                    resultClass = "bg-gray-100 text-gray-600 border-gray-200"; 
+                    resultLabel = "DRAW"; 
+                    scoreColor = "text-gray-600";
+                } else { 
+                    resultClass = "bg-red-100 text-red-700 border-red-200"; 
+                    resultLabel = "LOSS"; 
+                    scoreColor = "text-red-600";
+                }
+                
+                let funDetails = '';
+                if(m.match_type === 'Fun Football' && m.details && Array.isArray(m.details)){
+                     funDetails = `<div class="mt-3 bg-gray-50 p-2 rounded-lg border border-gray-100 space-y-1">
+                        ${m.details.map((d, i) => `
+                            <div class="flex justify-between items-center text-[10px]">
+                                <div class="flex-1 text-right font-bold text-blue-600 truncate">${d.t1}</div>
+                                <div class="mx-2 font-mono font-bold bg-white px-1 border rounded">${d.s1}-${d.s2}</div>
+                                <div class="flex-1 text-left font-bold text-red-600 truncate">${d.t2}</div>
+                            </div>
+                        `).join('')}
+                     </div>`;
+                }
+
+                 return `
+                    <div class="bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden hover:shadow-lg transition-all relative group mb-4">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-gray-400"></div>
+                        <div class="p-4 sm:p-5">
+                            <div class="flex justify-between items-center mb-4">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-[10px] font-bold px-2 py-1 rounded border bg-purple-100 text-purple-700 border-purple-200">INTERNAL</span>
+                                    <span class="text-xs text-gray-400 font-medium">${m.match_type}</span>
+                                </div>
+                                <span class="text-xs text-gray-500 font-medium flex items-center gap-1">📅 ${dateStr}</span>
+                            </div>
+                            
+                            <div class="text-center">
+                                <h4 class="font-bold text-slate-800">Internal Mini League</h4>
+                                <div class="text-xs text-gray-500">4 Matches Played</div>
+                            </div>
+                            
+                            ${funDetails}
+
+                            <div class="flex items-center justify-between pt-3 border-t border-gray-50 mt-3">
+                                <div class="text-xs text-gray-400 flex items-center gap-1 max-w-[60%] truncate">
+                                    📍 ${m.location || 'Bandung'}
+                                </div>
+                                <div class="flex gap-2">
+                                    <button onclick="inputStatsForMatch('${m.__backendId}')" class="bg-slate-50 hover:bg-slate-100 text-slate-600 border border-slate-200 px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1">
+                                        📊 Statistik
+                                    </button>
+                                    <button onclick="deleteMatch('${m.__backendId}')" class="admin-only bg-red-50 hover:bg-red-100 text-red-500 border border-red-100 px-3 py-1.5 rounded-lg text-xs font-bold transition">
+                                        🗑️ Hapus
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            `;
+                    `;
+            }
         }).join(''); 
     }
     window.deleteMatch = async function(id) { if(confirm('Hapus?')) await deleteData(id); }
