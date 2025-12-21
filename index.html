@@ -948,37 +948,56 @@
             if(document.getElementById('topAssistAvatar')) document.getElementById('topAssistAvatar').innerText = initials;
         }
 
+// 1. Mencari jadwal yang akan datang
         const upcomingSchedules = allData.filter(d => d.type === 'schedule' && new Date(d.date + 'T' + (d.time || '00:00')) > new Date())
                                          .sort((a,b) => new Date(a.date) - new Date(b.date));
         
+        // JIKA ADA JADWAL:
         if (upcomingSchedules.length > 0) {
             const next = upcomingSchedules[0];
+            
+            // Update teks judul dan tanggal di dashboard
             if(document.getElementById('nextMatchTitle')) document.getElementById('nextMatchTitle').textContent = "vs " + next.name;
             const d = new Date(next.date);
             if(document.getElementById('nextMatchDate')) document.getElementById('nextMatchDate').textContent = d.toLocaleDateString('id-ID', {day:'numeric', month:'long'}) + ' @ ' + next.time;
             
+            // MATIKAN hitung mundur lama agar tidak tumpang tindih
             if(countdownInterval) clearInterval(countdownInterval);
-            const target = new Date(next.date + 'T' + next.time).getTime();
             
+            const target = new Date(next.date + 'T' + (next.time || '00:00')).getTime();
+            
+            // MULAI hitung mundur baru
             countdownInterval = setInterval(() => {
                 const now = new Date().getTime();
                 const distance = target - now;
+                
                 if (distance < 0) {
                     clearInterval(countdownInterval);
-                    if(document.getElementById('countdownDays')) document.getElementById('countdownDays').textContent = "0";
-                    if(document.getElementById('countdownHours')) document.getElementById('countdownHours').textContent = "0";
+                    if(document.getElementById('countdownDays')) document.getElementById('countdownDays').textContent = "00";
+                    if(document.getElementById('countdownHours')) document.getElementById('countdownHours').textContent = "00";
                 } else {
                     const days = Math.floor(distance / (1000 * 60 * 60 * 24));
                     const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                    if(document.getElementById('countdownDays')) document.getElementById('countdownDays').textContent = days;
-                    if(document.getElementById('countdownHours')) document.getElementById('countdownHours').textContent = hours;
+                    
+                    // Update angka di layar (dengan tambahan angka 0 di depan jika di bawah 10)
+                    if(document.getElementById('countdownDays')) document.getElementById('countdownDays').textContent = days < 10 ? "0" + days : days;
+                    if(document.getElementById('countdownHours')) document.getElementById('countdownHours').textContent = hours < 10 ? "0" + hours : hours;
                 }
             }, 1000);
+
         } else {
+            // JIKA JADWAL KOSONG (Setelah dihapus):
+            
+            // 1. PAKSA MATIKAN mesin hitung mundur (Ini kuncinya!)
+            if(countdownInterval) clearInterval(countdownInterval);
+            
+            // 2. Bersihkan tampilan dashboard
             if(document.getElementById('nextMatchTitle')) document.getElementById('nextMatchTitle').textContent = "Belum Ada Jadwal";
             if(document.getElementById('nextMatchDate')) document.getElementById('nextMatchDate').textContent = "-";
+            if(document.getElementById('countdownDays')) document.getElementById('countdownDays').textContent = "00";
+            if(document.getElementById('countdownHours')) document.getElementById('countdownHours').textContent = "00";
         }
-    }
+    } // Penutup fungsi updateDashboard
 
     async function getAutoPrayerTimes() {
       const date = new Date(); const d = String(date.getDate()).padStart(2,'0'); const m = String(date.getMonth()+1).padStart(2,'0'); const y = date.getFullYear();
