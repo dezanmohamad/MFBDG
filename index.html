@@ -763,6 +763,7 @@
 
     let currentUser = null;
     let allData = [];
+    let nextMatchTargetTime = null;
     let currentMenu = 'dashboard';
     let currentEditingRecord = null;
     let countdownInterval = null;
@@ -885,26 +886,60 @@
         "Senyummu di hadapan saudaramu adalah sedekah bagimu. (HR. Tirmidzi)"
     ];
 
+function startGlobalTimer() {
+    setInterval(() => {
+        if (!nextMatchTargetTime) return;
+
+        const now = new Date().getTime();
+        const distance = nextMatchTargetTime - now;
+
+        const daysEl = document.getElementById('countdownDays');
+        const hoursEl = document.getElementById('countdownHours');
+        const minsEl = document.getElementById('countdownMinutes');
+        const secsEl = document.getElementById('countdownSeconds');
+
+        if (!daysEl) return; 
+
+        if (distance < 0) {
+            daysEl.textContent = "00";
+            hoursEl.textContent = "00";
+            minsEl.textContent = "00";
+            secsEl.textContent = "00";
+            return;
+        }
+
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        daysEl.textContent = String(days).padStart(2, '0');
+        hoursEl.textContent = String(hours).padStart(2, '0');
+        minsEl.textContent = String(minutes).padStart(2, '0');
+        secsEl.textContent = String(seconds).padStart(2, '0');
+    }, 1000);
+}
     // ... App Logic ...
     function initializeAppUI() {
-      updateDates(); 
-      setInterval(updateDates, 60000); 
-      displayRenungan(); 
-      renderPrayerSchedule();
-      getOnlineDoa(); 
-      showMenu('dashboard');
-      
-      document.querySelectorAll('.menu-item').forEach(card => card.addEventListener('click', () => {
+    updateDates(); 
+    setInterval(updateDates, 60000); 
+    displayRenungan(); 
+    renderPrayerSchedule();
+    getOnlineDoa(); 
+    showMenu('dashboard');
+    startGlobalTimer(); // <--- Memulai timer detik
+    
+    document.querySelectorAll('.menu-item').forEach(card => card.addEventListener('click', () => {
         showMenu(card.dataset.menu);
         if(card.dataset.menu === 'islami') getOnlineDoa(); 
-      }));
-      
-      localStorage.removeItem('isAdmin'); 
-      if(document.body.classList.contains('is-admin')) {
-          document.body.classList.remove('is-admin');
-          document.getElementById('adminBtn').textContent='🔒';
-      }
+    }));
+    
+    localStorage.removeItem('isAdmin'); 
+    if(document.body.classList.contains('is-admin')) {
+        document.body.classList.remove('is-admin');
+        document.getElementById('adminBtn').textContent='🔒';
     }
+}
 
     function updateDates() { 
         const now = new Date(); 
@@ -963,49 +998,25 @@
             if(document.getElementById('topAssistAvatar')) document.getElementById('topAssistAvatar').innerText = initials;
         }
 
-        const upcomingSchedules = allData.filter(d => d.type === 'schedule' && new Date(d.date + 'T' + (d.time || '00:00')) > new Date())
-                                         .sort((a,b) => new Date(a.date) - new Date(b.date));
-        
-        if (upcomingSchedules.length > 0) {
-            const next = upcomingSchedules[0];
-            if(document.getElementById('nextMatchTitle')) document.getElementById('nextMatchTitle').textContent = "vs " + next.name;
-            const d = new Date(next.date);
-            if(document.getElementById('nextMatchDate')) document.getElementById('nextMatchDate').textContent = d.toLocaleDateString('id-ID', {day:'numeric', month:'long'}) + ' @ ' + next.time;
-            
-            if(countdownInterval) clearInterval(countdownInterval);
-            const target = new Date(next.date + 'T' + (next.time || '00:00')).getTime();
-            
-            // Logika hitung mundur sampai detik untuk Baginda Raja
-            countdownInterval = setInterval(() => {
-                const now = new Date().getTime();
-                const distance = target - now;
-                
-                if (distance < 0) {
-                    clearInterval(countdownInterval);
-                    ['Days', 'Hours', 'Minutes', 'Seconds'].forEach(id => {
-                        const el = document.getElementById('countdown' + id);
-                        if(el) el.textContent = "00";
-                    });
-                } else {
-                    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-                    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+// TEMPEL KODE INI SEBAGAI GANTINYA
+const upcomingSchedules = allData.filter(d => d.type === 'schedule' && new Date(d.date + 'T' + (d.time || '00:00')) > new Date())
+                                 .sort((a,b) => new Date(a.date) - new Date(b.date));
 
-                    if(document.getElementById('countdownDays')) 
-                        document.getElementById('countdownDays').textContent = String(days).padStart(2, '0');
-                    if(document.getElementById('countdownHours')) 
-                        document.getElementById('countdownHours').textContent = String(hours).padStart(2, '0');
-                    if(document.getElementById('countdownMinutes')) 
-                        document.getElementById('countdownMinutes').textContent = String(minutes).padStart(2, '0');
-                    if(document.getElementById('countdownSeconds')) 
-                        document.getElementById('countdownSeconds').textContent = String(seconds).padStart(2, '0');
-                }
-            }, 1000);
-        } else {
-            if(document.getElementById('nextMatchTitle')) document.getElementById('nextMatchTitle').textContent = "Belum Ada Jadwal";
-            if(document.getElementById('nextMatchDate')) document.getElementById('nextMatchDate').textContent = "-";
-        }
+if (upcomingSchedules.length > 0) {
+    const next = upcomingSchedules[0];
+    if(document.getElementById('nextMatchTitle')) document.getElementById('nextMatchTitle').textContent = "vs " + next.name;
+    
+    const d = new Date(next.date);
+    if(document.getElementById('nextMatchDate')) document.getElementById('nextMatchDate').textContent = d.toLocaleDateString('id-ID', {day:'numeric', month:'long'}) + ' @ ' + next.time;
+    
+    // Kita hanya memberi tahu target waktunya saja ke variabel global
+    // Tambahkan :00 agar detiknya terbaca jelas oleh sistem
+    nextMatchTargetTime = new Date(next.date + 'T' + (next.time || '00:00') + ':00').getTime();
+} else {
+    if(document.getElementById('nextMatchTitle')) document.getElementById('nextMatchTitle').textContent = "Belum Ada Jadwal";
+    if(document.getElementById('nextMatchDate')) document.getElementById('nextMatchDate').textContent = "-";
+    nextMatchTargetTime = null; // Tidak ada jadwal = timer berhenti
+}
     }
 
     async function getAutoPrayerTimes() {
