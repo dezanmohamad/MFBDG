@@ -1127,7 +1127,35 @@
     }
     
     window.addSchedule = async function() { await createData({ type:'schedule', schedule_type:document.getElementById('scheduleType').value, name:document.getElementById('scheduleName').value, date:document.getElementById('scheduleDate').value, time:document.getElementById('scheduleTime').value, location:document.getElementById('scheduleLocation').value, createdAt:new Date().toISOString() }); showToast('Jadwal disimpan'); }
-    
+   window.deleteSchedule = async function(id) {
+    if(confirm('Apakah Baginda yakin ingin menghapus jadwal ini? Seluruh data pendaftaran pemain di jadwal ini juga akan ikut terhapus.')) {
+        try {
+            await deleteData(id);
+            const pendaftaranTerkait = allData.filter(d => d.type === 'registration' && d.schedule_id === id);
+            for (let reg of pendaftaranTerkait) {
+                await deleteData(reg.__backendId);
+            }
+            showToast('Jadwal berhasil dimusnahkan!');
+        } catch (error) {
+            showToast('Gagal menghapus jadwal.', 'error');
+        }
+    }
+}
+// Fungsi hapus aset/inventaris
+window.deleteInventory = async function(id) {
+    if(confirm('Hapus aset ini dari gudang, Baginda?')) {
+        await deleteData(id);
+        showToast('Aset telah dimusnahkan!');
+    }
+}
+
+// Fungsi hapus sponsor
+window.deleteSponsor = async function(id) {
+    if(confirm('Baginda yakin ingin mencopot sponsor ini dari Wall of Fame?')) {
+        await deleteData(id);
+        showToast('Sponsor telah dihapus.');
+    }
+}   
     // ... Match Reg Modal logic ...
     window.openMatchRegModal = function(scheduleId) {
         currentMatchIdForReg = scheduleId;
