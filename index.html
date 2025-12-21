@@ -1126,7 +1126,18 @@
         reader.readAsText(file);
     }
     
-    window.addSchedule = async function() { await createData({ type:'schedule', schedule_type:document.getElementById('scheduleType').value, name:document.getElementById('scheduleName').value, date:document.getElementById('scheduleDate').value, time:document.getElementById('scheduleTime').value, location:document.getElementById('scheduleLocation').value, createdAt:new Date().toISOString() }); showToast('Jadwal disimpan'); }
+    // Fungsi untuk menghapus jadwal
+window.deleteSchedule = async function(id) {
+    if (confirm('Apakah Baginda Raja yakin ingin menghapus jadwal ini dari catatan sejarah?')) {
+        try {
+            await deleteData(id);
+            showToast('Jadwal berhasil dihapus, Baginda.');
+        } catch (error) {
+            console.error("Gagal menghapus jadwal:", error);
+            showToast('Gagal menghapus jadwal', 'error');
+        }
+    }
+}
     
     // ... Match Reg Modal logic ...
     window.openMatchRegModal = function(scheduleId) {
