@@ -170,44 +170,44 @@
 
    <main class="max-w-7xl mx-auto px-4 pb-24 pt-4">
     
-    <div id="dashboardView" class="view-content"> 
-  <div class="mb-8">
-    <div class="relative rounded-3xl overflow-hidden shadow-2xl group min-h-[260px] bg-slate-900 border border-white/10">
-        <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1556056504-5c7696c4c28d?q=80&w=2000')] bg-cover bg-center opacity-40 transition-transform duration-700 group-hover:scale-105"></div>
-        <div class="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/80 to-transparent"></div>
+   <div id="dashboardView" class="view-content"> 
+    <div class="mb-8">
+     <div class="relative rounded-3xl overflow-hidden shadow-2xl bg-slate-900 border border-white/10 min-h-[280px] flex flex-col justify-center">
+        <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1556056504-5c7696c4c28d?q=80&w=2000')] bg-cover bg-center opacity-30"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/60 to-transparent"></div>
         
-        <div class="relative p-6 md:p-10 h-full flex flex-col justify-center text-white">
-            <div class="flex items-center gap-3 mb-2">
-                <span class="bg-amber-500 text-slate-900 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider animate-pulse shadow-[0_0_10px_rgba(218,165,32,0.6)]">Next Match</span>
+        <div class="relative p-6 text-white text-center">
+            <div class="flex justify-center items-center gap-2 mb-2">
+                <span class="bg-amber-500 text-slate-900 text-[10px] font-bold px-3 py-1 rounded-full uppercase animate-pulse">Next Match</span>
                 <span id="nextMatchDate" class="text-xs text-gray-300 font-medium">Memuat jadwal...</span>
             </div>
-            <h2 id="nextMatchTitle" class="text-2xl md:text-5xl font-head font-bold text-white mb-4 uppercase italic leading-tight drop-shadow-lg">Menunggu Jadwal</h2>
+            <h2 id="nextMatchTitle" class="text-2xl md:text-5xl font-head font-bold mb-6 uppercase italic leading-tight">Menunggu Jadwal</h2>
             
-            <div class="flex items-center gap-2 md:gap-4 mt-2">
-                <div class="text-center bg-white/10 backdrop-blur-md rounded-xl p-2 min-w-[65px] md:min-w-[80px] border border-white/10 shadow-lg">
-                    <div class="text-xl md:text-3xl font-bold font-mono text-amber-400" id="countdownDays">00</div>
-                    <div class="text-[8px] md:text-[10px] uppercase text-gray-300 tracking-widest">Hari</div>
+            <div class="flex justify-center items-center gap-2 md:gap-4 mb-8">
+                <div class="bg-white/10 backdrop-blur-md rounded-xl p-2 min-w-[65px] border border-white/10">
+                    <div class="text-2xl font-bold font-mono text-amber-400" id="countdownDays">00</div>
+                    <div class="text-[8px] uppercase text-gray-300">Hari</div>
                 </div>
                 <div class="text-lg font-bold text-white/30">:</div>
-                <div class="text-center bg-white/10 backdrop-blur-md rounded-xl p-2 min-w-[65px] md:min-w-[80px] border border-white/10 shadow-lg">
-                    <div class="text-xl md:text-3xl font-bold font-mono text-amber-400" id="countdownHours">00</div>
-                    <div class="text-[8px] md:text-[10px] uppercase text-gray-300 tracking-widest">Jam</div>
+                <div class="bg-white/10 backdrop-blur-md rounded-xl p-2 min-w-[65px] border border-white/10">
+                    <div class="text-2xl font-bold font-mono text-amber-400" id="countdownHours">00</div>
+                    <div class="text-[8px] uppercase text-gray-300">Jam</div>
                 </div>
                 <div class="text-lg font-bold text-white/30">:</div>
-                <div class="text-center bg-white/10 backdrop-blur-md rounded-xl p-2 min-w-[65px] md:min-w-[80px] border border-white/10 shadow-lg">
-                    <div class="text-xl md:text-3xl font-bold font-mono text-amber-400" id="countdownMinutes">00</div>
-                    <div class="text-[8px] md:text-[10px] uppercase text-gray-300 tracking-widest">Menit</div>
+                <div class="bg-white/10 backdrop-blur-md rounded-xl p-2 min-w-[65px] border border-white/10">
+                    <div class="text-2xl font-bold font-mono text-amber-400" id="countdownMinutes">00</div>
+                    <div class="text-[8px] uppercase text-gray-300">Menit</div>
                 </div>
                 <div class="text-lg font-bold text-white/30">:</div>
-                <div class="text-center bg-white/10 backdrop-blur-md rounded-xl p-2 min-w-[65px] md:min-w-[80px] border border-white/10 shadow-lg">
-                    <div class="text-xl md:text-3xl font-bold font-mono text-amber-400" id="countdownSeconds">00</div>
-                    <div class="text-[8px] md:text-[10px] uppercase text-gray-300 tracking-widest">Detik</div>
+                <div class="bg-white/10 backdrop-blur-md rounded-xl p-2 min-w-[65px] border border-white/10">
+                    <div class="text-2xl font-bold font-mono text-amber-400" id="countdownSeconds">00</div>
+                    <div class="text-[8px] uppercase text-gray-300">Detik</div>
                 </div>
             </div>
 
-            <div class="mt-8">
-                <button onclick="showMenu('jadwal')" class="bg-amber-500 hover:bg-amber-400 text-slate-900 px-6 py-2.5 rounded-full text-xs font-bold transition-all shadow-lg transform hover:scale-105">Lihat Detail →</button>
-            </div>
+            <button onclick="showMenu('jadwal')" class="bg-amber-500 hover:bg-amber-400 text-slate-900 px-8 py-2.5 rounded-full text-xs font-bold transition-all shadow-lg transform active:scale-95 mx-auto block">
+                Lihat Detail Jadwal →
+            </button>
         </div>
     </div>
   </div>
@@ -973,20 +973,33 @@
             if(document.getElementById('nextMatchDate')) document.getElementById('nextMatchDate').textContent = d.toLocaleDateString('id-ID', {day:'numeric', month:'long'}) + ' @ ' + next.time;
             
             if(countdownInterval) clearInterval(countdownInterval);
-            const target = new Date(next.date + 'T' + next.time).getTime();
+            const target = new Date(next.date + 'T' + (next.time || '00:00')).getTime();
             
+            // Logika hitung mundur sampai detik untuk Baginda Raja
             countdownInterval = setInterval(() => {
                 const now = new Date().getTime();
                 const distance = target - now;
+                
                 if (distance < 0) {
                     clearInterval(countdownInterval);
-                    if(document.getElementById('countdownDays')) document.getElementById('countdownDays').textContent = "0";
-                    if(document.getElementById('countdownHours')) document.getElementById('countdownHours').textContent = "0";
+                    ['Days', 'Hours', 'Minutes', 'Seconds'].forEach(id => {
+                        const el = document.getElementById('countdown' + id);
+                        if(el) el.textContent = "00";
+                    });
                 } else {
                     const days = Math.floor(distance / (1000 * 60 * 60 * 24));
                     const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                    if(document.getElementById('countdownDays')) document.getElementById('countdownDays').textContent = days;
-                    if(document.getElementById('countdownHours')) document.getElementById('countdownHours').textContent = hours;
+                    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                    if(document.getElementById('countdownDays')) 
+                        document.getElementById('countdownDays').textContent = String(days).padStart(2, '0');
+                    if(document.getElementById('countdownHours')) 
+                        document.getElementById('countdownHours').textContent = String(hours).padStart(2, '0');
+                    if(document.getElementById('countdownMinutes')) 
+                        document.getElementById('countdownMinutes').textContent = String(minutes).padStart(2, '0');
+                    if(document.getElementById('countdownSeconds')) 
+                        document.getElementById('countdownSeconds').textContent = String(seconds).padStart(2, '0');
                 }
             }, 1000);
         } else {
