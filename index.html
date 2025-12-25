@@ -1424,8 +1424,8 @@ window.renderGeneratedTeams = function(teams) {
     const formation = document.getElementById('genFormation').value;
     if(!container) return;
 
-    // Masukkan hasil olahan tim ke dalam container tanpa variabel luar yang error
-    container.innerHTML = teams.map((t, tIdx) => {
+    // Gabungkan logika pembuatan HTML ke dalam satu proses map
+    const htmlContent = teams.map((t, tIdx) => {
         const colors = [
             { bg: "bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 border-blue-500/50", badge: "bg-blue-600" },
             { bg: "bg-gradient-to-br from-slate-900 via-red-900 to-slate-900 border-red-500/50", badge: "bg-red-600" },
@@ -1468,8 +1468,8 @@ window.renderGeneratedTeams = function(teams) {
             </div>
         </div>`;
     }).join('');
-};
-    container.innerHTML = html; // Gunakan variabel html yang sudah dibuat
+
+    container.innerHTML = htmlContent;
 };
     window.updateTeamName = function(idx, newName) { if(tempGeneratedTeams[idx]) tempGeneratedTeams[idx].name = newName; }
 
