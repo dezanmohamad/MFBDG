@@ -30,24 +30,33 @@
 #genTeamContainer {
     display: flex;
     gap: 1.5rem;
-    padding: 1rem;
-    flex-direction: row; /* Default Laptop: Menyamping */
-    overflow: auto;
+    padding: 1.5rem;
+    flex-direction: row; 
+    overflow-x: auto; /* Scroll ke samping jika tim banyak */
+    overflow-y: hidden;
+    flex: 1; /* Mengisi sisa ruang yang ada */
     -webkit-overflow-scrolling: touch;
+}
+
+/* Supaya kartu tim di dalamnya bisa scroll sendiri jika pemainnya sangat banyak */
+#genTeamContainer > div {
+    max-height: 100%;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
 }
 
 @media (max-width: 768px) {
     #genTeamContainer {
-        flex-direction: column; /* HP: Menumpuk ke bawah agar bisa di-scroll */
+        flex-direction: column; /* Menumpuk ke bawah jika di HP */
         overflow-x: hidden;
-        overflow-y: visible;
-        padding: 0.5rem;
+        overflow-y: auto; 
+        padding: 0.75rem;
     }
     
-    /* Memastikan modal putihnya bisa di-scroll ke bawah di HP */
     #teamGeneratorModal > div {
-        overflow-y: auto !important;
-        display: block; /* Mengubah flex jadi block di HP agar scroll alami */
+        width: 96vw;
+        height: 95vh;
     }
 }
     
@@ -710,8 +719,8 @@
       </div>
   </div>
 
-<div id="teamGeneratorModal" class="hidden fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
-    <div class="bg-white w-full max-w-6xl rounded-3xl shadow-2xl flex flex-col max-h-[95vh] border-4 border-gray-100 overflow-hidden">
+<div id="teamGeneratorModal" class="hidden fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 backdrop-blur-sm p-2 md:p-4">
+    <div class="bg-white w-[95vw] max-w-6xl rounded-3xl shadow-2xl flex flex-col h-[90vh] border-4 border-gray-100 overflow-hidden">
         <div class="bg-slate-900 p-6 flex justify-between items-center text-white border-b border-gray-800 flex-shrink-0">
             <div>
                 <h3 class="text-2xl font-bold font-head tracking-wide text-white">AI COACH</h3>
@@ -1386,7 +1395,10 @@ window.saveGeneratedTeams = async function() {
         showToast("Aksi gagal! Database sedang sibuk.", "error");
     }
 };
-   
+   window.pushToMatchRecap = function() {
+    showToast("Fitur ini sedang disiapkan oleh arsitek kerajaan, Baginda!", "success");
+    // Logika pengiriman data ke Match History akan kita buat di sesi selanjutnya
+};
 window.updatePlayerPosition = function(tIdx, pIdx, newPos) {
     tempGeneratedTeams[tIdx].players[pIdx].position_played = newPos;
     // Urutkan ulang otomatis agar GK tetap No. 1 setelah diedit
@@ -1424,7 +1436,7 @@ window.renderGeneratedTeams = function(teams) {
     const formation = document.getElementById('genFormation').value;
     if(!container) return;
 
-    // Gabungkan logika pembuatan HTML ke dalam satu proses map
+    // Pastikan ada 'const htmlContent =' di sini
     const htmlContent = teams.map((t, tIdx) => {
         const colors = [
             { bg: "bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 border-blue-500/50", badge: "bg-blue-600" },
