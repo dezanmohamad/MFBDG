@@ -1424,8 +1424,8 @@ window.renderGeneratedTeams = function(teams) {
     const formation = document.getElementById('genFormation').value;
     if(!container) return;
 
-    // Kita masukkan hasil map ke variabel html
-    const html = teams.map((t, tIdx) => {
+    // Masukkan hasil olahan tim ke dalam container tanpa variabel luar yang error
+    container.innerHTML = teams.map((t, tIdx) => {
         const colors = [
             { bg: "bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 border-blue-500/50", badge: "bg-blue-600" },
             { bg: "bg-gradient-to-br from-slate-900 via-red-900 to-slate-900 border-red-500/50", badge: "bg-red-600" },
@@ -1468,7 +1468,7 @@ window.renderGeneratedTeams = function(teams) {
             </div>
         </div>`;
     }).join('');
-    
+};
     container.innerHTML = html; // Gunakan variabel html yang sudah dibuat
 };
     window.updateTeamName = function(idx, newName) { if(tempGeneratedTeams[idx]) tempGeneratedTeams[idx].name = newName; }
@@ -1986,7 +1986,7 @@ window.renderGeneratedTeams = function(teams) {
     window.filterGallery = function(filter) { currentGalleryFilter = filter; document.querySelectorAll('.gallery-filter').forEach(btn => { if(btn.id === `btn-filter-${filter}`) { btn.classList.remove('bg-white','text-gray-600','border-gray-200'); btn.classList.add('bg-slate-800','text-white','border-slate-700'); } else { btn.classList.add('bg-white','text-gray-600','border-gray-200'); btn.classList.remove('bg-slate-800','text-white','border-slate-700'); } }); renderGallery(); }
     function renderGallery() { const grid = document.getElementById('galleryGrid'); if(!grid) return; let items = allData.filter(d => d.type === 'gallery_item'); if (currentGalleryFilter !== 'all') { items = items.filter(d => d.category === currentGalleryFilter); } if (items.length === 0) { grid.innerHTML = `<div class="col-span-full text-center py-10 text-gray-500 italic">Belum ada foto di kategori ini.</div>`; return; } grid.innerHTML = items.map(item => `<div class="mb-4 break-inside-avoid relative group rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 bg-white"><img src="${item.image}" class="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-700" onerror="this.src='https://via.placeholder.com/400x300?text=No+Image'"><div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4"><span class="text-[10px] font-bold uppercase tracking-wider text-amber-400 mb-1">${item.category}</span><h3 class="text-white font-bold text-lg leading-tight mb-1">${item.title}</h3><p class="text-gray-300 text-xs line-clamp-2">${item.description}</p><button onclick="deleteGalleryItem('${item.__backendId}')" class="admin-only absolute top-2 right-2 bg-white/20 hover:bg-red-500 text-white p-2 rounded-full backdrop-blur transition">🗑️</button></div></div>`).join(''); }
     window.deleteGalleryItem = async function(id) { if(confirm('Hapus foto ini?')) await deleteData(id); }
-
+   
     window.showToast = function(msg, type='success') { const t = document.createElement('div'); t.className = `fixed top-4 right-4 z-[9999] px-4 py-2 rounded text-white shadow-lg toast ${type==='success'?'bg-green-500':'bg-red-500'}`; t.innerText = msg; document.body.appendChild(t); setTimeout(()=>t.remove(), 2800); }
     window.toggleAdmin = function() { if(document.body.classList.contains('is-admin')){ document.body.classList.remove('is-admin'); document.getElementById('adminBtn').textContent='🔒'; localStorage.setItem('isAdmin', 'false'); showToast('Admin Logout'); } else { document.getElementById('loginModal').classList.remove('hidden'); } }
     window.submitLogin = function() { if(document.getElementById('adminPassInput').value === 'hudan123'){ document.body.classList.add('is-admin'); document.getElementById('adminBtn').textContent='🔓'; localStorage.setItem('isAdmin', 'true'); closeAdminModal(); showToast('Selamat datang, Baginda Raja!'); } else { showToast('Password Salah','error'); } }
