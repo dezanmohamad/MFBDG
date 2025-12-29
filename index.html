@@ -1488,17 +1488,51 @@ window.renderGeneratedTeams = function(teams) {
     function renderSchedules() { 
         const list = document.getElementById('scheduleList');
         if (!list) return;
-        let schedules = allData.filter(d=>d.type==='schedule');
+        
+        let schedules = allData.filter(d => d.type === 'schedule');
+        
+        // Filter search
         if (searchQuery) schedules = schedules.filter(s => s.name.toLowerCase().includes(searchQuery) || s.location.toLowerCase().includes(searchQuery));
+        
+        // Sort by date
         schedules.sort((a,b) => new Date(a.date + 'T' + (a.time || '00:00')) - new Date(b.date + 'T' + (b.time || '00:00')));
-        if(schedules.length === 0) { list.innerHTML = `<div class="text-center py-10 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200"><div class="text-4xl mb-2">📅</div><p class="text-gray-500 font-semibold">Belum ada agenda.</p><p class="text-gray-400 text-sm">Istirahatlah sejenak, Baginda.</p></div>`; return; }
+        
+        if(schedules.length === 0) { 
+            list.innerHTML = `<div class="text-center py-10 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200"><div class="text-4xl mb-2">📅</div><p class="text-gray-500 font-semibold">Belum ada agenda.</p><p class="text-gray-400 text-sm">Istirahatlah sejenak, Baginda.</p></div>`; 
+            return; 
+        }
         
         list.innerHTML = schedules.map(s => {
-            const dateObj = new Date(s.date); const dayName = dateObj.toLocaleDateString('id-ID', { weekday: 'long' }); const dayDate = dateObj.getDate(); const monthName = dateObj.toLocaleDateString('id-ID', { month: 'short' });
-            const today = new Date(); today.setHours(0,0,0,0); const eventDate = new Date(s.date + 'T' + (s.time || '00:00')); const diffTime = eventDate - today; const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
-            let countdownBadge = diffDays > 0 ? `<div class="absolute top-0 right-0 bg-amber-400 text-slate-900 text-[10px] font-bold px-3 py-1 rounded-bl-xl shadow-md z-20">H-${diffDays}</div>` : (diffDays === 0 ? `<div class="absolute top-0 right-0 bg-red-500 text-white text-[10px] font-bold px-3 py-1 rounded-bl-xl shadow-md z-20 animate-pulse">HARI INI!</div>` : `<div class="absolute top-0 right-0 bg-gray-600 text-gray-300 text-[10px] font-bold px-3 py-1 rounded-bl-xl shadow-md z-20">SELESAI</div>`);
+            const dateObj = new Date(s.date); 
+            const dayName = dateObj.toLocaleDateString('id-ID', { weekday: 'long' }); 
+            const dayDate = dateObj.getDate(); 
+            const monthName = dateObj.toLocaleDateString('id-ID', { month: 'short' });
+            
+            // Cek apakah jadwal ini SUDAH diinput skornya (sudah ada di data match)
+            const isMatchDone = allData.some(m => m.type === 'match' && m.schedule_ref === s.__backendId);
+            
+            const today = new Date(); today.setHours(0,0,0,0); 
+            const eventDate = new Date(s.date + 'T' + (s.time || '00:00')); 
+            const diffTime = eventDate - today; 
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+            
+            let countdownBadge = diffDays > 0 
+                ? `<div class="absolute top-0 right-0 bg-amber-400 text-slate-900 text-[10px] font-bold px-3 py-1 rounded-bl-xl shadow-md z-20">H-${diffDays}</div>` 
+                : (diffDays === 0 
+                    ? `<div class="absolute top-0 right-0 bg-red-500 text-white text-[10px] font-bold px-3 py-1 rounded-bl-xl shadow-md z-20 animate-pulse">HARI INI!</div>` 
+                    : `<div class="absolute top-0 right-0 bg-gray-600 text-gray-300 text-[10px] font-bold px-3 py-1 rounded-bl-xl shadow-md z-20">SELESAI</div>`);
+
+            // Tombol Input Skor (Hanya muncul jika belum diinput)
+            let actionButton = '';
+            if (isMatchDone) {
+                 actionButton = `<div class="inline-block bg-green-100 text-green-700 px-3 py-1.5 rounded-lg text-xs font-bold border border-green-200">✅ Skor Tersimpan</div>`;
+            } else {
+                 actionButton = `<button onclick="openMatchInput('${s.__backendId}')" class="admin-only bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white px-4 py-1.5 rounded-lg text-xs font-bold shadow-md transform active:scale-95 transition flex items-center gap-1">📝 Input Skor</button>`;
+            }
+
             const currentRegs = allData.filter(d => d.type === 'registration' && d.schedule_id === s.__backendId).length;
             const viewTeamsBtn = s.generated_teams ? `<button onclick="event.stopPropagation(); openTeamGenerator('${s.__backendId}')" class="bg-purple-500 text-white text-[10px] font-bold px-2 py-0.5 rounded hover:bg-purple-600 transition ml-2">👀 LIHAT TIM</button>` : '';
+            
             let cardBg = s.schedule_type === 'Friendly Match' ? 'bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-900 border border-indigo-500/30' : 'bg-gradient-to-br from-emerald-800 to-teal-900 border border-emerald-500/30';
             
             let vsSection = s.schedule_type === 'Friendly Match' 
@@ -1514,15 +1548,9 @@ window.renderGeneratedTeams = function(teams) {
                         <div class="text-[9px] text-amber-400 group-hover/team:underline">Edit / Detail ➜</div>
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                        ${s.generated_teams.map(t => `
-                            <div class="bg-white/5 p-2 rounded border border-white/5">
-                                <div class="font-bold text-[10px] text-white truncate mb-0.5">${t.name}</div>
-                                <div class="text-[9px] text-gray-400 truncate">${t.players.length} Pemain</div>
-                            </div>
-                        `).join('')}
+                        ${s.generated_teams.map(t => `<div class="bg-white/5 p-2 rounded border border-white/5"><div class="font-bold text-[10px] text-white truncate mb-0.5">${t.name}</div><div class="text-[9px] text-gray-400 truncate">${t.players.length} Pemain</div></div>`).join('')}
                     </div>
-                </div>
-                `;
+                </div>`;
             }
 
             return `
@@ -1552,6 +1580,7 @@ window.renderGeneratedTeams = function(teams) {
                         ${teamPreview}
                     </div>
                     <div class="flex sm:flex-col gap-2 mt-2 sm:mt-0 self-start">
+                        ${actionButton}
                         <button onclick="window.open('https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(s.location)}', '_blank')" class="w-10 h-10 rounded-full bg-white/5 hover:bg-amber-500 hover:text-slate-900 text-white flex items-center justify-center transition border border-white/10 backdrop-blur" title="Buka Peta">🗺️</button>
                         <button onclick="deleteSchedule('${s.__backendId}')" class="admin-only w-10 h-10 rounded-full bg-red-500/20 hover:bg-red-500 text-red-300 hover:text-white flex items-center justify-center transition border border-red-500/30 backdrop-blur" title="Hapus Jadwal">🗑️</button>
                     </div>
@@ -1821,6 +1850,34 @@ window.renderGeneratedTeams = function(teams) {
             `;
         }).join(''); 
     }
+    
+   // --- FITUR BARU: JEMBATAN DARI JADWAL KE INPUT SKOR ---
+window.openMatchInput = function(scheduleId) {
+    // 1. Pindah ke view Match
+    showMenu('match');
+    
+    // 2. Tunggu sebentar agar UI render, lalu isi dropdown
+    setTimeout(() => {
+        const select = document.getElementById('matchScheduleRef');
+        if(select) {
+            select.value = scheduleId;
+            
+            // 3. Trigger perubahan agar form muncul otomatis
+            renderMatchInputForm(); 
+            
+            // 4. Scroll ke area input agar Baginda tidak perlu scroll manual
+            const inputSection = document.getElementById('matchInputSection');
+            if(inputSection) {
+                inputSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                inputSection.classList.add('ring-4', 'ring-amber-400', 'transition-all'); // Highlight visual
+                setTimeout(() => inputSection.classList.remove('ring-4', 'ring-amber-400'), 2000);
+            }
+        } else {
+            showToast("Gagal memuat form input.", "error");
+        }
+    }, 100); // Delay kecil untuk memastikan transisi menu selesai
+}
+   
     window.deleteMatch = async function(id) { if(confirm('Hapus?')) await deleteData(id); }
     window.inputStatsForMatch = function(id) { showMenu('statistik'); const m=allData.find(d=>d.__backendId===id); if(m) document.getElementById('statsDate').value=m.date; }
     window.updatePlayerDropdown = function() { document.getElementById('statsPlayerName').innerHTML = '<option value="">Pilih</option>' + allData.filter(d=>d.type==='member').map(m=>`<option value="${m.__backendId}">${m.name}</option>`).join(''); }
