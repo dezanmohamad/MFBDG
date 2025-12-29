@@ -404,6 +404,13 @@
           <h3 class="text-xl font-bold text-slate-800 mb-6 flex items-center gap-2 border-l-4 border-amber-500 pl-3">
               <span>👥</span> Galeri Pemain
           </h3>
+          <div class="flex gap-2 mb-4 overflow-x-auto pb-2 scrollbar-hide">
+               <button onclick="filterSquad('all')" id="btn-squad-all" class="squad-filter px-4 py-1.5 rounded-full text-xs font-bold shadow-sm transition-all bg-slate-800 text-white border border-slate-700">Semua</button>
+               <button onclick="filterSquad('Kiper')" id="btn-squad-gk" class="squad-filter px-4 py-1.5 rounded-full text-xs font-bold shadow-sm transition-all bg-white text-gray-600 border border-gray-200 hover:bg-yellow-50">🧤 GK</button>
+               <button onclick="filterSquad('Bek')" id="btn-squad-def" class="squad-filter px-4 py-1.5 rounded-full text-xs font-bold shadow-sm transition-all bg-white text-gray-600 border border-gray-200 hover:bg-blue-50">🛡️ DEF</button>
+               <button onclick="filterSquad('Gelandang')" id="btn-squad-mid" class="squad-filter px-4 py-1.5 rounded-full text-xs font-bold shadow-sm transition-all bg-white text-gray-600 border border-gray-200 hover:bg-green-50">🎯 MID</button>
+               <button onclick="filterSquad('Striker')" id="btn-squad-fwd" class="squad-filter px-4 py-1.5 rounded-full text-xs font-bold shadow-sm transition-all bg-white text-gray-600 border border-gray-200 hover:bg-red-50">⚽ FWD</button>
+          </div>
           <div class="flex items-center justify-between mb-4 px-2">
               <span class="text-xs text-gray-500 font-semibold" id="totalPlayerCount">Memuat pemain...</span>
               <div class="admin-only flex gap-2">
@@ -820,6 +827,7 @@
     let currentGalleryFilter = 'all'; 
     let tempGeneratedTeams = [];
     let isEditingTeams = false; // New state for edit mode
+    let currentSquadFilter = 'all';
 
     // ... initAuth & setupDataListener ...
     const initAuth = async () => {
@@ -1158,28 +1166,118 @@ const upcomingSchedules = allData.filter(d => d.type === 'schedule' && new Date(
         showToast('Anggota ditambah'); 
     }
     
-    function renderMembers() { 
+function renderMembers() { 
         const container = document.getElementById('memberList');
         if (!container) return;
+        
         const countEl = document.getElementById('totalPlayerCount');
-        let members = allData.filter(d=>d.type==='member');
+        let members = allData.filter(d => d.type === 'member');
+        
+        // --- LOGIKA FILTER POSISI ---
+        if (currentSquadFilter !== 'all') {
+            members = members.filter(m => m.position === currentSquadFilter);
+        }
+        // ----------------------------
+
         if (searchQuery) members = members.filter(m => m.name.toLowerCase().includes(searchQuery) || m.position.toLowerCase().includes(searchQuery));
+        
         if(countEl) countEl.innerText = `${members.length} Pemain Terdaftar`;
-        if (members.length === 0) { container.innerHTML = `<div class="col-span-full text-center py-12 text-gray-400">Tidak ada pemain ditemukan.</div>`; return; }
+        
+        if (members.length === 0) { 
+            container.innerHTML = `<div class="col-span-full text-center py-12 text-gray-400 bg-gray-50 rounded-xl border border-dashed border-gray-300 flex flex-col items-center justify-center gap-2"><span class="text-2xl">🔍</span><span>Tidak ada pemain di posisi ini.</span></div>`; 
+            return; 
+        }
+
         container.innerHTML = members.map(m => {
             let posGradient = "from-gray-700 to-gray-900";
-            if (m.position === 'Kiper') posGradient = "from-yellow-600 to-yellow-800";
-            else if (m.position === 'Bek') posGradient = "from-blue-600 to-blue-800";
-            else if (m.position === 'Gelandang') posGradient = "from-emerald-600 to-emerald-800";
-            else if (m.position === 'Striker') posGradient = "from-rose-600 to-rose-800";
+            let posBadgeColor = "text-gray-600 bg-gray-100";
+            
+            // Custom warna kartu berdasarkan posisi
+            if (m.position === 'Kiper') { posGradient = "from-yellow-500 to-yellow-700"; posBadgeColor="text-yellow-700 bg-yellow-100"; }
+            else if (m.position === 'Bek') { posGradient = "from-blue-600 to-blue-800"; posBadgeColor="text-blue-700 bg-blue-100"; }
+            else if (m.position === 'Gelandang') { posGradient = "from-emerald-600 to-emerald-800"; posBadgeColor="text-emerald-700 bg-emerald-100"; }
+            else if (m.position === 'Striker') { posGradient = "from-rose-600 to-rose-800"; posBadgeColor="text-rose-700 bg-rose-100"; }
+            
             let stars = m.skill_level === 'Mahir' ? "⭐⭐⭐" : (m.skill_level === 'Menengah' ? "⭐⭐" : "⭐");
-            const pStats = allData.filter(d=>d.type==='stats' && d.member_id===m.__backendId);
+            const pStats = allData.filter(d => d.type === 'stats' && d.member_id === m.__backendId);
             const caps = pStats.length;
-            const goals = pStats.reduce((a,b)=>a+(parseInt(b.goals)||0),0);
-            return `<div class="relative bg-gradient-to-b ${posGradient} rounded-2xl p-4 text-white shadow-xl hover-lift group overflow-hidden cursor-pointer border-2 border-white/20" onclick="showPlayerDetail('${m.__backendId}')"><div class="flex justify-between items-start mb-2 relative z-10"><div class="text-center"><div class="text-2xl font-bold font-head leading-none">${90 + (caps > 5 ? 5 : 0)}</div><div class="text-[10px] opacity-75 uppercase">OVR</div></div><div class="text-xs font-bold bg-white/20 backdrop-blur px-2 py-1 rounded uppercase">${m.position}</div></div><div class="w-24 h-24 mx-auto mb-2 relative z-10 rounded-full border-4 border-white/30 overflow-hidden bg-white/10 shadow-lg"><img src="${m.photo || 'https://via.placeholder.com/150?text=' + m.name.charAt(0)}" class="w-full h-full object-cover" onerror="this.src='https://via.placeholder.com/150?text=Player'"></div><div class="text-center relative z-10"><h3 class="font-bold font-head text-xl leading-tight truncate px-2">${m.name}</h3><div class="text-xs text-white/70 mb-3">${stars} • ${m.availability}</div><div class="grid grid-cols-3 gap-1 text-center bg-black/20 rounded-lg p-2 border border-white/10"><div><div class="font-bold text-sm">${caps}</div><div class="text-[9px] uppercase opacity-60">Main</div></div><div><div class="font-bold text-sm">${goals}</div><div class="text-[9px] uppercase opacity-60">Gol</div></div><div><div class="font-bold text-sm">Active</div><div class="text-[9px] uppercase opacity-60">Status</div></div></div></div><div class="admin-only absolute top-2 right-2 z-20 hidden group-hover:flex gap-1"><button onclick="event.stopPropagation();editMember('${m.__backendId}')" class="bg-white text-blue-600 p-1.5 rounded-full text-xs shadow hover:scale-110 transition">✏️</button><button onclick="event.stopPropagation();deleteMember('${m.__backendId}')" class="bg-white text-red-600 p-1.5 rounded-full text-xs shadow hover:scale-110 transition">🗑️</button></div></div>`;
+            const goals = pStats.reduce((a,b) => a + (parseInt(b.goals)||0), 0);
+            
+            // OVR sederhana: Base 60 + (Caps * 2) + (Goals * 1), Max 99
+            let ovr = 60 + (caps * 2) + goals;
+            if (m.skill_level === 'Menengah') ovr += 10;
+            if (m.skill_level === 'Mahir') ovr += 20;
+            if (ovr > 99) ovr = 99;
+
+            return `
+            <div class="relative bg-gradient-to-br ${posGradient} rounded-2xl p-4 text-white shadow-xl hover-lift group overflow-hidden cursor-pointer border border-white/20" onclick="showPlayerDetail('${m.__backendId}')">
+                
+                <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
+
+                <div class="flex justify-between items-start mb-3 relative z-10">
+                    <div class="text-center">
+                        <div class="text-3xl font-bold font-head leading-none drop-shadow-md">${ovr}</div>
+                        <div class="text-[8px] opacity-80 uppercase tracking-wider">OVR</div>
+                    </div>
+                    <div class="text-[10px] font-bold ${posBadgeColor} bg-white/90 backdrop-blur px-2 py-1 rounded shadow-sm uppercase tracking-wide">
+                        ${m.position.substring(0,3).toUpperCase()}
+                    </div>
+                </div>
+                
+                <div class="w-24 h-24 mx-auto mb-3 relative z-10 rounded-full border-4 border-white/30 overflow-hidden bg-white/10 shadow-lg group-hover:scale-105 transition-transform duration-300">
+                    <img src="${m.photo || 'https://ui-avatars.com/api/?name='+encodeURIComponent(m.name)+'&background=random'}" class="w-full h-full object-cover" onerror="this.src='https://ui-avatars.com/api/?name=Player&background=random'">
+                </div>
+                
+                <div class="text-center relative z-10">
+                    <h3 class="font-bold font-head text-lg leading-tight truncate px-1 mb-1 drop-shadow-sm">${m.name}</h3>
+                    <div class="text-[10px] text-white/80 mb-3 font-medium bg-black/20 inline-block px-2 py-0.5 rounded-full border border-white/10">
+                        ${stars} • ${m.availability}
+                    </div>
+                    
+                    <div class="grid grid-cols-3 gap-1 text-center bg-black/20 rounded-xl p-2 border border-white/10 backdrop-blur-sm">
+                        <div>
+                            <div class="font-bold text-sm text-amber-400">${caps}</div>
+                            <div class="text-[8px] uppercase opacity-70">Main</div>
+                        </div>
+                        <div>
+                            <div class="font-bold text-sm text-green-400">${goals}</div>
+                            <div class="text-[8px] uppercase opacity-70">Gol</div>
+                        </div>
+                        <div>
+                            <div class="font-bold text-sm text-blue-400">Active</div>
+                            <div class="text-[8px] uppercase opacity-70">Status</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="admin-only absolute top-2 right-2 z-20 hidden group-hover:flex gap-1.5">
+                    <button onclick="event.stopPropagation();editMember('${m.__backendId}')" class="bg-white text-blue-600 p-2 rounded-full text-xs shadow-lg hover:bg-blue-50 transition transform hover:scale-110" title="Edit">✏️</button>
+                    <button onclick="event.stopPropagation();deleteMember('${m.__backendId}')" class="bg-white text-red-600 p-2 rounded-full text-xs shadow-lg hover:bg-red-50 transition transform hover:scale-110" title="Hapus">🗑️</button>
+                </div>
+            </div>`;
         }).join('');
     }
-    
+    window.filterSquad = function(pos) {
+        currentSquadFilter = pos;
+        
+        // Update Style Tombol
+        document.querySelectorAll('.squad-filter').forEach(btn => {
+            // Reset ke style default (putih)
+            btn.className = 'squad-filter px-4 py-1.5 rounded-full text-xs font-bold shadow-sm transition-all bg-white text-gray-600 border border-gray-200 hover:bg-gray-50';
+        });
+        
+        // Set style aktif (hitam/slate)
+        let activeId = 'btn-squad-all';
+        if(pos === 'Kiper') activeId = 'btn-squad-gk';
+        if(pos === 'Bek') activeId = 'btn-squad-def';
+        if(pos === 'Gelandang') activeId = 'btn-squad-mid';
+        if(pos === 'Striker') activeId = 'btn-squad-fwd';
+        
+        const activeBtn = document.getElementById(activeId);
+        if(activeBtn) activeBtn.className = 'squad-filter px-4 py-1.5 rounded-full text-xs font-bold shadow-sm transition-all bg-slate-800 text-white border border-slate-700';
+
+        renderMembers();
+    }
     // ... editMember, saveEditMember, etc ...
     window.editMember = function(id) { currentEditingRecord=allData.find(d=>d.__backendId===id); if(!currentEditingRecord) return; document.getElementById('editMemberName').value=currentEditingRecord.name; document.getElementById('editMemberPosition').value=currentEditingRecord.position; document.getElementById('editMemberPhone').value=currentEditingRecord.phone; document.getElementById('editMemberSkill').value=currentEditingRecord.skill_level; document.getElementById('editMemberAvailability').value=currentEditingRecord.availability; document.getElementById('editMemberPhoto').value=currentEditingRecord.photo || ''; document.getElementById('editMemberModal').classList.remove('hidden'); }
     window.saveEditMember = async function() { if(!currentEditingRecord) return; await updateData({...currentEditingRecord, name:document.getElementById('editMemberName').value, position:document.getElementById('editMemberPosition').value, phone:document.getElementById('editMemberPhone').value, skill_level:document.getElementById('editMemberSkill').value, availability:document.getElementById('editMemberAvailability').value, photo: document.getElementById('editMemberPhoto').value }); showToast('Update berhasil'); closeEditMemberModal(); }
