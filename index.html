@@ -1047,9 +1047,6 @@ function startGlobalTimer() {
         }
 
 const upcomingSchedules = allData.filter(d => d.type === 'schedule' && new Date(d.date + 'T' + (d.time || '00:00')) > new Date())
-                                 .sort((a,b) => new Date(a.date) - new Date(b.date));
-
-const upcomingSchedules = allData.filter(d => d.type === 'schedule' && new Date(d.date + 'T' + (d.time || '00:00')) > new Date())
                                          .sort((a,b) => new Date(a.date) - new Date(b.date));
 
         if (upcomingSchedules.length > 0) {
