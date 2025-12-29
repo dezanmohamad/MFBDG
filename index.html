@@ -1049,20 +1049,33 @@ function startGlobalTimer() {
 const upcomingSchedules = allData.filter(d => d.type === 'schedule' && new Date(d.date + 'T' + (d.time || '00:00')) > new Date())
                                  .sort((a,b) => new Date(a.date) - new Date(b.date));
 
-if (upcomingSchedules.length > 0) {
-    const next = upcomingSchedules[0];
-    if(document.getElementById('nextMatchTitle')) document.getElementById('nextMatchTitle').textContent = "vs " + next.name;
-    
-    const d = new Date(next.date);
-    if(document.getElementById('nextMatchDate')) document.getElementById('nextMatchDate').textContent = d.toLocaleDateString('id-ID', {day:'numeric', month:'long'}) + ' @ ' + next.time;
-    
+const upcomingSchedules = allData.filter(d => d.type === 'schedule' && new Date(d.date + 'T' + (d.time || '00:00')) > new Date())
+                                         .sort((a,b) => new Date(a.date) - new Date(b.date));
 
-    nextMatchTargetTime = new Date(next.date + 'T' + (next.time || '00:00') + ':00').getTime();
-} else {
-    if(document.getElementById('nextMatchTitle')) document.getElementById('nextMatchTitle').textContent = "Belum Ada Jadwal";
-    if(document.getElementById('nextMatchDate')) document.getElementById('nextMatchDate').textContent = "-";
-    nextMatchTargetTime = null; // Tidak ada jadwal = timer berhenti
-}
+        if (upcomingSchedules.length > 0) {
+            const next = upcomingSchedules[0];
+            
+            // --- PERBAIKAN LOGIKA TAMPILAN JUDUL ---
+            let displayTitle = next.name;
+            
+            // Hanya tambahkan "vs" jika tipenya Friendly Match
+            if (next.schedule_type === 'Friendly Match') {
+                displayTitle = "vs " + next.name;
+            }
+            // Jika Fun Football / Internal, langsung tampilkan namanya saja
+            
+            if(document.getElementById('nextMatchTitle')) document.getElementById('nextMatchTitle').textContent = displayTitle;
+            // ----------------------------------------
+            
+            const d = new Date(next.date);
+            if(document.getElementById('nextMatchDate')) document.getElementById('nextMatchDate').textContent = d.toLocaleDateString('id-ID', {day:'numeric', month:'long'}) + ' @ ' + next.time;
+            
+            nextMatchTargetTime = new Date(next.date + 'T' + (next.time || '00:00') + ':00').getTime();
+        } else {
+            if(document.getElementById('nextMatchTitle')) document.getElementById('nextMatchTitle').textContent = "Belum Ada Jadwal";
+            if(document.getElementById('nextMatchDate')) document.getElementById('nextMatchDate').textContent = "-";
+            nextMatchTargetTime = null; 
+        }
     }
 
     async function getAutoPrayerTimes() {
