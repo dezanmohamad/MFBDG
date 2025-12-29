@@ -552,6 +552,13 @@
               <button onclick="document.getElementById('statsInputSection').scrollIntoView({behavior: 'smooth'})" class="admin-only bg-amber-500 hover:bg-amber-600 text-slate-900 px-6 py-2 rounded-full font-bold text-sm transition shadow-lg">Input Statistik</button>
           </div>
       </div>
+     <div class="flex justify-center gap-2 mb-6 mt-4">
+          <button onclick="filterStats('all')" id="btn-stats-all" class="stats-filter px-4 py-1.5 rounded-full text-xs font-bold shadow-sm transition-all bg-slate-800 text-white border border-slate-700">Semua Waktu</button>
+          <button onclick="filterStats('week')" id="btn-stats-week" class="stats-filter px-4 py-1.5 rounded-full text-xs font-bold shadow-sm transition-all bg-white text-gray-600 border border-gray-200 hover:bg-gray-50">📅 Minggu Ini</button>
+          <button onclick="filterStats('month')" id="btn-stats-month" class="stats-filter px-4 py-1.5 rounded-full text-xs font-bold shadow-sm transition-all bg-white text-gray-600 border border-gray-200 hover:bg-gray-50">🗓️ Bulan Ini</button>
+      </div>
+      <div id="statsPodium" class="mb-10 grid grid-cols-1 md:grid-cols-3 gap-4 items-end min-h-[100px]">
+          </div>
 
       <div id="statsPodium" class="mb-10 grid grid-cols-1 md:grid-cols-3 gap-4 items-end min-h-[100px]">
           </div>
@@ -830,6 +837,7 @@
     let tempGeneratedTeams = [];
     let isEditingTeams = false; // New state for edit mode
     let currentSquadFilter = 'all';
+    let currentStatsFilter = 'all';
 
     // ... initAuth & setupDataListener ...
     const initAuth = async () => {
@@ -1008,7 +1016,26 @@ function startGlobalTimer() {
         const hijriEl = document.getElementById('hijriDateDisplay');
         if(hijriEl) hijriEl.textContent = '1446 H'; 
     }
+
+   window.filterStats = function(period) {
+    currentStatsFilter = period;
+
+    // Update Tampilan Tombol
+    document.querySelectorAll('.stats-filter').forEach(btn => {
+        btn.className = 'stats-filter px-4 py-1.5 rounded-full text-xs font-bold shadow-sm transition-all bg-white text-gray-600 border border-gray-200 hover:bg-gray-50';
+    });
     
+    // Set tombol aktif
+    let activeId = 'btn-stats-all';
+    if(period === 'week') activeId = 'btn-stats-week';
+    if(period === 'month') activeId = 'btn-stats-month';
+    
+    const activeBtn = document.getElementById(activeId);
+    if(activeBtn) activeBtn.className = 'stats-filter px-4 py-1.5 rounded-full text-xs font-bold shadow-sm transition-all bg-slate-800 text-white border border-slate-700';
+
+    // Render ulang statistik dengan filter baru
+    renderStats();
+}
     window.showMenu = function(menu) { 
         currentMenu = menu; 
         searchQuery = "";
@@ -2155,11 +2182,36 @@ function renderMatches() {
         document.getElementById('statsBestXI').checked = false;
     }
     
-   function renderStats() { 
+function renderStats() { 
         const statsMap = {};
         
-        // 1. Agregasi Data (Menggabungkan data dari input Match & Manual)
-        allData.filter(d => d.type === 'stats').forEach(s => {
+        // --- LOGIKA FILTER WAKTU (MINGGU INI / BULAN INI) ---
+        const now = new Date();
+        // Set awal minggu (Senin)
+        const day = now.getDay(); 
+        const diff = now.getDate() - day + (day == 0 ? -6 : 1); 
+        const startOfWeek = new Date(now); 
+        startOfWeek.setDate(diff); startOfWeek.setHours(0,0,0,0);
+
+        // Set awal bulan (Tanggal 1)
+        const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+
+        // Filter data mentah dulu sebelum dihitung
+        const filteredRawData = allData.filter(d => d.type === 'stats').filter(s => {
+            if (currentStatsFilter === 'all') return true;
+            
+            const statDate = new Date(s.date);
+            // Fix: set jam statDate ke 0 agar komparasi adil
+            statDate.setHours(0,0,0,0);
+
+            if (currentStatsFilter === 'week') return statDate >= startOfWeek;
+            if (currentStatsFilter === 'month') return statDate >= startOfMonth;
+            return true;
+        });
+        // ----------------------------------------------------
+
+        // 1. Agregasi Data (Menggunakan data yang sudah difilter)
+        filteredRawData.forEach(s => {
             const mid = s.member_id;
             if (!statsMap[mid]) {
                 statsMap[mid] = { 
@@ -2207,6 +2259,11 @@ function renderMatches() {
             const rank1 = enrichedStats[0];
             const rank2 = enrichedStats.length > 1 ? enrichedStats[1] : null;
             const rank3 = enrichedStats.length > 2 ? enrichedStats[2] : null;
+            
+            // Label Periode di Podium
+            let periodLabel = "SEASON 2024/25";
+            if(currentStatsFilter === 'week') periodLabel = "MINGGU INI";
+            if(currentStatsFilter === 'month') periodLabel = "BULAN INI";
 
             // Juara 2 (Kiri)
             if (rank2) {
@@ -2242,7 +2299,7 @@ function renderMatches() {
                         <div class="text-amber-600 text-xs sm:text-sm font-bold">${rank1.points} Pts</div>
                     </div>
                     <div class="h-20 sm:h-24 w-full bg-gradient-to-t from-yellow-300 via-yellow-100 to-white rounded-t-lg mt-2 shadow-lg border-t border-white flex items-end justify-center pb-2">
-                        <span class="text-[10px] font-bold text-yellow-700 opacity-50">MVP</span>
+                        <span class="text-[9px] font-bold text-yellow-800 opacity-60 uppercase">${periodLabel}</span>
                     </div>
                 </div>`;
             }
@@ -2265,7 +2322,7 @@ function renderMatches() {
                 </div>`;
             } else { podiumHTML += `<div class="hidden md:block"></div>`; }
         } else {
-            podiumHTML = '<div class="col-span-3 text-center text-gray-400 italic py-10">Belum ada data statistik musim ini.</div>';
+            podiumHTML = '<div class="col-span-3 text-center text-gray-400 italic py-10">Belum ada data statistik di periode ini.</div>';
         }
         podiumContainer.innerHTML = podiumHTML;
 
@@ -2301,7 +2358,9 @@ function renderMatches() {
                 </tr>`;
             }).join('');
         }
-       renderStatsHistory();
+        
+        // Panggil Log Riwayat
+        renderStatsHistory();
     }
 
    // --- KODE YANG HILANG: LOGIKA RIWAYAT & HAPUS ---
