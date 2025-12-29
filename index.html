@@ -588,8 +588,18 @@
            <label class="flex items-center space-x-2 bg-white p-2 rounded border border-amber-100"><input type="checkbox" id="statsBestXI" class="w-4 h-4 text-amber-500"> <span>🛡️ Best XI (+3)</span></label> 
        </div></div>
        <button onclick="addStats()" class="w-full gold-gradient text-white px-4 py-3 rounded-xl hover:opacity-90 font-bold shadow-lg transform active:scale-95 transition flex items-center justify-center gap-2"> 💾 Simpan Data Statistik </button>
+      </div> <div class="mt-8 border-t border-gray-200 pt-6">
+           <h3 class="font-bold text-slate-700 mb-4 flex items-center gap-2">
+               <span>🕒</span> Riwayat Input (Log)
+           </h3>
+           <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+               <div id="statsHistoryLog" class="divide-y divide-gray-100 max-h-[300px] overflow-y-auto">
+                   </div>
+           </div>
+           <p class="text-xs text-gray-400 mt-2 text-center">Hapus data di sini jika terjadi kesalahan input.</p>
       </div>
-    </div>
+
+      </div> ```
 
     <div id="inventarisView" class="view-content hidden">
       <div class="relative rounded-2xl overflow-hidden mb-8 shadow-xl bg-slate-800 text-white min-h-[180px] flex items-center">
@@ -2133,7 +2143,60 @@ function renderMatches() {
                 </tr>`;
             }).join('');
         }
+       renderStatsHistory();
     }
+
+   // --- KODE YANG HILANG: LOGIKA RIWAYAT & HAPUS ---
+
+function renderStatsHistory() {
+    const container = document.getElementById('statsHistoryLog');
+    if (!container) return;
+
+    // Ambil data stats, urutkan dari yang terbaru (createdAt desc)
+    const historyData = allData.filter(d => d.type === 'stats')
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+    if (historyData.length === 0) {
+        container.innerHTML = '<div class="p-4 text-center text-xs text-gray-400 italic">Belum ada data statistik.</div>';
+        return;
+    }
+
+    container.innerHTML = historyData.map(h => {
+        const member = allData.find(m => m.__backendId === h.member_id);
+        const name = member ? member.name : 'Unknown Player';
+        const date = new Date(h.date).toLocaleDateString('id-ID', {day:'numeric', month:'short'});
+        
+        let desc = [];
+        if(parseInt(h.goals) > 0) desc.push(`<span class="text-green-600 font-bold">${h.goals} Gol</span>`);
+        if(parseInt(h.assists) > 0) desc.push(`<span class="text-blue-600 font-bold">${h.assists} Ast</span>`);
+        if(parseInt(h.saves) > 0) desc.push(`<span class="text-orange-600 font-bold">${h.saves} Sav</span>`);
+        
+        return `
+        <div class="p-3 flex justify-between items-center hover:bg-gray-50 transition">
+            <div class="flex items-center gap-3">
+                <div class="text-[10px] font-mono text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded">${date}</div>
+                <div>
+                    <div class="text-xs font-bold text-slate-700">${name}</div>
+                    <div class="text-[10px] text-gray-500 mt-0.5">
+                        ${desc.join(' • ') || 'Main/Bonus'} 
+                        <span class="text-amber-600 font-bold ml-1">(+${h.totalPoints} Pts)</span>
+                    </div>
+                </div>
+            </div>
+            <button onclick="deleteStats('${h.__backendId}')" class="admin-only text-red-400 hover:text-red-600 p-1.5 rounded-full hover:bg-red-50 transition" title="Hapus Data Ini">
+                🗑️
+            </button>
+        </div>
+        `;
+    }).join('');
+}
+
+window.deleteStats = async function(id) {
+    if(confirm('Batalkan poin ini? Peringkat klasemen akan otomatis berubah.')) {
+        await deleteData(id);
+        showToast('Poin berhasil direvisi.');
+    }
+}
     window.addInventory = async function() { await createData({ type:'inventory', item_name:document.getElementById('itemName').value, item_image:document.getElementById('itemImage').value, quantity:document.getElementById('itemQuantity').value, condition:document.getElementById('itemCondition').value, createdAt:new Date().toISOString() }); showToast('Item ditambah'); document.getElementById('itemName').value=''; }
     function renderInventory() { document.getElementById('inventoryList').innerHTML = allData.filter(d=>d.type==='inventory').map(i=>`<div class="flex gap-3 p-3 bg-white rounded border items-center hover-lift"><img src="${i.item_image||'https://via.placeholder.com/50'}" class="w-12 h-12 object-cover rounded"><div class="flex-1"><b>${i.item_name}</b> <span class="text-xs bg-gray-200 px-1 rounded">${i.condition}</span><div class="text-xs">Stok: ${i.quantity}</div></div><div class="admin-only flex gap-1"><button onclick="editInventory('${i.__backendId}')" class="text-blue-500">✏️</button><button onclick="deleteInventory('${i.__backendId}')" class="text-red-500">🗑️</button></div></div>`).join(''); }
     window.editInventory = function(id) { currentEditingRecord=allData.find(d=>d.__backendId===id); if(!currentEditingRecord) return; document.getElementById('editItemName').value=currentEditingRecord.item_name; document.getElementById('editItemImage').value=currentEditingRecord.item_image||''; document.getElementById('editItemQuantity').value=currentEditingRecord.quantity; document.getElementById('editItemCondition').value=currentEditingRecord.condition; document.getElementById('editInventoryModal').classList.remove('hidden'); }
