@@ -1603,7 +1603,7 @@ window.renderGeneratedTeams = function(teams) {
        select.innerHTML = html;
     }
 
-    // 1. RENDER FORM MATCH (4 BABAK)
+    // 1. RENDER FORM MATCH
     window.renderMatchInputForm = function() {
         const scheduleId = document.getElementById('matchScheduleRef').value;
         const type = document.getElementById('matchType').value;
@@ -1618,6 +1618,13 @@ window.renderGeneratedTeams = function(teams) {
                 if(!type) document.getElementById('matchType').value = sched.schedule_type;
             }
         }
+
+        // --- PERSIAPAN DROPDOWN PEMAIN UNTUK STATS ---
+        // Kita siapkan string opsi pemain di sini agar ringan
+        const members = allData.filter(d => d.type === 'member').sort((a,b) => a.name.localeCompare(b.name));
+        window.playerOptionsHTML = '<option value="">-- Pilih Pemain --</option>' + 
+            members.map(m => `<option value="${m.__backendId}">${m.name} (${m.position})</option>`).join('');
+        // ---------------------------------------------
 
         if (type === 'Friendly Match') {
             opponentInputRef.classList.remove('hidden');
@@ -1646,7 +1653,7 @@ window.renderGeneratedTeams = function(teams) {
                         <div><label class="text-xs font-bold text-gray-500">Tim Rotasi 2 (Q2 & Q4)</label><select id="friend_team_b" onchange="updateFriendlyLabels()" class="w-full border rounded p-1 text-sm font-bold text-slate-700 bg-white">${teamOptions}</select></div>
                     </div>
                 </div>
-                <div class="space-y-2">
+                <div class="space-y-2 mb-4">
                     ${[1,2,3,4].map(q => `
                     <div class="flex items-center gap-2">
                         <div class="w-8 h-8 rounded bg-slate-200 flex items-center justify-center font-bold text-xs">Q${q}</div>
@@ -1659,10 +1666,22 @@ window.renderGeneratedTeams = function(teams) {
                         </div>
                     </div>`).join('')}
                 </div>
-                <div class="mt-4 flex justify-between items-center bg-slate-800 text-white p-3 rounded-xl">
+                
+                <div class="flex justify-between items-center bg-slate-800 text-white p-3 rounded-t-xl">
                     <span class="text-xs font-bold uppercase tracking-widest text-slate-400">Total Agg</span>
                     <div class="flex items-center gap-3"><span id="total_friendly_us" class="text-2xl font-bold font-head text-amber-400">0</span><span class="text-sm text-gray-500">-</span><span id="total_friendly_op" class="text-2xl font-bold font-head text-white">0</span></div>
-                </div>`;
+                </div>
+
+                <div class="bg-gray-50 border-x border-b border-gray-200 p-4 rounded-b-xl mb-4">
+                    <div class="flex justify-between items-center mb-2">
+                        <h4 class="font-bold text-sm text-gray-700">⚽ Statistik Pemain</h4>
+                        <button onclick="addStatRow()" class="text-[10px] bg-green-100 text-green-700 px-2 py-1 rounded border border-green-200 hover:bg-green-200 font-bold">➕ Tambah Pemain</button>
+                    </div>
+                    <div id="quickStatsList" class="space-y-2">
+                        </div>
+                    <p class="text-[10px] text-gray-400 italic mt-2 text-center">Masukkan pemain yang mencetak gol atau assist saja.</p>
+                </div>
+                `;
 
         } else if (type === 'Fun Football') {
             opponentInputRef.classList.add('hidden');
@@ -1681,7 +1700,32 @@ window.renderGeneratedTeams = function(teams) {
         }
     }
 
-    // 2. HELPER CALCULATOR
+   // FUNGSI BANTUAN: MENAMBAH BARIS INPUT STATISTIK
+    window.addStatRow = function() {
+        const container = document.getElementById('quickStatsList');
+        if(!container) return;
+        
+        const rowId = 'stat_row_' + Date.now();
+        const html = `
+        <div id="${rowId}" class="flex gap-2 items-center bg-white p-2 rounded border border-gray-200 stat-row-entry">
+            <select class="stat-player-select flex-1 text-xs border border-gray-300 rounded p-1.5 focus:outline-none focus:border-amber-400 bg-white">
+                ${window.playerOptionsHTML}
+            </select>
+            <div class="flex items-center gap-1 w-16">
+                <span class="text-[10px]">⚽</span>
+                <input type="number" min="0" placeholder="0" class="stat-goals-input w-full text-xs border border-gray-300 rounded p-1 text-center font-bold">
+            </div>
+            <div class="flex items-center gap-1 w-16">
+                <span class="text-[10px]">🎯</span>
+                <input type="number" min="0" placeholder="0" class="stat-assists-input w-full text-xs border border-gray-300 rounded p-1 text-center font-bold">
+            </div>
+            <button onclick="document.getElementById('${rowId}').remove()" class="text-red-400 hover:text-red-600 font-bold px-1">✕</button>
+        </div>
+        `;
+        container.insertAdjacentHTML('beforeend', html);
+    }
+   
+   // 2. HELPER CALCULATOR
     window.updateFriendlyLabels = function() {
         const teamA = document.getElementById('friend_team_a').value || 'Tim A';
         const teamB = document.getElementById('friend_team_b').value || 'Tim B';
@@ -1700,7 +1744,7 @@ window.renderGeneratedTeams = function(teams) {
         document.getElementById('total_friendly_op').textContent = op;
     }
 
-    // 3. FUNGSI SIMPAN (LOGIC BARU)
+    // 3. FUNGSI SIMPAN (LOGIC BARU: MATCH + STATS)
     window.addMatch = async function() { 
         const scheduleId = document.getElementById('matchScheduleRef').value;
         const type = document.getElementById('matchType').value;
@@ -1711,11 +1755,16 @@ window.renderGeneratedTeams = function(teams) {
 
         let dataPayload = { type:'match', schedule_ref: scheduleId, date, location, match_type: type, createdAt: new Date().toISOString() };
 
+        // --- 1. PROSES SIMPAN MATCH UTAMA ---
         if (type === 'Friendly Match') {
             const teamA = document.getElementById('friend_team_a').value;
             const teamB = document.getElementById('friend_team_b').value;
             const opponentName = document.getElementById('matchOpponent').value || 'Lawan';
-            if(!teamA || !teamB) { showToast('Pilih Tim Rotasi A dan B', 'error'); return; }
+            
+            // Validasi Tim Rotasi (Boleh kosong tapi sebaiknya diisi)
+            if(!teamA || !teamB) { 
+                if(!confirm("Tim Rotasi belum dipilih. Lanjutkan?")) return;
+            }
 
             const scores = [];
             let totalUs = 0, totalOp = 0;
@@ -1725,7 +1774,10 @@ window.renderGeneratedTeams = function(teams) {
                 scores.push({ q: i, team_internal: (i%2!==0?teamA:teamB), us: u, op: o });
                 totalUs += u; totalOp += o;
             }
-            dataPayload.opponent = opponentName; dataPayload.score_us = totalUs; dataPayload.score_opponent = totalOp; dataPayload.details = scores;
+            dataPayload.opponent = opponentName; 
+            dataPayload.score_us = totalUs; 
+            dataPayload.score_opponent = totalOp; 
+            dataPayload.details = scores;
             dataPayload.result = totalUs > totalOp ? 'Menang' : (totalUs == totalOp ? 'Seri' : 'Kalah');
 
         } else if (type === 'Fun Football') {
@@ -1738,117 +1790,58 @@ window.renderGeneratedTeams = function(teams) {
                 if(t1 && t2) matches.push({ t1, t2, s1, s2 });
             }
             if(matches.length === 0) { showToast('Isi minimal 1 match', 'error'); return; }
-            dataPayload.opponent = "Internal Game"; dataPayload.score_us = 0; dataPayload.score_opponent = 0; dataPayload.details = matches; dataPayload.result = 'Internal';
+            dataPayload.opponent = "Internal Game"; 
+            dataPayload.score_us = 0; 
+            dataPayload.score_opponent = 0; 
+            dataPayload.details = matches; 
+            dataPayload.result = 'Internal';
         }
 
-        await createData(dataPayload); 
-        showToast('Hasil Match Disimpan!'); 
-        renderCurrentView();
-        document.getElementById('matchInputSection').scrollIntoView();
-        document.getElementById('matchScheduleRef').value = "";
-        document.getElementById('dynamicScoreInput').innerHTML = '<p class="text-center text-gray-400 italic text-sm">Pilih jadwal...</p>';
-    }
+        try {
+            // A. Simpan Data Match
+            await createData(dataPayload); 
 
-    function renderMatches() { 
-        const list = document.getElementById('matchList');
-        if (!list) return;
-        let matches = allData.filter(d=>d.type==='match');
-        if (searchQuery) {
-            matches = matches.filter(m => m.opponent.toLowerCase().includes(searchQuery) || m.location.toLowerCase().includes(searchQuery));
-        }
-        
-        matches.sort((a,b) => new Date(b.date) - new Date(a.date));
-
-        // Update Summary Stats
-        let wins = 0, draws = 0, losses = 0;
-        matches.forEach(m => {
-            const us = parseInt(m.score_us) || 0;
-            const op = parseInt(m.score_opponent) || 0;
-            if (us > op) wins++;
-            else if (us === op) draws++;
-            else losses++;
-        });
-        if(document.getElementById('summaryWin')) document.getElementById('summaryWin').textContent = wins;
-        if(document.getElementById('summaryDraw')) document.getElementById('summaryDraw').textContent = draws;
-        if(document.getElementById('summaryLoss')) document.getElementById('summaryLoss').textContent = losses;
-
-        if (matches.length === 0) {
-            list.innerHTML = `<div class="text-center py-10 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200"><div class="text-4xl mb-2">⚽</div><p class="text-gray-500 font-semibold">Belum ada riwayat pertandingan.</p></div>`;
-            return;
-        }
-
-        list.innerHTML = matches.map(m => {
-            const us = parseInt(m.score_us) || 0;
-            const op = parseInt(m.score_opponent) || 0;
-            let resultClass = "";
-            let resultLabel = "";
-            let scoreColor = "";
+            // B. PROSES SIMPAN STATISTIK PEMAIN (JIKA ADA)
+            const statRows = document.querySelectorAll('.stat-row-entry');
+            let statsCount = 0;
             
-            if (us > op) { 
-                resultClass = "bg-green-100 text-green-700 border-green-200"; 
-                resultLabel = "WIN"; 
-                scoreColor = "text-green-600";
-            } else if (us === op) { 
-                resultClass = "bg-gray-100 text-gray-600 border-gray-200"; 
-                resultLabel = "DRAW"; 
-                scoreColor = "text-gray-600";
-            } else { 
-                resultClass = "bg-red-100 text-red-700 border-red-200"; 
-                resultLabel = "LOSS"; 
-                scoreColor = "text-red-600";
+            for (const row of statRows) {
+                const playerId = row.querySelector('.stat-player-select').value;
+                const goals = parseInt(row.querySelector('.stat-goals-input').value) || 0;
+                const assists = parseInt(row.querySelector('.stat-assists-input').value) || 0;
+                
+                // Hanya simpan jika pemain dipilih DAN ada kontribusi (gol/assist > 0)
+                if (playerId && (goals > 0 || assists > 0)) {
+                    // Hitung Poin (Gol=3, Assist=1) + Bonus otomatis Main(+2)
+                    // Note: Kita asumsikan input di sini dapat bonus Main. Bonus lain manual nanti kalau mau.
+                    const totalPoints = (goals * 3) + (assists * 1) + 2; 
+                    
+                    await createData({
+                        type: 'stats',
+                        member_id: playerId,
+                        date: date, // Tanggal disamakan dengan match
+                        goals: goals,
+                        assists: assists,
+                        saves: 0, // Default 0 kalau input cepat
+                        totalPoints: totalPoints,
+                        createdAt: new Date().toISOString()
+                    });
+                    statsCount++;
+                }
             }
 
-            const dateObj = new Date(m.date);
-            const dateStr = dateObj.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+            showToast(`Match & ${statsCount} Statistik Tersimpan!`); 
             
-            return `
-            <div class="bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden hover:shadow-lg transition-all relative group">
-                <div class="absolute top-0 left-0 w-1 h-full ${us > op ? 'bg-green-500' : (us === op ? 'bg-gray-400' : 'bg-red-500')}"></div>
-                <div class="p-4 sm:p-5">
-                    <div class="flex justify-between items-center mb-4">
-                        <div class="flex items-center gap-2">
-                            <span class="text-[10px] font-bold px-2 py-1 rounded border ${resultClass}">${resultLabel}</span>
-                            <span class="text-xs text-gray-400 font-medium">${m.match_type}</span>
-                        </div>
-                        <span class="text-xs text-gray-500 font-medium flex items-center gap-1">📅 ${dateStr}</span>
-                    </div>
-                    
-                    <div class="flex items-center justify-between gap-2 sm:gap-4 mb-4">
-                        <div class="flex-1 flex flex-col items-center justify-center text-center">
-                            <div class="w-12 h-12 sm:w-14 sm:h-14 bg-white rounded-full border-2 border-amber-400 shadow-sm flex items-center justify-center text-slate-800 font-bold text-sm mb-2">MF</div>
-                            <h4 class="text-xs sm:text-sm font-bold text-slate-800 line-clamp-1">Muslim Footballers</h4>
-                        </div>
-                        
-                        <div class="flex flex-col items-center justify-center px-2">
-                            <div class="text-3xl sm:text-4xl font-head font-bold ${scoreColor} tracking-widest">${us} - ${op}</div>
-                            <div class="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1">Full Time</div>
-                        </div>
-                        
-                        <div class="flex-1 flex flex-col items-center justify-center text-center">
-                            <div class="w-12 h-12 sm:w-14 sm:h-14 bg-slate-100 rounded-full border-2 border-slate-200 shadow-sm flex items-center justify-center text-slate-500 font-bold text-lg mb-2 overflow-hidden">
-                                ${m.opponent.charAt(0).toUpperCase()}
-                            </div>
-                            <h4 class="text-xs sm:text-sm font-bold text-slate-800 line-clamp-1">${m.opponent}</h4>
-                        </div>
-                    </div>
-                    
-                    <div class="flex items-center justify-between pt-3 border-t border-gray-50">
-                        <div class="text-xs text-gray-400 flex items-center gap-1 max-w-[60%] truncate">
-                            📍 ${m.location || 'Bandung'}
-                        </div>
-                        <div class="flex gap-2">
-                            <button onclick="inputStatsForMatch('${m.__backendId}')" class="bg-slate-50 hover:bg-slate-100 text-slate-600 border border-slate-200 px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1">
-                                📊 Statistik
-                            </button>
-                            <button onclick="deleteMatch('${m.__backendId}')" class="admin-only bg-red-50 hover:bg-red-100 text-red-500 border border-red-100 px-3 py-1.5 rounded-lg text-xs font-bold transition">
-                                🗑️ Hapus
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            `;
-        }).join(''); 
+            // Reset Form
+            renderCurrentView();
+            document.getElementById('matchInputSection').scrollIntoView();
+            document.getElementById('matchScheduleRef').value = "";
+            document.getElementById('dynamicScoreInput').innerHTML = '<p class="text-center text-gray-400 italic text-sm">Pilih jadwal...</p>';
+
+        } catch (e) {
+            console.error(e);
+            showToast('Gagal menyimpan data', 'error');
+        }
     }
     
    // --- FITUR BARU: JEMBATAN DARI JADWAL KE INPUT SKOR ---
@@ -1876,6 +1869,103 @@ window.openMatchInput = function(scheduleId) {
             showToast("Gagal memuat form input.", "error");
         }
     }, 100); // Delay kecil untuk memastikan transisi menu selesai
+}
+
+// --- FUNGSI RENDER MATCHES (YANG HILANG) ---
+function renderMatches() { 
+    const list = document.getElementById('matchList');
+    if (!list) return;
+    
+    let matches = allData.filter(d => d.type === 'match');
+    
+    // Filter Pencarian
+    if (searchQuery) {
+        matches = matches.filter(m => m.opponent.toLowerCase().includes(searchQuery) || m.location.toLowerCase().includes(searchQuery));
+    }
+    
+    // Urutkan dari yang terbaru
+    matches.sort((a,b) => new Date(b.date) - new Date(a.date));
+
+    // Update Summary Stats (Menang/Seri/Kalah)
+    let wins = 0, draws = 0, losses = 0;
+    matches.forEach(m => {
+        const us = parseInt(m.score_us) || 0;
+        const op = parseInt(m.score_opponent) || 0;
+        if (us > op) wins++;
+        else if (us === op) draws++;
+        else losses++;
+    });
+    if(document.getElementById('summaryWin')) document.getElementById('summaryWin').textContent = wins;
+    if(document.getElementById('summaryDraw')) document.getElementById('summaryDraw').textContent = draws;
+    if(document.getElementById('summaryLoss')) document.getElementById('summaryLoss').textContent = losses;
+
+    if (matches.length === 0) {
+        list.innerHTML = `<div class="text-center py-10 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200"><div class="text-4xl mb-2">⚽</div><p class="text-gray-500 font-semibold">Belum ada riwayat pertandingan.</p></div>`;
+        return;
+    }
+
+    list.innerHTML = matches.map(m => {
+        const us = parseInt(m.score_us) || 0;
+        const op = parseInt(m.score_opponent) || 0;
+        let resultClass = "", resultLabel = "", scoreColor = "";
+        
+        if (us > op) { resultClass = "bg-green-100 text-green-700 border-green-200"; resultLabel = "WIN"; scoreColor = "text-green-600"; } 
+        else if (us === op) { resultClass = "bg-gray-100 text-gray-600 border-gray-200"; resultLabel = "DRAW"; scoreColor = "text-gray-600"; } 
+        else { resultClass = "bg-red-100 text-red-700 border-red-200"; resultLabel = "LOSS"; scoreColor = "text-red-600"; }
+
+        const dateObj = new Date(m.date);
+        const dateStr = dateObj.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+
+        // --- LOGIKA MENGAMBIL PENCETAK GOL & ASSIST ---
+        const matchStats = allData.filter(d => d.type === 'stats' && d.date === m.date);
+
+        const goalGetters = matchStats.filter(s => (parseInt(s.goals) || 0) > 0).map(s => {
+            const member = allData.find(mem => mem.__backendId === s.member_id);
+            const name = member ? member.name.split(' ')[0] : 'Unknown';
+            const goals = parseInt(s.goals);
+            return goals > 1 ? `<b>${name}</b>(${goals})` : `<b>${name}</b>`;
+        });
+
+        const assistProviders = matchStats.filter(s => (parseInt(s.assists) || 0) > 0).map(s => {
+            const member = allData.find(mem => mem.__backendId === s.member_id);
+            const name = member ? member.name.split(' ')[0] : 'Unknown';
+            const assists = parseInt(s.assists);
+            return assists > 1 ? `${name}(${assists})` : `${name}`;
+        });
+
+        let detailsHTML = '';
+        if (goalGetters.length > 0 || assistProviders.length > 0) {
+            detailsHTML = `<div class="mt-3 pt-3 border-t border-dashed border-gray-200 text-xs text-gray-600 space-y-1">`;
+            if (goalGetters.length > 0) detailsHTML += `<div class="flex items-start gap-2"><span class="text-green-600 font-bold min-w-[20px]">⚽</span> <span>${goalGetters.join(', ')}</span></div>`;
+            if (assistProviders.length > 0) detailsHTML += `<div class="flex items-start gap-2"><span class="text-blue-500 font-bold min-w-[20px]">🎯</span> <span class="italic text-gray-500">${assistProviders.join(', ')}</span></div>`;
+            detailsHTML += `</div>`;
+        }
+        // ----------------------------------------------
+        
+        return `
+        <div class="bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden hover:shadow-lg transition-all relative group">
+            <div class="absolute top-0 left-0 w-1 h-full ${us > op ? 'bg-green-500' : (us === op ? 'bg-gray-400' : 'bg-red-500')}"></div>
+            <div class="p-4 sm:p-5">
+                <div class="flex justify-between items-center mb-4">
+                    <div class="flex items-center gap-2"><span class="text-[10px] font-bold px-2 py-1 rounded border ${resultClass}">${resultLabel}</span><span class="text-xs text-gray-400 font-medium">${m.match_type}</span></div>
+                    <span class="text-xs text-gray-500 font-medium flex items-center gap-1">📅 ${dateStr}</span>
+                </div>
+                <div class="flex items-center justify-between gap-2 sm:gap-4 mb-4">
+                    <div class="flex-1 flex flex-col items-center justify-center text-center"><div class="w-12 h-12 sm:w-14 sm:h-14 bg-white rounded-full border-2 border-amber-400 shadow-sm flex items-center justify-center text-slate-800 font-bold text-sm mb-2">MF</div><h4 class="text-xs sm:text-sm font-bold text-slate-800 line-clamp-1">Muslim Footballers</h4></div>
+                    <div class="flex flex-col items-center justify-center px-2"><div class="text-3xl sm:text-4xl font-head font-bold ${scoreColor} tracking-widest">${us} - ${op}</div><div class="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1">Full Time</div></div>
+                    <div class="flex-1 flex flex-col items-center justify-center text-center"><div class="w-12 h-12 sm:w-14 sm:h-14 bg-slate-100 rounded-full border-2 border-slate-200 shadow-sm flex items-center justify-center text-slate-500 font-bold text-lg mb-2 overflow-hidden">${m.opponent.charAt(0).toUpperCase()}</div><h4 class="text-xs sm:text-sm font-bold text-slate-800 line-clamp-1">${m.opponent}</h4></div>
+                </div>
+                ${detailsHTML}
+                <div class="flex items-center justify-between pt-3 border-t border-gray-50 mt-2">
+                    <div class="text-xs text-gray-400 flex items-center gap-1 max-w-[60%] truncate">📍 ${m.location || 'Bandung'}</div>
+                    <div class="flex gap-2">
+                        <button onclick="inputStatsForMatch('${m.__backendId}')" class="bg-slate-50 hover:bg-slate-100 text-slate-600 border border-slate-200 px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1">📊 Statistik</button>
+                        <button onclick="deleteMatch('${m.__backendId}')" class="admin-only bg-red-50 hover:bg-red-100 text-red-500 border border-red-100 px-3 py-1.5 rounded-lg text-xs font-bold transition">🗑️ Hapus</button>
+                    </div>
+                </div>
+            </div>
+        </div>`;
+    }).join(''); 
 }
    
     window.deleteMatch = async function(id) { if(confirm('Hapus?')) await deleteData(id); }
