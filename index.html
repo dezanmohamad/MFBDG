@@ -2630,27 +2630,39 @@ window.deleteStats = async function(id) {
         showToast('Poin berhasil direvisi.');
     }
 }
-    window.addInventory = async function() { await createData({ type:'inventory', item_name:document.getElementById('itemName').value, item_image:document.getElementById('itemImage').value, quantity:document.getElementById('itemQuantity').value, condition:document.getElementById('itemCondition').value, createdAt:new Date().toISOString() }); showToast('Item ditambah'); document.getElementById('itemName').value=''; }
+ // --- MULAI KODE BARU (ASET, SPONSOR, GALERI) ---
+
+    // 1. INVENTARIS / ASET
+    window.addInventory = async function() { 
+        await createData({ 
+            type:'inventory', 
+            item_name:document.getElementById('itemName').value, 
+            item_image:document.getElementById('itemImage').value, 
+            quantity:document.getElementById('itemQuantity').value, 
+            condition:document.getElementById('itemCondition').value, 
+            createdAt:new Date().toISOString() 
+        }); 
+        showToast('Item ditambah'); 
+        document.getElementById('itemName').value=''; 
+    }
+
     function renderInventory() { 
         const container = document.getElementById('inventoryList');
         if (!container) return;
         
-        // Ambil data & urutkan dari yang terbaru
         const items = allData.filter(d => d.type === 'inventory')
                              .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
-        // 1. JIKA DATA KOSONG -> TAMPILKAN PESAN INI
         if (items.length === 0) {
             container.innerHTML = `
                 <div class="col-span-full text-center py-12 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-300">
                     <div class="text-4xl mb-2">📦</div>
                     <p class="text-gray-500 font-bold">Gudang Kosong</p>
-                    <p class="text-xs text-gray-400 mt-1">Belum ada aset/inventaris yang dicatat.</p>
+                    <p class="text-xs text-gray-400 mt-1">Belum ada aset yang dicatat.</p>
                 </div>`;
             return;
         }
 
-        // 2. JIKA ADA DATA -> TAMPILKAN KARTU YANG LEBIH BAGUS
         container.innerHTML = items.map(i => {
             let badgeClass = 'bg-green-100 text-green-700';
             if(i.condition === 'Cukup') badgeClass = 'bg-yellow-100 text-yellow-700';
@@ -2659,21 +2671,13 @@ window.deleteStats = async function(id) {
             return `
             <div class="bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden hover-lift group relative flex flex-col">
                 <div class="h-32 w-full bg-gray-100 relative overflow-hidden">
-                    <img src="${i.item_image || 'https://via.placeholder.com/300x200?text=Aset'}" 
-                         class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                         onerror="this.src='https://via.placeholder.com/300x200?text=No+Image'">
-                    <div class="absolute top-2 right-2 ${badgeClass} text-[10px] font-bold px-2 py-1 rounded-lg shadow-sm backdrop-blur-sm">
-                        ${i.condition}
-                    </div>
+                    <img src="${i.item_image || 'https://via.placeholder.com/300x200?text=Aset'}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" onerror="this.src='https://via.placeholder.com/300x200?text=No+Image'">
+                    <div class="absolute top-2 right-2 ${badgeClass} text-[10px] font-bold px-2 py-1 rounded-lg shadow-sm backdrop-blur-sm">${i.condition}</div>
                 </div>
                 <div class="p-3 flex-1 flex flex-col justify-between">
-                    <div>
-                        <h4 class="font-bold text-slate-800 text-sm leading-tight mb-1 line-clamp-2">${i.item_name}</h4>
-                    </div>
+                    <div><h4 class="font-bold text-slate-800 text-sm leading-tight mb-1 line-clamp-2">${i.item_name}</h4></div>
                     <div class="flex justify-between items-end mt-3 border-t border-gray-50 pt-2">
-                        <div class="text-xs font-mono text-slate-500 bg-slate-50 px-2 py-1 rounded border border-slate-100">
-                            Stok: <b class="text-slate-800 text-sm">${i.quantity}</b>
-                        </div>
+                        <div class="text-xs font-mono text-slate-500 bg-slate-50 px-2 py-1 rounded border border-slate-100">Stok: <b class="text-slate-800 text-sm">${i.quantity}</b></div>
                         <div class="admin-only flex gap-1">
                             <button onclick="editInventory('${i.__backendId}')" class="w-7 h-7 flex items-center justify-center bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition shadow-sm">✏️</button>
                             <button onclick="deleteInventory('${i.__backendId}')" class="w-7 h-7 flex items-center justify-center bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition shadow-sm">🗑️</button>
@@ -2683,33 +2687,187 @@ window.deleteStats = async function(id) {
             </div>`;
         }).join('');
     }
-    window.editInventory = function(id) { currentEditingRecord=allData.find(d=>d.__backendId===id); if(!currentEditingRecord) return; document.getElementById('editItemName').value=currentEditingRecord.item_name; document.getElementById('editItemImage').value=currentEditingRecord.item_image||''; document.getElementById('editItemQuantity').value=currentEditingRecord.quantity; document.getElementById('editItemCondition').value=currentEditingRecord.condition; document.getElementById('editInventoryModal').classList.remove('hidden'); }
-    window.saveEditInventory = async function() { if(!currentEditingRecord) return; await updateData({...currentEditingRecord, item_name:document.getElementById('editItemName').value, item_image:document.getElementById('editItemImage').value, quantity:document.getElementById('editItemQuantity').value, condition:document.getElementById('editItemCondition').value }); showToast('Update berhasil'); closeEditInventoryModal(); }
+
+    window.editInventory = function(id) { 
+        currentEditingRecord=allData.find(d=>d.__backendId===id); 
+        if(!currentEditingRecord) return; 
+        document.getElementById('editItemName').value=currentEditingRecord.item_name; 
+        document.getElementById('editItemImage').value=currentEditingRecord.item_image||''; 
+        document.getElementById('editItemQuantity').value=currentEditingRecord.quantity; 
+        document.getElementById('editItemCondition').value=currentEditingRecord.condition; 
+        document.getElementById('editInventoryModal').classList.remove('hidden'); 
+    }
+    
+    window.saveEditInventory = async function() { 
+        if(!currentEditingRecord) return; 
+        await updateData({
+            ...currentEditingRecord, 
+            item_name:document.getElementById('editItemName').value, 
+            item_image:document.getElementById('editItemImage').value, 
+            quantity:document.getElementById('editItemQuantity').value, 
+            condition:document.getElementById('editItemCondition').value 
+        }); 
+        showToast('Update berhasil'); 
+        closeEditInventoryModal(); 
+    }
+    
     window.closeEditInventoryModal = function() { document.getElementById('editInventoryModal').classList.add('hidden'); }
-    window.deleteInventory = async function(id) { if(confirm('Hapus?')) await deleteData(id); }
-    window.addSponsor = async function() { await createData({ type:'sponsor', sponsor_name:document.getElementById('sponsorName').value, sponsor_image:document.getElementById('sponsorImage').value, contact:document.getElementById('sponsorContact').value, amount:document.getElementById('sponsorAmount').value, tier: document.getElementById('sponsorTier').value, createdAt:new Date().toISOString() }); showToast('Sponsor ditambah'); }
+    window.deleteInventory = async function(id) { if(confirm('Hapus aset ini?')) await deleteData(id); }
+
+    // 2. SPONSOR
+    window.addSponsor = async function() { 
+        await createData({ 
+            type:'sponsor', 
+            sponsor_name:document.getElementById('sponsorName').value, 
+            sponsor_image:document.getElementById('sponsorImage').value, 
+            contact:document.getElementById('sponsorContact').value, 
+            amount:document.getElementById('sponsorAmount').value, 
+            tier: document.getElementById('sponsorTier').value, 
+            createdAt:new Date().toISOString() 
+        }); 
+        showToast('Sponsor ditambah'); 
+    }
+
     function renderSponsors() { 
-        let list = allData.filter(d=>d.type==='sponsor').sort((a,b) => (parseInt(a.tier)||3) - (parseInt(b.tier)||3) || (parseInt(b.amount)||0) - (parseInt(a.amount)||0));
         const grid = document.getElementById('sponsorListGrid');
         if(!grid) return;
+        
+        let list = allData.filter(d=>d.type==='sponsor').sort((a,b) => (parseInt(a.tier)||3) - (parseInt(b.tier)||3) || (parseInt(b.amount)||0) - (parseInt(a.amount)||0));
+        
+        if (list.length === 0) {
+            grid.innerHTML = `
+                <div class="col-span-full text-center py-12 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-300">
+                    <div class="text-4xl mb-2">🤝</div>
+                    <p class="text-gray-500 font-bold">Belum Ada Sponsor</p>
+                    <p class="text-xs text-gray-400 mt-1">Jadilah pendukung pertama tim ini!</p>
+                </div>`;
+            return;
+        }
+
         grid.innerHTML = list.map((s) => {
             const tier = parseInt(s.tier) || 3;
             let tierClass = tier === 1 ? "bg-gradient-to-br from-slate-800 to-slate-900 border-slate-700 text-white" : (tier === 2 ? "bg-gradient-to-br from-amber-500 to-yellow-600 border-amber-400 text-white" : "bg-gradient-to-br from-slate-200 to-gray-300 border-gray-300 text-slate-800");
             let badge = tier === 1 ? "👑 PLATINUM" : (tier === 2 ? "⭐ GOLD" : "🥈 SILVER");
-            return `<div class="${tierClass} relative rounded-2xl p-6 hover-lift group flex flex-col sm:flex-row items-center gap-6 min-h-[160px] overflow-hidden border shadow-lg"><div class="absolute top-0 left-0 bg-white/20 text-[10px] font-bold px-3 py-1 rounded-br-lg shadow-sm z-10">${badge}</div><div class="admin-only absolute top-2 right-2 flex gap-1 z-20 opacity-0 group-hover:opacity-100 transition-opacity"><button onclick="editSponsor('${s.__backendId}')" class="bg-white/20 backdrop-blur p-1 rounded text-xs">✏️</button><button onclick="deleteSponsor('${s.__backendId}')" class="bg-red-500/80 backdrop-blur p-1 rounded text-xs">🗑️</button></div><div class="w-20 h-20 flex-shrink-0 bg-white rounded-full p-2"><img src="${s.sponsor_image}" class="w-full h-full object-contain" onerror="this.src='https://via.placeholder.com/100'"></div><div class="text-center sm:text-left flex-1"><h4 class="font-bold text-2xl">${s.sponsor_name}</h4><p class="text-sm opacity-80">${s.contact}</p></div></div>`;
+            
+            return `
+            <div class="${tierClass} relative rounded-2xl p-6 hover-lift group flex flex-col sm:flex-row items-center gap-6 min-h-[160px] overflow-hidden border shadow-lg">
+                <div class="absolute top-0 left-0 bg-white/20 text-[10px] font-bold px-3 py-1 rounded-br-lg shadow-sm z-10">${badge}</div>
+                <div class="admin-only absolute top-2 right-2 flex gap-1 z-20 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button onclick="editSponsor('${s.__backendId}')" class="bg-white/20 backdrop-blur p-1 rounded text-xs hover:bg-white/40">✏️</button>
+                    <button onclick="deleteSponsor('${s.__backendId}')" class="bg-red-500/80 backdrop-blur p-1 rounded text-xs hover:bg-red-600">🗑️</button>
+                </div>
+                <div class="w-24 h-24 flex-shrink-0 bg-white rounded-full p-2 shadow-md">
+                    <img src="${s.sponsor_image}" class="w-full h-full object-contain" onerror="this.src='https://via.placeholder.com/100?text=Logo'">
+                </div>
+                <div class="text-center sm:text-left flex-1">
+                    <h4 class="font-bold text-2xl font-head tracking-wide">${s.sponsor_name}</h4>
+                    <p class="text-sm opacity-80 mt-1">${s.contact}</p>
+                    <div class="mt-2 text-xs font-mono opacity-60">
+                        ${new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(s.amount || 0)}
+                    </div>
+                </div>
+            </div>`;
         }).join('');
     }
-    window.editSponsor = function(id) { currentEditingRecord=allData.find(d=>d.__backendId===id); if(!currentEditingRecord) return; document.getElementById('editSponsorName').value=currentEditingRecord.sponsor_name; document.getElementById('editSponsorImage').value=currentEditingRecord.sponsor_image||''; document.getElementById('editSponsorContact').value=currentEditingRecord.contact; document.getElementById('editSponsorAmount').value=currentEditingRecord.amount; document.getElementById('editSponsorTier').value=currentEditingRecord.tier || '3'; document.getElementById('editSponsorModal').classList.remove('hidden'); }
-    window.saveEditSponsor = async function() { if(!currentEditingRecord) return; await updateData({...currentEditingRecord, sponsor_name:document.getElementById('editSponsorName').value, sponsor_image:document.getElementById('editSponsorImage').value, contact:document.getElementById('editSponsorContact').value, amount:document.getElementById('editSponsorAmount').value, tier: document.getElementById('editSponsorTier').value }); showToast('Update berhasil'); closeEditSponsorModal(); }
-    window.closeEditSponsorModal = function() { document.getElementById('editSponsorModal').classList.add('hidden'); }
-    window.deleteSponsor = async function(id) { if(confirm('Hapus?')) await deleteData(id); }
-    window.handleManageSponsor = function() { if(document.body.classList.contains('is-admin')){ document.getElementById('sponsorSectionAdmin').scrollIntoView({behavior: 'smooth'}); } else { showToast('Silakan Login sebagai Admin', 'error'); toggleAdmin(); } }
 
-    window.addGalleryItem = async function() { await createData({ type:'gallery_item', title:document.getElementById('galleryTitle').value, category:document.getElementById('galleryCategory').value, image:document.getElementById('galleryImage').value, description:document.getElementById('galleryDesc').value, createdAt:new Date().toISOString() }); showToast('Foto ditambahkan'); }
-    window.filterGallery = function(filter) { currentGalleryFilter = filter; document.querySelectorAll('.gallery-filter').forEach(btn => { if(btn.id === `btn-filter-${filter}`) { btn.classList.remove('bg-white','text-gray-600','border-gray-200'); btn.classList.add('bg-slate-800','text-white','border-slate-700'); } else { btn.classList.add('bg-white','text-gray-600','border-gray-200'); btn.classList.remove('bg-slate-800','text-white','border-slate-700'); } }); renderGallery(); }
-    function renderGallery() { const grid = document.getElementById('galleryGrid'); if(!grid) return; let items = allData.filter(d => d.type === 'gallery_item'); if (currentGalleryFilter !== 'all') { items = items.filter(d => d.category === currentGalleryFilter); } if (items.length === 0) { grid.innerHTML = `<div class="col-span-full text-center py-10 text-gray-500 italic">Belum ada foto di kategori ini.</div>`; return; } grid.innerHTML = items.map(item => `<div class="mb-4 break-inside-avoid relative group rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 bg-white"><img src="${item.image}" class="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-700" onerror="this.src='https://via.placeholder.com/400x300?text=No+Image'"><div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4"><span class="text-[10px] font-bold uppercase tracking-wider text-amber-400 mb-1">${item.category}</span><h3 class="text-white font-bold text-lg leading-tight mb-1">${item.title}</h3><p class="text-gray-300 text-xs line-clamp-2">${item.description}</p><button onclick="deleteGalleryItem('${item.__backendId}')" class="admin-only absolute top-2 right-2 bg-white/20 hover:bg-red-500 text-white p-2 rounded-full backdrop-blur transition">🗑️</button></div></div>`).join(''); }
+    window.editSponsor = function(id) { 
+        currentEditingRecord=allData.find(d=>d.__backendId===id); 
+        if(!currentEditingRecord) return; 
+        document.getElementById('editSponsorName').value=currentEditingRecord.sponsor_name; 
+        document.getElementById('editSponsorImage').value=currentEditingRecord.sponsor_image||''; 
+        document.getElementById('editSponsorContact').value=currentEditingRecord.contact; 
+        document.getElementById('editSponsorAmount').value=currentEditingRecord.amount; 
+        document.getElementById('editSponsorTier').value=currentEditingRecord.tier || '3'; 
+        document.getElementById('editSponsorModal').classList.remove('hidden'); 
+    }
+    window.saveEditSponsor = async function() { 
+        if(!currentEditingRecord) return; 
+        await updateData({
+            ...currentEditingRecord, 
+            sponsor_name:document.getElementById('editSponsorName').value, 
+            sponsor_image:document.getElementById('editSponsorImage').value, 
+            contact:document.getElementById('editSponsorContact').value, 
+            amount:document.getElementById('editSponsorAmount').value, 
+            tier: document.getElementById('editSponsorTier').value 
+        }); 
+        showToast('Update berhasil'); 
+        closeEditSponsorModal(); 
+    }
+    window.closeEditSponsorModal = function() { document.getElementById('editSponsorModal').classList.add('hidden'); }
+    window.deleteSponsor = async function(id) { if(confirm('Hapus Sponsor?')) await deleteData(id); }
+    window.handleManageSponsor = function() { 
+        if(document.body.classList.contains('is-admin')){ 
+            document.getElementById('sponsorSectionAdmin').scrollIntoView({behavior: 'smooth'}); 
+        } else { 
+            showToast('Silakan Login sebagai Admin', 'error'); 
+            toggleAdmin(); 
+        } 
+    }
+
+    // 3. GALERI
+    window.addGalleryItem = async function() { 
+        await createData({ 
+            type:'gallery_item', 
+            title:document.getElementById('galleryTitle').value, 
+            category:document.getElementById('galleryCategory').value, 
+            image:document.getElementById('galleryImage').value, 
+            description:document.getElementById('galleryDesc').value, 
+            createdAt:new Date().toISOString() 
+        }); 
+        showToast('Foto ditambahkan'); 
+    }
+
+    window.filterGallery = function(filter) { 
+        currentGalleryFilter = filter; 
+        document.querySelectorAll('.gallery-filter').forEach(btn => { 
+            if(btn.id === `btn-filter-${filter}`) { 
+                btn.classList.remove('bg-white','text-gray-600','border-gray-200'); 
+                btn.classList.add('bg-slate-800','text-white','border-slate-700'); 
+            } else { 
+                btn.classList.add('bg-white','text-gray-600','border-gray-200'); 
+                btn.classList.remove('bg-slate-800','text-white','border-slate-700'); 
+            } 
+        }); 
+        renderGallery(); 
+    }
+
+    function renderGallery() { 
+        const grid = document.getElementById('galleryGrid'); 
+        if(!grid) return; 
+        
+        let items = allData.filter(d => d.type === 'gallery_item'); 
+        
+        if (currentGalleryFilter !== 'all') { 
+            items = items.filter(d => d.category === currentGalleryFilter); 
+        } 
+
+        items.sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+        if (items.length === 0) { 
+            grid.innerHTML = `
+                <div class="col-span-full text-center py-12 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-300">
+                    <div class="text-4xl mb-2">📷</div>
+                    <p class="text-gray-500 font-bold">Galeri Kosong</p>
+                    <p class="text-xs text-gray-400 mt-1">Belum ada foto di kategori ini.</p>
+                </div>`; 
+            return; 
+        } 
+        
+        grid.innerHTML = items.map(item => `
+        <div class="mb-4 break-inside-avoid relative group rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 bg-white">
+            <img src="${item.image}" class="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-700" onerror="this.src='https://via.placeholder.com/400x300?text=No+Image'">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
+                <span class="text-[10px] font-bold uppercase tracking-wider text-amber-400 mb-1">${item.category}</span>
+                <h3 class="text-white font-bold text-lg leading-tight mb-1">${item.title}</h3>
+                <p class="text-gray-300 text-xs line-clamp-2">${item.description}</p>
+                <button onclick="deleteGalleryItem('${item.__backendId}')" class="admin-only absolute top-2 right-2 bg-white/20 hover:bg-red-600 text-white p-2 rounded-full backdrop-blur transition shadow-lg">🗑️</button>
+            </div>
+        </div>`).join(''); 
+    }
+    
     window.deleteGalleryItem = async function(id) { if(confirm('Hapus foto ini?')) await deleteData(id); }
-   
+
+    // --- SELESAI KODE BARU ---  
     window.showToast = function(msg, type='success') { const t = document.createElement('div'); t.className = `fixed top-4 right-4 z-[9999] px-4 py-2 rounded text-white shadow-lg toast ${type==='success'?'bg-green-500':'bg-red-500'}`; t.innerText = msg; document.body.appendChild(t); setTimeout(()=>t.remove(), 2800); }
     window.toggleAdmin = function() { if(document.body.classList.contains('is-admin')){ document.body.classList.remove('is-admin'); document.getElementById('adminBtn').textContent='🔒'; localStorage.setItem('isAdmin', 'false'); showToast('Admin Logout'); } else { document.getElementById('loginModal').classList.remove('hidden'); } }
     window.submitLogin = function() { if(document.getElementById('adminPassInput').value === 'hudan123'){ document.body.classList.add('is-admin'); document.getElementById('adminBtn').textContent='🔓'; localStorage.setItem('isAdmin', 'true'); closeAdminModal(); showToast('Selamat datang, Baginda Raja!'); } else { showToast('Password Salah','error'); } }
