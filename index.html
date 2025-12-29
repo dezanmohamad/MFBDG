@@ -1987,9 +1987,10 @@ function renderMatches() {
         document.getElementById('statsSaves').value = '';
     }
     
-    function renderStats() { 
+   function renderStats() { 
         const statsMap = {};
         
+        // 1. Agregasi Data (Menggabungkan data dari input Match & Manual)
         allData.filter(d => d.type === 'stats').forEach(s => {
             const mid = s.member_id;
             if (!statsMap[mid]) {
@@ -2009,12 +2010,25 @@ function renderMatches() {
             statsMap[mid].matches += 1;
         });
 
-        const sortedStats = Object.values(statsMap).sort((a, b) => b.points - a.points);
-        const enrichedStats = sortedStats.map(stat => {
-            const member = allData.find(m => m.__backendId === stat.id);
-            return { ...stat, name: member ? member.name : 'Unknown', position: member ? member.position : '-', photo: member ? member.photo : '' };
+        // 2. Sorting Canggih (Tie-Breaker Logic)
+        const sortedStats = Object.values(statsMap).sort((a, b) => {
+            if (b.points !== a.points) return b.points - a.points; // 1. Cek Poin
+            if (b.goals !== a.goals) return b.goals - a.goals;     // 2. Cek Gol
+            if (b.assists !== a.assists) return b.assists - a.assists; // 3. Cek Assist
+            return a.matches - b.matches; // 4. Cek Match (Sedikit main tapi poin sama = lebih jago)
         });
 
+        const enrichedStats = sortedStats.map(stat => {
+            const member = allData.find(m => m.__backendId === stat.id);
+            return { 
+                ...stat, 
+                name: member ? member.name : 'Unknown', 
+                position: member ? member.position : '-', 
+                photo: member ? member.photo : '' 
+            };
+        });
+
+        // 3. Render Podium (3 Besar)
         const podiumContainer = document.getElementById('statsPodium');
         const listContainer = document.getElementById('statsList');
         
@@ -2022,62 +2036,64 @@ function renderMatches() {
 
         let podiumHTML = '';
         if (enrichedStats.length > 0) {
-            const top3 = [];
             const rank1 = enrichedStats[0];
             const rank2 = enrichedStats.length > 1 ? enrichedStats[1] : null;
             const rank3 = enrichedStats.length > 2 ? enrichedStats[2] : null;
 
+            // Juara 2 (Kiri)
             if (rank2) {
                 podiumHTML += `
-                <div class="flex flex-col items-center order-1 md:order-1 transform hover:scale-105 transition duration-300">
+                <div class="flex flex-col items-center order-1 transform hover:scale-105 transition duration-300">
                     <div class="relative">
                         <div class="w-16 h-16 md:w-20 md:h-20 rounded-full border-4 border-slate-300 bg-slate-100 overflow-hidden shadow-lg mb-2">
-                            <img src="${rank2.photo || 'https://via.placeholder.com/150?text='+rank2.name.charAt(0)}" class="w-full h-full object-cover">
+                            <img src="${rank2.photo}" class="w-full h-full object-cover" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(rank2.name)}&background=cbd5e1&color=1e293b'">
                         </div>
-                        <div class="absolute -bottom-2 -right-2 bg-slate-400 text-white w-6 h-6 flex items-center justify-center rounded-full font-bold text-xs shadow border border-white">2</div>
+                        <div class="absolute -bottom-2 -right-2 bg-slate-500 text-white w-6 h-6 flex items-center justify-center rounded-full font-bold text-xs shadow border border-white">2</div>
                     </div>
                     <div class="text-center mt-2">
-                        <h4 class="font-bold text-slate-700 text-sm truncate w-24 md:w-32">${rank2.name}</h4>
-                        <div class="text-slate-500 text-xs font-bold">${rank2.points} Pts</div>
+                        <h4 class="font-bold text-slate-700 text-xs sm:text-sm truncate w-20 sm:w-32">${rank2.name}</h4>
+                        <div class="text-slate-500 text-[10px] sm:text-xs font-bold">${rank2.points} Pts</div>
                     </div>
-                    <div class="h-16 w-full bg-gradient-to-t from-slate-300 to-slate-100 rounded-t-lg mt-2 shadow-inner"></div>
+                    <div class="h-14 sm:h-16 w-full bg-gradient-to-t from-slate-300 to-slate-100 rounded-t-lg mt-2 shadow-inner"></div>
                 </div>`;
             } else { podiumHTML += `<div class="hidden md:block"></div>`; }
 
+            // Juara 1 (Tengah - Lebih Besar)
             if (rank1) {
                 podiumHTML += `
                 <div class="flex flex-col items-center order-0 md:order-2 z-10 transform hover:scale-110 transition duration-300 -mt-6">
                     <div class="relative">
-                        <div class="absolute -top-6 left-1/2 transform -translate-x-1/2 text-2xl">👑</div>
+                        <div class="absolute -top-6 left-1/2 transform -translate-x-1/2 text-2xl animate-bounce">👑</div>
                         <div class="w-20 h-20 md:w-24 md:h-24 rounded-full border-4 border-yellow-400 bg-yellow-50 overflow-hidden shadow-xl mb-2">
-                            <img src="${rank1.photo || 'https://via.placeholder.com/150?text='+rank1.name.charAt(0)}" class="w-full h-full object-cover">
+                            <img src="${rank1.photo}" class="w-full h-full object-cover" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(rank1.name)}&background=fcd34d&color=78350f'">
                         </div>
                         <div class="absolute -bottom-2 -right-2 bg-yellow-500 text-white w-8 h-8 flex items-center justify-center rounded-full font-bold text-sm shadow border-2 border-white">1</div>
                     </div>
                     <div class="text-center mt-2">
-                        <h4 class="font-bold text-slate-800 text-base truncate w-28 md:w-40">${rank1.name}</h4>
-                        <div class="text-amber-500 text-sm font-bold">${rank1.points} Pts</div>
+                        <h4 class="font-bold text-slate-800 text-sm sm:text-base truncate w-24 sm:w-40">${rank1.name}</h4>
+                        <div class="text-amber-600 text-xs sm:text-sm font-bold">${rank1.points} Pts</div>
                     </div>
-                    <div class="h-24 w-full bg-gradient-to-t from-yellow-300 via-yellow-100 to-white rounded-t-lg mt-2 shadow-lg border-t border-white flex items-end justify-center pb-2">
-                        <span class="text-[10px] font-bold text-yellow-700 opacity-50">TOP PLAYER</span>
+                    <div class="h-20 sm:h-24 w-full bg-gradient-to-t from-yellow-300 via-yellow-100 to-white rounded-t-lg mt-2 shadow-lg border-t border-white flex items-end justify-center pb-2">
+                        <span class="text-[10px] font-bold text-yellow-700 opacity-50">MVP</span>
                     </div>
                 </div>`;
             }
 
+            // Juara 3 (Kanan)
             if (rank3) {
                 podiumHTML += `
                 <div class="flex flex-col items-center order-2 md:order-3 transform hover:scale-105 transition duration-300">
                     <div class="relative">
                         <div class="w-16 h-16 md:w-20 md:h-20 rounded-full border-4 border-orange-300 bg-orange-50 overflow-hidden shadow-lg mb-2">
-                            <img src="${rank3.photo || 'https://via.placeholder.com/150?text='+rank3.name.charAt(0)}" class="w-full h-full object-cover">
+                            <img src="${rank3.photo}" class="w-full h-full object-cover" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(rank3.name)}&background=fdba74&color=9a3412'">
                         </div>
                         <div class="absolute -bottom-2 -right-2 bg-orange-500 text-white w-6 h-6 flex items-center justify-center rounded-full font-bold text-xs shadow border border-white">3</div>
                     </div>
                     <div class="text-center mt-2">
-                        <h4 class="font-bold text-slate-700 text-sm truncate w-24 md:w-32">${rank3.name}</h4>
-                        <div class="text-orange-500 text-xs font-bold">${rank3.points} Pts</div>
+                        <h4 class="font-bold text-slate-700 text-xs sm:text-sm truncate w-20 sm:w-32">${rank3.name}</h4>
+                        <div class="text-orange-500 text-[10px] sm:text-xs font-bold">${rank3.points} Pts</div>
                     </div>
-                    <div class="h-12 w-full bg-gradient-to-t from-orange-200 to-orange-50 rounded-t-lg mt-2 shadow-inner"></div>
+                    <div class="h-10 sm:h-12 w-full bg-gradient-to-t from-orange-200 to-orange-50 rounded-t-lg mt-2 shadow-inner"></div>
                 </div>`;
             } else { podiumHTML += `<div class="hidden md:block"></div>`; }
         } else {
@@ -2085,34 +2101,35 @@ function renderMatches() {
         }
         podiumContainer.innerHTML = podiumHTML;
 
+        // 4. Render Table
         if (enrichedStats.length === 0) {
             listContainer.innerHTML = '<tr><td colspan="7" class="text-center py-4 text-gray-400">Data kosong</td></tr>';
         } else {
             listContainer.innerHTML = enrichedStats.map((p, i) => {
                 const rankColor = i === 0 ? 'bg-yellow-100 text-yellow-700' : (i === 1 ? 'bg-slate-100 text-slate-700' : (i === 2 ? 'bg-orange-100 text-orange-700' : 'text-gray-500'));
-                const rowBg = i < 3 ? 'bg-white' : 'hover:bg-gray-50';
+                const rowBg = i < 3 ? 'bg-gradient-to-r from-white to-gray-50' : 'hover:bg-gray-50';
                 
                 return `
                 <tr class="border-b border-gray-100 ${rowBg} transition-colors">
-                    <td class="px-4 py-3 text-center">
+                    <td class="px-2 sm:px-4 py-3 text-center">
                         <span class="w-6 h-6 inline-flex items-center justify-center rounded-full text-xs font-bold ${rankColor}">${i+1}</span>
                     </td>
-                    <td class="px-4 py-3">
+                    <td class="px-2 sm:px-4 py-3">
                         <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-full bg-gray-200 overflow-hidden hidden sm:block">
-                                <img src="${p.photo || 'https://via.placeholder.com/50?text='+p.name.charAt(0)}" class="w-full h-full object-cover">
+                            <div class="w-8 h-8 rounded-full overflow-hidden hidden sm:block border border-gray-200">
+                                <img src="${p.photo}" class="w-full h-full object-cover" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(p.name)}&background=random'">
                             </div>
                             <div>
-                                <div class="font-bold text-slate-700 text-sm">${p.name}</div>
-                                <div class="text-[10px] text-gray-400 uppercase">${p.position}</div>
+                                <div class="font-bold text-slate-700 text-xs sm:text-sm truncate max-w-[120px] sm:max-w-none">${p.name}</div>
+                                <div class="text-[9px] text-gray-400 uppercase font-semibold">${p.position}</div>
                             </div>
                         </div>
                     </td>
-                    <td class="px-4 py-3 text-center text-gray-600 font-medium">${p.matches}</td>
-                    <td class="px-4 py-3 text-center font-bold text-green-600 bg-green-50/30">${p.goals}</td>
-                    <td class="px-4 py-3 text-center font-bold text-blue-600 bg-blue-50/30">${p.assists}</td>
-                    <td class="px-4 py-3 text-center font-bold text-orange-600 bg-orange-50/30">${p.saves}</td>
-                    <td class="px-4 py-3 text-center font-black text-amber-600 bg-amber-50 text-base">${p.points}</td>
+                    <td class="px-2 sm:px-4 py-3 text-center text-gray-600 font-medium text-xs sm:text-sm">${p.matches}</td>
+                    <td class="px-2 sm:px-4 py-3 text-center font-bold text-green-600 bg-green-50/30 text-xs sm:text-sm">${p.goals}</td>
+                    <td class="px-2 sm:px-4 py-3 text-center font-bold text-blue-600 bg-blue-50/30 text-xs sm:text-sm">${p.assists}</td>
+                    <td class="px-2 sm:px-4 py-3 text-center font-bold text-orange-600 bg-orange-50/30 text-xs sm:text-sm hidden sm:table-cell">${p.saves}</td>
+                    <td class="px-2 sm:px-4 py-3 text-center font-black text-amber-600 bg-amber-50 text-sm sm:text-base border-l border-amber-100">${p.points}</td>
                 </tr>`;
             }).join('');
         }
