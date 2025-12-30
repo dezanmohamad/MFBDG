@@ -1036,54 +1036,67 @@ function startGlobalTimer() {
     }
     
     // ... render functions ...
-    function updateDashboard() {
-        const members = allData.filter(d=>d.type==='member'); 
-        const matches = allData.filter(d=>d.type==='match');
-        if(document.getElementById('totalAnggota')) document.getElementById('totalAnggota').textContent = members.length;
-        if(document.getElementById('totalMatches')) document.getElementById('totalMatches').textContent = matches.length;
-        
-        const stats = allData.filter(d=>d.type==='stats');
-        const goals = {}; const assists = {};
-        stats.forEach(s=>{ 
-            if(!goals[s.member_id]) goals[s.member_id]={name:'', val:0}; goals[s.member_id].val+=(parseInt(s.goals)||0);
-            if(!assists[s.member_id]) assists[s.member_id]={name:'', val:0}; assists[s.member_id].val+=(parseInt(s.assists)||0);
-            const m = members.find(x=>x.__backendId===s.member_id); if(m) { goals[s.member_id].name=m.name; assists[s.member_id].name=m.name; }
-        });
-        
-        const topG = Object.values(goals).sort((a,b)=>b.val-a.val)[0]; 
-        if(topG) {
-            if(document.getElementById('topScorer')) document.getElementById('topScorer').textContent = topG.name; 
-            if(document.getElementById('topScorerGoals')) document.getElementById('topScorerGoals').textContent = topG.val+' Goals';
-            const initials = topG.name.split(' ').map(n=>n[0]).join('').substring(0,2);
-            if(document.getElementById('topScorerAvatar')) document.getElementById('topScorerAvatar').innerText = initials;
-        }
-
-        const topA = Object.values(assists).sort((a,b)=>b.val-a.val)[0]; 
-        if(topA) {
-            if(document.getElementById('topAssist')) document.getElementById('topAssist').textContent = topA.name; 
-            if(document.getElementById('topAssistCount')) document.getElementById('topAssistCount').textContent = topA.val+' Assists';
-            const initials = topA.name.split(' ').map(n=>n[0]).join('').substring(0,2);
-            if(document.getElementById('topAssistAvatar')) document.getElementById('topAssistAvatar').innerText = initials;
-        }
-
-const upcomingSchedules = allData.filter(d => d.type === 'schedule' && new Date(d.date + 'T' + (d.time || '00:00')) > new Date())
-                                 .sort((a,b) => new Date(a.date) - new Date(b.date));
-
-if (upcomingSchedules.length > 0) {
-    const next = upcomingSchedules[0];
-    if(document.getElementById('nextMatchTitle')) document.getElementById('nextMatchTitle').textContent = "vs " + next.name;
+function updateDashboard() {
+    // 1. Update Counter (Jumlah Pemain & Match)
+    const members = allData.filter(d => d.type === 'member');
+    const matches = allData.filter(d => d.type === 'match');
+    if(document.getElementById('totalAnggota')) document.getElementById('totalAnggota').textContent = members.length;
+    if(document.getElementById('totalMatches')) document.getElementById('totalMatches').textContent = matches.length;
     
-    const d = new Date(next.date);
-    if(document.getElementById('nextMatchDate')) document.getElementById('nextMatchDate').textContent = d.toLocaleDateString('id-ID', {day:'numeric', month:'long'}) + ' @ ' + next.time;
+    // 2. Update Top Scorer & Assist (Dashboard Card)
+    const stats = allData.filter(d => d.type === 'stats');
+    const goals = {}; const assists = {};
+    stats.forEach(s => { 
+        if(!goals[s.member_id]) goals[s.member_id]={name:'', val:0}; goals[s.member_id].val+=(parseInt(s.goals)||0);
+        if(!assists[s.member_id]) assists[s.member_id]={name:'', val:0}; assists[s.member_id].val+=(parseInt(s.assists)||0);
+        const m = members.find(x => x.__backendId === s.member_id); 
+        if(m) { goals[s.member_id].name = m.name; assists[s.member_id].name = m.name; }
+    });
     
-
-    nextMatchTargetTime = new Date(next.date + 'T' + (next.time || '00:00') + ':00').getTime();
-} else {
-    if(document.getElementById('nextMatchTitle')) document.getElementById('nextMatchTitle').textContent = "Belum Ada Jadwal";
-    if(document.getElementById('nextMatchDate')) document.getElementById('nextMatchDate').textContent = "-";
-    nextMatchTargetTime = null; // Tidak ada jadwal = timer berhenti
-}
+    const topG = Object.values(goals).sort((a,b) => b.val - a.val)[0]; 
+    if(topG) {
+        if(document.getElementById('topScorer')) document.getElementById('topScorer').textContent = topG.name; 
+        if(document.getElementById('topScorerGoals')) document.getElementById('topScorerGoals').textContent = topG.val + ' Goals';
+        const initials = topG.name.split(' ').map(n=>n[0]).join('').substring(0,2);
+        if(document.getElementById('topScorerAvatar')) document.getElementById('topScorerAvatar').innerText = initials;
     }
+
+    const topA = Object.values(assists).sort((a,b) => b.val - a.val)[0]; 
+    if(topA) {
+        if(document.getElementById('topAssist')) document.getElementById('topAssist').textContent = topA.name; 
+        if(document.getElementById('topAssistCount')) document.getElementById('topAssistCount').textContent = topA.val + ' Assists';
+        const initials = topA.name.split(' ').map(n=>n[0]).join('').substring(0,2);
+        if(document.getElementById('topAssistAvatar')) document.getElementById('topAssistAvatar').innerText = initials;
+    }
+
+    // 3. Update Next Match Hero Section (INI YANG DIPERBAIKI)
+    const upcomingSchedules = allData.filter(d => d.type === 'schedule' && new Date(d.date + 'T' + (d.time || '00:00')) > new Date())
+                                     .sort((a,b) => new Date(a.date) - new Date(b.date));
+
+    if (upcomingSchedules.length > 0) {
+        const next = upcomingSchedules[0];
+        
+        // --- PERBAIKAN LOGIKA "VS" ---
+        let displayTitle = "";
+        if (next.schedule_type === 'Friendly Match') {
+            displayTitle = "vs " + next.name; // Pakai "vs" kalau lawan orang
+        } else {
+            displayTitle = next.name; // Kalau Internal, langsung nama acaranya
+        }
+        
+        if(document.getElementById('nextMatchTitle')) document.getElementById('nextMatchTitle').textContent = displayTitle;
+        
+        const d = new Date(next.date);
+        if(document.getElementById('nextMatchDate')) document.getElementById('nextMatchDate').textContent = d.toLocaleDateString('id-ID', {day:'numeric', month:'long'}) + ' @ ' + next.time;
+        
+        // Set Timer Global
+        nextMatchTargetTime = new Date(next.date + 'T' + (next.time || '00:00') + ':00').getTime();
+    } else {
+        if(document.getElementById('nextMatchTitle')) document.getElementById('nextMatchTitle').textContent = "Belum Ada Jadwal";
+        if(document.getElementById('nextMatchDate')) document.getElementById('nextMatchDate').textContent = "-";
+        nextMatchTargetTime = null;
+    }
+}
 
     async function getAutoPrayerTimes() {
       const date = new Date(); const d = String(date.getDate()).padStart(2,'0'); const m = String(date.getMonth()+1).padStart(2,'0'); const y = date.getFullYear();
