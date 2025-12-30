@@ -22,11 +22,11 @@
     
     .hover-lift { transition: all 0.3s ease; }
     .hover-lift:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(218, 165, 32, 0.3); }
-
+ 
    /* Pastikan ini ada di dalam tag <style> */
 .scrollbar-hide::-webkit-scrollbar { display: none; }
 .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
-
+ 
 #genTeamContainer {
     display: flex;
     gap: 1.5rem;
@@ -37,7 +37,7 @@
     flex: 1; /* Mengisi sisa ruang yang ada */
     -webkit-overflow-scrolling: touch;
 }
-
+ 
 /* Supaya kartu tim di dalamnya bisa scroll sendiri jika pemainnya sangat banyak */
 #genTeamContainer > div {
     max-height: 100%;
@@ -45,7 +45,7 @@
     display: flex;
     flex-direction: column;
 }
-
+ 
 @media (max-width: 768px) {
     #genTeamContainer {
         flex-direction: column; /* Menumpuk ke bawah jika di HP */
@@ -94,14 +94,14 @@
         background-size: 20px 20px;
         background-position: 0 0, 10px 10px;
     }
-
+ 
     /* Logic Admin */
     .admin-only { display: none !important; }
     body.is-admin .admin-only { display: block !important; }
     body.is-admin div.flex.admin-only { display: flex !important; } 
     body.is-admin label.admin-only { display: flex !important; }
     body.is-admin .admin-grid { display: grid !important; }
-
+ 
     .admin-toggle { 
         position: fixed; 
         bottom: 30px; 
@@ -162,7 +162,7 @@
                      placeholder="Cari Pemain, Aset, atau Sponsor...">
           </div>
       </div>
-
+ 
       <div class="text-right hidden md:block flex-shrink-0">
        <div class="text-sm font-bold text-slate-700" id="currentDate"></div>
        <div class="text-xs text-amber-600 font-semibold" id="hijriDate">1446 H</div>
@@ -170,7 +170,7 @@
      </div>
     </div>
    </header>
-
+ 
    <div class="max-w-7xl mx-auto px-4 pt-4 pb-2 sticky top-[70px] z-40">
     <div class="glass-nav rounded-2xl p-2 shadow-lg">
         <div class="flex md:grid md:grid-cols-9 gap-2 overflow-x-auto pb-1 md:pb-0 hide-scrollbar" style="-webkit-overflow-scrolling: touch;">
@@ -204,7 +204,7 @@
         </div>
     </div>
    </div>
-
+ 
    <main class="max-w-7xl mx-auto px-4 pb-24 pt-4">
     
    <div id="dashboardView" class="view-content"> 
@@ -241,14 +241,14 @@
                     <div class="text-[8px] uppercase text-gray-300">Detik</div>
                 </div>
             </div>
-
+ 
             <button onclick="showMenu('jadwal')" class="bg-amber-500 hover:bg-amber-400 text-slate-900 px-8 py-2.5 rounded-full text-xs font-bold transition-all shadow-lg transform active:scale-95 mx-auto block">
                 Lihat Detail Jadwal →
             </button>
         </div>
     </div>
   </div>
-
+ 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         <div class="bg-gradient-to-br from-blue-600 to-blue-800 p-5 rounded-2xl shadow-lg shadow-blue-500/20 text-white relative overflow-hidden group hover-lift cursor-pointer border border-blue-500/30" onclick="showMenu('anggota')">
             <div class="absolute -right-4 -bottom-4 text-9xl text-white opacity-10 transform rotate-12 transition-transform group-hover:scale-110">👥</div>
@@ -304,7 +304,7 @@
        </div>
       </div>
     </div>
-
+ 
     <div id="islamiView" class="view-content hidden">
       <div class="relative rounded-2xl overflow-hidden mb-6 shadow-xl border border-green-200">
           <div class="absolute inset-0 bg-gradient-to-r from-emerald-800 to-green-600"></div>
@@ -320,7 +320,7 @@
               </div>
           </div>
       </div>
-
+ 
       <div class="mb-6">
           <div class="flex items-center justify-between mb-3 px-1">
             <h3 class="text-lg font-bold text-emerald-800 flex items-center gap-2"><span class="text-xl">🕌</span> Waktu Sholat Bandung</h3>
@@ -328,7 +328,7 @@
           </div>
           <div id="prayerSchedule" class="grid grid-cols-2 md:grid-cols-5 gap-3"></div>
       </div>
-
+ 
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
         <div class="lg:col-span-2 glass-effect rounded-xl p-0 overflow-hidden shadow-lg border-t-4 border-amber-500">
             <div class="bg-amber-50 p-4 border-b border-amber-100 flex justify-between items-center">
@@ -349,7 +349,7 @@
                  </div>
             </div>
         </div>
-
+ 
         <div class="space-y-6">
              <div class="glass-effect rounded-xl p-5 shadow-md">
                 <div class="flex justify-between items-center mb-3">
@@ -370,7 +370,7 @@
              </div>
         </div>
       </div>
-
+ 
       <div class="glass-effect rounded-xl p-6 admin-only">
         <h2 class="text-xl font-bold text-amber-600 mb-4 flex items-center gap-2"><span>📚</span> Kelola Jadwal Kajian</h2>
         <div class="grid grid-cols-1 md:grid-cols-4 gap-3 mb-4">
@@ -387,7 +387,7 @@
         <div id="kajianList" class="space-y-3"></div>
       </div>
     </div>
-
+ 
     <div id="anggotaView" class="view-content hidden">
       <div class="relative rounded-2xl overflow-hidden mb-8 shadow-xl bg-slate-900 text-white min-h-[200px] flex items-center">
           <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1579952363873-27f3bade9f55?q=80&w=2000')] bg-cover bg-center opacity-40"></div>
@@ -399,7 +399,7 @@
               <button onclick="document.getElementById('joinFormSection').scrollIntoView({behavior: 'smooth'})" class="admin-only bg-amber-500 hover:bg-amber-600 text-slate-900 px-6 py-2 rounded-full font-bold text-sm transition shadow-lg transform hover:scale-105">Gabung Tim</button>
           </div>
       </div>
-
+ 
       <div class="mb-10">
           <h3 class="text-xl font-bold text-slate-800 mb-6 flex items-center gap-2 border-l-4 border-amber-500 pl-3">
               <span>👥</span> Galeri Pemain
@@ -411,9 +411,6 @@
                <button onclick="filterSquad('Gelandang')" id="btn-squad-mid" class="squad-filter px-4 py-1.5 rounded-full text-xs font-bold shadow-sm transition-all bg-white text-gray-600 border border-gray-200 hover:bg-green-50">🎯 MID</button>
                <button onclick="filterSquad('Striker')" id="btn-squad-fwd" class="squad-filter px-4 py-1.5 rounded-full text-xs font-bold shadow-sm transition-all bg-white text-gray-600 border border-gray-200 hover:bg-red-50">⚽ FWD</button>
           </div>
-       <h3 class="text-xl font-bold text-slate-800 mb-6 flex items-center gap-2 border-l-4 border-amber-500 pl-3">
-    <span>👥</span> Galeri Pemain
-</h3>
           <div class="flex items-center justify-between mb-4 px-2">
               <span class="text-xs text-gray-500 font-semibold" id="totalPlayerCount">Memuat pemain...</span>
               <div class="admin-only flex gap-2">
@@ -423,7 +420,7 @@
           </div>
           <div id="memberList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5"></div>
       </div>
-
+ 
       <div id="joinFormSection" class="admin-only bg-white rounded-2xl p-6 shadow-lg border border-gray-100 relative overflow-hidden">
          <div class="absolute top-0 right-0 p-10 opacity-5 text-9xl rotate-12">📝</div>
          <div class="relative z-10">
@@ -441,7 +438,7 @@
          </div>
       </div>
     </div>
-
+ 
     <div id="jadwalView" class="view-content hidden">
       <div class="relative rounded-2xl overflow-hidden mb-8 shadow-xl bg-slate-900 text-white min-h-[200px] flex items-center">
           <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1522778119026-d647f0565c6d?q=80&w=2000')] bg-cover bg-center opacity-40"></div>
@@ -453,14 +450,14 @@
               <button onclick="document.getElementById('scheduleSectionAdmin').scrollIntoView({behavior: 'smooth'})" class="admin-only bg-amber-500 hover:bg-amber-600 text-slate-900 px-6 py-2 rounded-full font-bold text-sm transition shadow-lg">Tambah Jadwal</button>
           </div>
       </div>
-
+ 
       <div class="mb-10">
           <h3 class="text-xl font-bold text-slate-800 mb-6 flex items-center gap-2 border-l-4 border-amber-500 pl-3">
               <span>📅</span> Agenda Mendatang
           </h3>
           <div id="scheduleList" class="space-y-6"></div>
       </div>
-
+ 
       <div id="scheduleSectionAdmin" class="glass-effect rounded-xl p-6 mb-6 admin-only border border-amber-200">
        <h2 class="text-xl font-bold text-amber-600 mb-4">📅 Buat Jadwal Baru</h2>
        <div class="mb-4"><select id="scheduleType" class="w-full px-4 py-3 border border-amber-300 rounded-xl bg-white font-semibold text-gray-700 focus:ring-2 focus:ring-amber-400"> <option value="">-- Pilih Jenis Kegiatan --</option> <option value="Friendly Match">🤝 Friendly Match</option> <option value="Fun Football">⚽ Fun Football Internal</option> </select></div>
@@ -468,7 +465,7 @@
        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4"><input type="time" id="scheduleTime" class="px-4 py-3 border border-amber-300 rounded-xl focus:ring-2 focus:ring-amber-400"> <input type="text" id="scheduleLocation" placeholder="Lokasi Lapangan" class="px-4 py-3 border border-amber-300 rounded-xl focus:ring-2 focus:ring-amber-400"></div><button onclick="addSchedule()" class="w-full gold-gradient text-white px-4 py-3 rounded-xl hover:opacity-90 font-semibold shadow-md transform active:scale-95 transition"> 💾 Simpan Jadwal </button>
       </div>
     </div>
-
+ 
     <div id="matchView" class="view-content hidden">
       <div class="relative rounded-2xl overflow-hidden mb-8 shadow-xl bg-slate-900 text-white min-h-[200px] flex items-center">
           <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=2000')] bg-cover bg-center opacity-40"></div>
@@ -480,7 +477,7 @@
               <button onclick="document.getElementById('matchInputSection').scrollIntoView({behavior: 'smooth'})" class="admin-only bg-amber-500 hover:bg-amber-600 text-slate-900 px-6 py-2 rounded-full font-bold text-sm transition shadow-lg transform hover:scale-105">Input Skor</button>
           </div>
       </div>
-
+ 
       <div class="grid grid-cols-3 gap-3 mb-8">
           <div class="bg-gradient-to-br from-green-600 to-green-700 rounded-xl p-4 text-white shadow-lg relative overflow-hidden group hover-lift border border-green-500/30">
               <div class="absolute -right-2 -top-2 opacity-10 text-6xl font-bold font-head group-hover:scale-110 transition-transform">W</div>
@@ -504,14 +501,14 @@
               </div>
           </div>
       </div>
-
+ 
       <div class="mb-10">
           <h3 class="text-xl font-bold text-slate-800 mb-6 flex items-center gap-2 border-l-4 border-amber-500 pl-3">
               <span>🏆</span> Riwayat Laga
           </h3>
           <div id="matchList" class="space-y-4"></div>
       </div>
-
+ 
       <div id="matchInputSection" class="glass-effect rounded-xl p-6 mb-6 admin-only border border-amber-200">
         <h2 class="text-xl font-bold text-amber-600 mb-4 flex items-center gap-2"><span>⚽</span> Input Hasil Pertandingan</h2>
         
@@ -521,7 +518,7 @@
                 <option value="">-- Pilih Jadwal --</option>
             </select>
         </div>
-
+ 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <select id="matchType" onchange="renderMatchInputForm()" class="px-4 py-3 border border-amber-300 rounded-xl bg-white font-bold text-gray-700"> 
                 <option value="">-- Jenis Match --</option> 
@@ -535,15 +532,15 @@
             <input type="text" id="matchLocation" placeholder="Lokasi" class="w-full px-4 py-3 border border-amber-300 rounded-xl bg-gray-100" readonly>
             <input type="text" id="matchOpponent" placeholder="Nama Lawan" class="w-full mt-2 px-4 py-3 border border-amber-300 rounded-xl hidden">
         </div>
-
+ 
         <div id="dynamicScoreInput" class="mb-6 bg-gray-50 p-4 rounded-xl border border-gray-200">
             <p class="text-center text-gray-400 italic text-sm">Silakan pilih jadwal terlebih dahulu...</p>
         </div>
-
+ 
         <button onclick="addMatch()" class="w-full gold-gradient text-white px-4 py-3 rounded-xl hover:opacity-90 font-semibold shadow-md transform active:scale-95 transition"> 💾 Simpan Hasil Match </button>
       </div>
     </div>
-
+ 
     <div id="statistikView" class="view-content hidden">
       <div class="relative rounded-2xl overflow-hidden mb-8 shadow-xl bg-slate-900 text-white min-h-[200px] flex items-center">
           <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2000')] bg-cover bg-center opacity-40"></div>
@@ -555,17 +552,10 @@
               <button onclick="document.getElementById('statsInputSection').scrollIntoView({behavior: 'smooth'})" class="admin-only bg-amber-500 hover:bg-amber-600 text-slate-900 px-6 py-2 rounded-full font-bold text-sm transition shadow-lg">Input Statistik</button>
           </div>
       </div>
-     <div class="flex justify-center gap-2 mb-6 mt-4">
-          <button onclick="filterStats('all')" id="btn-stats-all" class="stats-filter px-4 py-1.5 rounded-full text-xs font-bold shadow-sm transition-all bg-slate-800 text-white border border-slate-700">Semua Waktu</button>
-          <button onclick="filterStats('week')" id="btn-stats-week" class="stats-filter px-4 py-1.5 rounded-full text-xs font-bold shadow-sm transition-all bg-white text-gray-600 border border-gray-200 hover:bg-gray-50">📅 Minggu Ini</button>
-          <button onclick="filterStats('month')" id="btn-stats-month" class="stats-filter px-4 py-1.5 rounded-full text-xs font-bold shadow-sm transition-all bg-white text-gray-600 border border-gray-200 hover:bg-gray-50">🗓️ Bulan Ini</button>
-      </div>
+ 
       <div id="statsPodium" class="mb-10 grid grid-cols-1 md:grid-cols-3 gap-4 items-end min-h-[100px]">
           </div>
-
-      <div id="statsPodium" class="mb-10 grid grid-cols-1 md:grid-cols-3 gap-4 items-end min-h-[100px]">
-          </div>
-
+ 
       <div class="glass-effect rounded-2xl overflow-hidden shadow-lg mb-8 border border-gray-100">
           <div class="p-4 bg-gradient-to-r from-slate-50 to-white border-b border-gray-200 flex justify-between items-center">
               <h3 class="font-bold text-slate-700 flex items-center gap-2">📊 Peringkat Keseluruhan</h3>
@@ -589,7 +579,7 @@
               </table>
           </div>
       </div>
-
+ 
       <div id="statsInputSection" class="glass-effect rounded-xl p-6 mb-6 admin-only border border-amber-200 shadow-xl">
        <h2 class="text-xl font-bold text-amber-600 mb-4 flex items-center gap-2">📝 Input Statistik Baru</h2>
        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4"><select id="statsPlayerName" class="px-4 py-3 border border-amber-300 rounded-xl bg-white font-bold text-gray-700 focus:ring-2 focus:ring-amber-400"> <option value="">-- Pilih Pemain --</option> </select> <select id="statsMatchRef" class="px-4 py-3 border border-amber-300 rounded-xl bg-white font-bold text-gray-700 focus:ring-2 focus:ring-amber-400">
@@ -617,9 +607,9 @@
            </div>
            <p class="text-xs text-gray-400 mt-2 text-center">Hapus data di sini jika terjadi kesalahan input.</p>
       </div>
-
+ 
       </div> ```
-
+ 
     <div id="inventarisView" class="view-content hidden">
       <div class="relative rounded-2xl overflow-hidden mb-8 shadow-xl bg-slate-800 text-white min-h-[180px] flex items-center">
           <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1522778119026-d647f0565c6d?q=80&w=2000')] bg-cover bg-center opacity-40"></div>
@@ -638,7 +628,7 @@
        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4"><input type="number" id="itemQuantity" placeholder="Jumlah Stok" min="0" class="px-4 py-2 border border-amber-300 rounded-lg"> <select id="itemCondition" class="w-full px-4 py-2 border border-amber-300 rounded-lg bg-amber-50 font-semibold"> <option value="">-- Kondisi Fisik --</option> <option value="Baik">✅ Baik (Layak Pakai)</option> <option value="Cukup">⚠️ Cukup (Ada Lecet)</option> <option value="Perlu Diganti">❌ Rusak / Perlu Ganti</option> </select></div><button onclick="addInventory()" class="w-full gold-gradient text-white px-4 py-3 rounded-lg hover:opacity-90 font-semibold shadow-md"> ➕ Simpan ke Inventaris </button>
       </div>
     </div>
-
+ 
     <div id="sponsorView" class="view-content hidden">
       <div class="relative rounded-2xl overflow-hidden mb-8 shadow-xl bg-slate-900 text-white min-h-[200px] flex items-center">
           <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1517466787929-bc90951d0974?q=80&w=2000')] bg-cover bg-center opacity-40"></div>
@@ -684,16 +674,16 @@
     </div>
    </main>
   </div>
-
+ 
   <div id="adminBtn" class="admin-toggle" onclick="toggleAdmin()">🔒</div>
-
+ 
   <div id="loginModal" class="hidden fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm"><div class="bg-white p-6 rounded-xl shadow-2xl w-80 text-center border-2 border-amber-400"><h3 class="text-xl font-bold text-amber-600 mb-4 font-arabic">🔑 Login Admin</h3><input type="password" id="adminPassInput" placeholder="Masukkan Password..." class="w-full px-4 py-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:border-amber-500"><div class="flex gap-2"><button onclick="submitLogin()" class="flex-1 bg-amber-500 text-white py-2 rounded-lg hover:bg-amber-600 font-bold">Masuk</button> <button onclick="closeAdminModal()" class="flex-1 bg-gray-200 text-gray-700 py-2 rounded-lg hover:bg-gray-300">Batal</button></div></div></div>
   <div id="editInventoryModal" class="hidden fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm"><div class="bg-white p-6 rounded-xl shadow-2xl w-96 border-2 border-blue-400"><h3 class="text-xl font-bold text-blue-600 mb-4">✏️ Edit Inventaris</h3><div class="space-y-3"><input type="text" id="editItemName" placeholder="Nama Item" class="w-full px-4 py-2 border border-gray-300 rounded-lg"> <input type="text" id="editItemImage" placeholder="Link Foto (opsional)" class="w-full px-4 py-2 border border-gray-300 rounded-lg"> <input type="number" id="editItemQuantity" placeholder="Jumlah" class="w-full px-4 py-2 border border-gray-300 rounded-lg"> <select id="editItemCondition" class="w-full px-4 py-2 border border-gray-300 rounded-lg"> <option value="Baik">Baik</option> <option value="Cukup">Cukup</option> <option value="Perlu Diganti">Perlu Diganti</option> </select></div><div class="flex gap-2 mt-4"><button onclick="saveEditInventory()" class="flex-1 bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 font-bold">💾 Simpan</button> <button onclick="closeEditInventoryModal()" class="flex-1 bg-gray-200 text-gray-700 py-2 rounded-lg hover:bg-gray-300">Batal</button></div></div></div>
   <div id="editSponsorModal" class="hidden fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm"><div class="bg-white p-6 rounded-xl shadow-2xl w-96 border-2 border-pink-400"><h3 class="text-xl font-bold text-pink-600 mb-4">✏️ Edit Sponsor</h3><div class="space-y-3"><input type="text" id="editSponsorName" placeholder="Nama Sponsor" class="w-full px-4 py-2 border border-gray-300 rounded-lg"> <input type="text" id="editSponsorImage" placeholder="Link Logo (https://...)" class="w-full px-4 py-2 border border-gray-300 rounded-lg"> <input type="text" id="editSponsorContact" placeholder="Kontak" class="w-full px-4 py-2 border border-gray-300 rounded-lg"> <input type="number" id="editSponsorAmount" placeholder="Jumlah Donasi (Rp)" class="w-full px-4 py-2 border border-gray-300 rounded-lg"><select id="editSponsorTier" class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50"><option value="3">Tier 3 (Silver)</option><option value="2">Tier 2 (Gold)</option><option value="1">Tier 1 (Platinum)</option></select></div><div class="flex gap-2 mt-4"><button onclick="saveEditSponsor()" class="flex-1 bg-pink-500 text-white py-2 rounded-lg hover:bg-pink-600 font-bold">💾 Simpan</button> <button onclick="closeEditSponsorModal()" class="flex-1 bg-gray-200 text-gray-700 py-2 rounded-lg hover:bg-gray-300">Batal</button></div></div></div>
   <div id="playerModal" class="hidden fixed inset-0 z-[9000] flex items-center justify-center bg-black/70 backdrop-blur-sm p-4"><div class="glass-effect w-full max-w-lg rounded-2xl overflow-hidden shadow-2xl relative bg-white"><button onclick="closePlayerModal()" class="absolute top-4 right-4 text-gray-500 hover:text-red-500 z-10 text-xl">✖</button><div class="bg-gradient-to-r from-amber-400 to-yellow-300 p-6 text-center"><div class="w-20 h-20 bg-white rounded-full mx-auto flex items-center justify-center text-4xl shadow-lg border-4 border-white mb-3">👤</div><h2 id="modalPlayerName" class="text-2xl font-bold text-amber-900 font-arabic">Nama Pemain</h2><p id="modalPlayerPos" class="text-amber-800 font-semibold">Posisi</p></div><div class="p-6"><div class="grid grid-cols-3 gap-2 text-center mb-6"><div class="p-2 bg-amber-50 rounded-lg"><div class="text-xs text-gray-500">Main</div><div id="modalStatsCaps" class="text-xl font-bold text-amber-600">0</div></div><div class="p-2 bg-green-50 rounded-lg"><div class="text-xs text-gray-500">Gol</div><div id="modalStatsGoals" class="text-xl font-bold text-green-600">0</div></div><div class="p-2 bg-blue-50 rounded-lg"><div class="text-xs text-gray-500">Assist</div><div id="modalStatsAssist" class="text-xl font-bold text-blue-600">0</div></div></div><h3 class="font-bold text-gray-700 mb-2 border-b pb-1">Riwayat Performa</h3><div id="modalHistoryList" class="max-h-48 overflow-y-auto space-y-2 text-sm"></div></div></div></div>
   <div id="editMemberModal" class="hidden fixed inset-0 z-[9500] flex items-center justify-center bg-black/70 backdrop-blur-sm p-4"><div class="bg-white w-full max-w-2xl rounded-2xl overflow-hidden shadow-2xl"><div class="bg-gradient-to-r from-blue-500 to-blue-400 p-4 text-center"><h3 class="text-xl font-bold text-white">✏️ Edit Data Anggota</h3></div><div class="p-6"><div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4"><input type="text" id="editMemberName" placeholder="Nama Lengkap" class="px-4 py-2 border border-gray-300 rounded-lg"> <select id="editMemberPosition" class="px-4 py-2 border border-gray-300 rounded-lg"> <option value="">Pilih Posisi</option> <option value="Kiper">Kiper</option> <option value="Bek">Bek</option> <option value="Gelandang">Gelandang</option> <option value="Striker">Striker</option> </select></div><div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4"><input type="tel" id="editMemberPhone" placeholder="No. Telepon" class="px-4 py-2 border border-gray-300 rounded-lg"> <select id="editMemberSkill" class="px-4 py-2 border border-gray-300 rounded-lg"> <option value="">Level Keahlian</option> <option value="Pemula">Pemula</option> <option value="Menengah">Menengah</option> <option value="Mahir">Mahir</option> </select></div><div class="mb-4"><input type="text" id="editMemberPhoto" placeholder="URL Foto (https://...)" class="w-full px-4 py-2 border border-gray-300 rounded-lg mb-4"> <select id="editMemberAvailability" class="w-full px-4 py-2 border border-gray-300 rounded-lg"> <option value="">Ketersediaan</option> <option value="Weekday">Weekday</option> <option value="Weekend">Weekend</option> <option value="Fleksibel">Fleksibel</option> </select></div><div class="flex gap-3"><button onclick="saveEditMember()" class="flex-1 bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600 font-bold">💾 Simpan Perubahan</button> <button onclick="closeEditMemberModal()" class="flex-1 bg-gray-200 text-gray-700 py-3 rounded-lg hover:bg-gray-300 font-bold">❌ Batal</button></div></div></div></div>
   <div id="prayerModal" class="hidden fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"><div class="glass-effect w-full max-w-md rounded-2xl overflow-hidden shadow-2xl relative bg-white border-2 border-emerald-400 flex flex-col max-h-[90vh]"><div class="bg-gradient-to-r from-emerald-600 to-green-500 p-6 text-center flex-shrink-0"><div class="w-16 h-16 bg-white/20 rounded-full mx-auto flex items-center justify-center text-3xl shadow-inner backdrop-blur-sm mb-3">🤲</div><h2 id="modalPrayerTitle" class="text-xl font-bold text-white font-head tracking-wide">Judul Doa</h2></div><div class="p-6 text-center space-y-4 bg-[url('https://www.transparenttextures.com/patterns/cream-paper.png')] overflow-y-auto flex-1"><p id="modalPrayerArabic" class="text-2xl font-arabic text-emerald-900 leading-loose dir-rtl"></p><div class="h-px bg-emerald-200 w-1/2 mx-auto"></div><p id="modalPrayerTrans" class="text-sm text-slate-600 italic leading-relaxed"></p></div><div class="p-4 bg-gray-50 border-t border-gray-200 flex-shrink-0"><button onclick="closePrayerModal()" class="w-full bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-3 rounded-xl transition-colors shadow-sm">Tutup Kartu Doa</button></div></div></div>
-
+ 
   <div id="matchRegModal" class="hidden fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
       <div class="bg-white w-full max-w-lg rounded-2xl overflow-hidden shadow-2xl flex flex-col h-[85vh] md:max-h-[600px]">
           
@@ -708,14 +698,14 @@
                   <span id="regQuotaBadge" class="text-xs font-bold px-3 py-1 rounded-full bg-blue-100 text-blue-700 border border-blue-200">Kuota: 0 / 0</span>
               </div>
           </div>
-
+ 
           <div class="flex-1 overflow-y-auto custom-scrollbar">
               
               <div class="sticky top-0 bg-gray-100 px-4 py-2 text-xs font-bold text-gray-600 border-b z-10 shadow-sm">
                   SUDAH TERDAFTAR
               </div>
               <div id="regRegisteredList" class="p-2 space-y-1 bg-white border-b mb-2"></div>
-
+ 
               <div class="admin-only">
                   <div class="sticky top-0 bg-gray-100 px-4 py-2 flex justify-between items-center border-y z-10 shadow-sm mt-2">
                         <span class="text-xs font-bold text-gray-600">TAMBAH PEMAIN BARU</span>
@@ -728,12 +718,12 @@
                   <div id="regPlayerChecklist" class="p-4 space-y-2 bg-white pb-20">
                       </div>
               </div>
-
+ 
               <div class="p-4 text-center text-gray-400 text-xs italic admin-only:hidden">
                   Hubungi Baginda Raja (Admin) untuk mendaftar atau mengelola pemain.
               </div>
           </div>
-
+ 
           <div class="admin-only p-4 border-t bg-white shadow-[0_-5px_15px_rgba(0,0,0,0.05)] flex-shrink-0 z-20">
               <div class="flex flex-col gap-2">
                   <button onclick="addBulkRegistration()" class="w-full bg-green-500 hover:bg-green-600 text-white px-4 py-3 rounded-xl font-bold text-sm shadow-md transition transform active:scale-95 flex items-center justify-center gap-2">
@@ -747,7 +737,7 @@
           </div>
       </div>
   </div>
-
+ 
 <div id="teamGeneratorModal" class="hidden fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 backdrop-blur-sm p-2 md:p-4">
     <div class="bg-white w-[95vw] max-w-6xl rounded-3xl shadow-2xl flex flex-col h-[90vh] border-4 border-gray-100 overflow-hidden">
         <div class="bg-slate-900 p-6 flex justify-between items-center text-white border-b border-gray-800 flex-shrink-0">
@@ -785,10 +775,10 @@
                  </button>
              </div>
         </div>
-
+ 
         <div id="genTeamContainer" class="flex-1 overflow-auto p-6 bg-slate-100 scrollbar-dark">
             </div>
-
+ 
         <div class="p-5 border-t bg-white flex justify-end gap-3 z-10 shadow-[0_-5px_20px_rgba(0,0,0,0.05)] flex-shrink-0">
              <button onclick="closeTeamGeneratorModal()" class="px-6 py-2.5 rounded-xl text-gray-600 font-bold hover:bg-gray-100 transition">Tutup</button>
              <button onclick="pushToMatchRecap()" class="admin-only bg-green-600 hover:bg-green-700 text-white px-6 py-2.5 rounded-xl font-bold shadow-lg transition">
@@ -797,13 +787,13 @@
         </div>
     </div>
   </div>
-
+ 
   <script type="module">
     // ... imports ...
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
     import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
     import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
+ 
     // ... existing firebase config ...
     // --- FIREBASE CONFIGURATION ---
     const myFirebaseConfig = {
@@ -815,19 +805,19 @@
       appId: "1:546357578832:web:87b8759b4c0fe9198dd555",
       measurementId: "G-6X09T9TVMJ"
     };
-
+ 
     let firebaseConfig;
     if (typeof __firebase_config !== 'undefined') {
         firebaseConfig = JSON.parse(__firebase_config);
     } else {
         firebaseConfig = myFirebaseConfig;
     }
-
+ 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
     const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-
+ 
     let currentUser = null;
     let allData = [];
     let nextMatchTargetTime = null;
@@ -840,8 +830,7 @@
     let tempGeneratedTeams = [];
     let isEditingTeams = false; // New state for edit mode
     let currentSquadFilter = 'all';
-    let currentStatsFilter = 'all';
-
+ 
     // ... initAuth & setupDataListener ...
     const initAuth = async () => {
         try {
@@ -855,14 +844,14 @@
         }
     };
     initAuth();
-
+ 
     onAuthStateChanged(auth, (user) => {
         currentUser = user;
         if (user) {
             setupDataListener(user);
         }
     });
-
+ 
     function setupDataListener(user) {
         const q = collection(db, 'artifacts', appId, 'public', 'data', 'universal_data');
         onSnapshot(q, (snapshot) => {
@@ -887,14 +876,14 @@
             console.error("Data fetch error:", error);
         });
     }
-
+ 
     // ... other window functions ...
     window.handleGlobalSearch = function() {
         const input = document.getElementById('globalSearchInput');
         searchQuery = input.value.toLowerCase();
         renderCurrentView();
     }
-
+ 
     function renderCurrentView() {
         if(currentMenu === 'dashboard') updateDashboard();
         else if(currentMenu === 'anggota') renderMembers();
@@ -918,7 +907,7 @@
             showToast("Gagal menyimpan (Cek Console)", "error");
         }
     }
-
+ 
     async function updateData(data) {
         if (!currentUser) return;
         try {
@@ -938,7 +927,7 @@
             await updateDoc(docRef, data);
         } catch(e) { console.error(e); showToast("Gagal update doc", "error"); }
     }
-
+ 
     async function deleteData(id) {
         if (!currentUser) return;
         try {
@@ -949,28 +938,28 @@
             showToast("Gagal menghapus", "error");
         }
     }
-
+ 
     const hadistDatabase = [ 
         "Mukmin yang kuat lebih baik dan lebih dicintai Allah daripada mukmin yang lemah. (HR. Muslim)",
         "Sebaik-baik manusia adalah yang paling bermanfaat bagi manusia lainnya. (HR. Ahmad)",
         "Barangsiapa menempuh jalan untuk menuntut ilmu, Allah mudahkan baginya jalan menuju surga. (HR. Muslim)",
         "Senyummu di hadapan saudaramu adalah sedekah bagimu. (HR. Tirmidzi)"
     ];
-
+ 
 function startGlobalTimer() {
     setInterval(() => {
         if (!nextMatchTargetTime) return;
-
+ 
         const now = new Date().getTime();
         const distance = nextMatchTargetTime - now;
-
+ 
         const daysEl = document.getElementById('countdownDays');
         const hoursEl = document.getElementById('countdownHours');
         const minsEl = document.getElementById('countdownMinutes');
         const secsEl = document.getElementById('countdownSeconds');
-
+ 
         if (!daysEl) return; 
-
+ 
         if (distance < 0) {
             daysEl.textContent = "00";
             hoursEl.textContent = "00";
@@ -978,232 +967,19 @@ function startGlobalTimer() {
             secsEl.textContent = "00";
             return;
         }
-
+ 
         const days = Math.floor(distance / (1000 * 60 * 60 * 24));
         const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
+ 
         daysEl.textContent = String(days).padStart(2, '0');
         hoursEl.textContent = String(hours).padStart(2, '0');
         minsEl.textContent = String(minutes).padStart(2, '0');
         secsEl.textContent = String(seconds).padStart(2, '0');
     }, 1000);
 }
-function renderInventory() {
-        const container = document.getElementById('inventoryList');
-        if (!container) return;
-
-        // Ambil data inventory dan urutkan dari yang terbaru
-        const items = allData.filter(d => d.type === 'inventory')
-                             .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-
-        // Jika Kosong
-        if (items.length === 0) {
-            container.innerHTML = `
-                <div class="col-span-full text-center py-12 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-300">
-                    <div class="text-4xl mb-2">📦</div>
-                    <p class="text-gray-500 font-bold">Gudang Kosong</p>
-                    <p class="text-xs text-gray-400 mt-1">Belum ada aset yang dicatat.</p>
-                </div>`;
-            return;
-        }
-
-        // Render Kartu Aset
-        container.innerHTML = items.map(i => {
-            let badgeClass = 'bg-green-100 text-green-700';
-            if(i.condition === 'Cukup') badgeClass = 'bg-yellow-100 text-yellow-700';
-            if(i.condition === 'Perlu Diganti') badgeClass = 'bg-red-100 text-red-700';
-
-            return `
-            <div class="bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden hover-lift group relative flex flex-col">
-                <div class="h-32 w-full bg-gray-100 relative overflow-hidden">
-                    <img src="${i.item_image || 'https://via.placeholder.com/300x200?text=Aset'}" 
-                         class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                         onerror="this.src='https://via.placeholder.com/300x200?text=No+Image'">
-                    <div class="absolute top-2 right-2 ${badgeClass} text-[10px] font-bold px-2 py-1 rounded-lg shadow-sm backdrop-blur-sm">
-                        ${i.condition}
-                    </div>
-                </div>
-                <div class="p-3 flex-1 flex flex-col justify-between">
-                    <div>
-                        <h4 class="font-bold text-slate-800 text-sm leading-tight mb-1 line-clamp-2">${i.item_name}</h4>
-                    </div>
-                    <div class="flex justify-between items-end mt-3 border-t border-gray-50 pt-2">
-                        <div class="text-xs font-mono text-slate-500 bg-slate-50 px-2 py-1 rounded border border-slate-100">
-                            Stok: <b class="text-slate-800 text-sm">${i.quantity}</b>
-                        </div>
-                        <div class="admin-only flex gap-1">
-                            <button onclick="editInventory('${i.__backendId}')" class="w-7 h-7 flex items-center justify-center bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition shadow-sm">✏️</button>
-                            <button onclick="deleteInventory('${i.__backendId}')" class="w-7 h-7 flex items-center justify-center bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition shadow-sm">🗑️</button>
-                        </div>
-                    </div>
-                </div>
-            </div>`;
-        }).join('');
-    }
-    
-    // Fungsi Edit & Hapus Aset
-    window.editInventory = function(id) { 
-        currentEditingRecord=allData.find(d=>d.__backendId===id); 
-        if(!currentEditingRecord) return; 
-        document.getElementById('editItemName').value=currentEditingRecord.item_name; 
-        document.getElementById('editItemImage').value=currentEditingRecord.item_image||''; 
-        document.getElementById('editItemQuantity').value=currentEditingRecord.quantity; 
-        document.getElementById('editItemCondition').value=currentEditingRecord.condition; 
-        document.getElementById('editInventoryModal').classList.remove('hidden'); 
-    }
-    window.saveEditInventory = async function() { 
-        if(!currentEditingRecord) return; 
-        await updateData({
-            ...currentEditingRecord, 
-            item_name:document.getElementById('editItemName').value, 
-            item_image:document.getElementById('editItemImage').value, 
-            quantity:document.getElementById('editItemQuantity').value, 
-            condition:document.getElementById('editItemCondition').value 
-        }); 
-        showToast('Update berhasil'); 
-        closeEditInventoryModal(); 
-    }
-    window.closeEditInventoryModal = function() { document.getElementById('editInventoryModal').classList.add('hidden'); }
-    window.deleteInventory = async function(id) { if(confirm('Hapus aset ini?')) await deleteData(id); }
-
-
-    // ==========================================
-    // 2. LOGIKA MENU SPONSOR - FIX
-    // ==========================================
-    function renderSponsors() { 
-        const grid = document.getElementById('sponsorListGrid');
-        if(!grid) return;
-        
-        let list = allData.filter(d=>d.type==='sponsor').sort((a,b) => (parseInt(a.tier)||3) - (parseInt(b.tier)||3) || (parseInt(b.amount)||0) - (parseInt(a.amount)||0));
-        
-        if (list.length === 0) {
-            grid.innerHTML = `
-                <div class="col-span-full text-center py-12 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-300">
-                    <div class="text-4xl mb-2">🤝</div>
-                    <p class="text-gray-500 font-bold">Belum Ada Sponsor</p>
-                    <p class="text-xs text-gray-400 mt-1">Jadilah pendukung pertama tim ini!</p>
-                </div>`;
-            return;
-        }
-
-        grid.innerHTML = list.map((s) => {
-            const tier = parseInt(s.tier) || 3;
-            let tierClass = tier === 1 ? "bg-gradient-to-br from-slate-800 to-slate-900 border-slate-700 text-white" : (tier === 2 ? "bg-gradient-to-br from-amber-500 to-yellow-600 border-amber-400 text-white" : "bg-gradient-to-br from-slate-200 to-gray-300 border-gray-300 text-slate-800");
-            let badge = tier === 1 ? "👑 PLATINUM" : (tier === 2 ? "⭐ GOLD" : "🥈 SILVER");
-            
-            return `
-            <div class="${tierClass} relative rounded-2xl p-6 hover-lift group flex flex-col sm:flex-row items-center gap-6 min-h-[160px] overflow-hidden border shadow-lg">
-                <div class="absolute top-0 left-0 bg-white/20 text-[10px] font-bold px-3 py-1 rounded-br-lg shadow-sm z-10">${badge}</div>
-                <div class="admin-only absolute top-2 right-2 flex gap-1 z-20 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <button onclick="editSponsor('${s.__backendId}')" class="bg-white/20 backdrop-blur p-1 rounded text-xs hover:bg-white/40">✏️</button>
-                    <button onclick="deleteSponsor('${s.__backendId}')" class="bg-red-500/80 backdrop-blur p-1 rounded text-xs hover:bg-red-600">🗑️</button>
-                </div>
-                <div class="w-24 h-24 flex-shrink-0 bg-white rounded-full p-2 shadow-md">
-                    <img src="${s.sponsor_image}" class="w-full h-full object-contain" onerror="this.src='https://via.placeholder.com/100?text=Logo'">
-                </div>
-                <div class="text-center sm:text-left flex-1">
-                    <h4 class="font-bold text-2xl font-head tracking-wide">${s.sponsor_name}</h4>
-                    <p class="text-sm opacity-80 mt-1">${s.contact}</p>
-                    <div class="mt-2 text-xs font-mono opacity-60">
-                        ${new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(s.amount || 0)}
-                    </div>
-                </div>
-            </div>`;
-        }).join('');
-    }
-
-    // Fungsi Edit & Hapus Sponsor
-    window.editSponsor = function(id) { 
-        currentEditingRecord=allData.find(d=>d.__backendId===id); 
-        if(!currentEditingRecord) return; 
-        document.getElementById('editSponsorName').value=currentEditingRecord.sponsor_name; 
-        document.getElementById('editSponsorImage').value=currentEditingRecord.sponsor_image||''; 
-        document.getElementById('editSponsorContact').value=currentEditingRecord.contact; 
-        document.getElementById('editSponsorAmount').value=currentEditingRecord.amount; 
-        document.getElementById('editSponsorTier').value=currentEditingRecord.tier || '3'; 
-        document.getElementById('editSponsorModal').classList.remove('hidden'); 
-    }
-    window.saveEditSponsor = async function() { 
-        if(!currentEditingRecord) return; 
-        await updateData({
-            ...currentEditingRecord, 
-            sponsor_name:document.getElementById('editSponsorName').value, 
-            sponsor_image:document.getElementById('editSponsorImage').value, 
-            contact:document.getElementById('editSponsorContact').value, 
-            amount:document.getElementById('editSponsorAmount').value, 
-            tier: document.getElementById('editSponsorTier').value 
-        }); 
-        showToast('Update berhasil'); 
-        closeEditSponsorModal(); 
-    }
-    window.closeEditSponsorModal = function() { document.getElementById('editSponsorModal').classList.add('hidden'); }
-    window.deleteSponsor = async function(id) { if(confirm('Hapus Sponsor?')) await deleteData(id); }
-    window.handleManageSponsor = function() { 
-        if(document.body.classList.contains('is-admin')){ 
-            document.getElementById('sponsorSectionAdmin').scrollIntoView({behavior: 'smooth'}); 
-        } else { 
-            showToast('Silakan Login sebagai Admin', 'error'); 
-            toggleAdmin(); 
-        } 
-    }
-
-
-    // ==========================================
-    // 3. LOGIKA MENU GALERI - FIX
-    // ==========================================
-    window.filterGallery = function(filter) { 
-        currentGalleryFilter = filter; 
-        document.querySelectorAll('.gallery-filter').forEach(btn => { 
-            if(btn.id === `btn-filter-${filter}`) { 
-                btn.classList.remove('bg-white','text-gray-600','border-gray-200'); 
-                btn.classList.add('bg-slate-800','text-white','border-slate-700'); 
-            } else { 
-                btn.classList.add('bg-white','text-gray-600','border-gray-200'); 
-                btn.classList.remove('bg-slate-800','text-white','border-slate-700'); 
-            } 
-        }); 
-        renderGallery(); 
-    }
-
-    function renderGallery() { 
-        const grid = document.getElementById('galleryGrid'); 
-        if(!grid) return; 
-        
-        let items = allData.filter(d => d.type === 'gallery_item'); 
-        
-        if (currentGalleryFilter !== 'all') { 
-            items = items.filter(d => d.category === currentGalleryFilter); 
-        } 
-
-        // Urutkan terbaru
-        items.sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
-
-        if (items.length === 0) { 
-            grid.innerHTML = `
-                <div class="col-span-full text-center py-12 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-300">
-                    <div class="text-4xl mb-2">📷</div>
-                    <p class="text-gray-500 font-bold">Galeri Kosong</p>
-                    <p class="text-xs text-gray-400 mt-1">Belum ada foto di kategori ini.</p>
-                </div>`; 
-            return; 
-        } 
-        
-        grid.innerHTML = items.map(item => `
-        <div class="mb-4 break-inside-avoid relative group rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 bg-white">
-            <img src="${item.image}" class="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-700" onerror="this.src='https://via.placeholder.com/400x300?text=No+Image'">
-            <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
-                <span class="text-[10px] font-bold uppercase tracking-wider text-amber-400 mb-1">${item.category}</span>
-                <h3 class="text-white font-bold text-lg leading-tight mb-1">${item.title}</h3>
-                <p class="text-gray-300 text-xs line-clamp-2">${item.description}</p>
-                <button onclick="deleteGalleryItem('${item.__backendId}')" class="admin-only absolute top-2 right-2 bg-white/20 hover:bg-red-600 text-white p-2 rounded-full backdrop-blur transition shadow-lg">🗑️</button>
-            </div>
-        </div>`).join(''); 
-    }
-    
-    window.deleteGalleryItem = async function(id) { if(confirm('Hapus foto ini?')) await deleteData(id); }   
-   // ... App Logic ...
+    // ... App Logic ...
     function initializeAppUI() {
     updateDates(); 
     setInterval(updateDates, 60000); 
@@ -1224,7 +1000,7 @@ function renderInventory() {
         document.getElementById('adminBtn').textContent='🔒';
     }
 }
-
+ 
     function updateDates() { 
         const now = new Date(); 
         document.getElementById('currentDate').textContent = now.toLocaleDateString('id-ID', { weekday:'long', year:'numeric', month:'long', day:'numeric' }); 
@@ -1232,32 +1008,13 @@ function renderInventory() {
         const hijriEl = document.getElementById('hijriDateDisplay');
         if(hijriEl) hijriEl.textContent = '1446 H'; 
     }
-
-   window.filterStats = function(period) {
-    currentStatsFilter = period;
-
-    // Update Tampilan Tombol
-    document.querySelectorAll('.stats-filter').forEach(btn => {
-        btn.className = 'stats-filter px-4 py-1.5 rounded-full text-xs font-bold shadow-sm transition-all bg-white text-gray-600 border border-gray-200 hover:bg-gray-50';
-    });
     
-    // Set tombol aktif
-    let activeId = 'btn-stats-all';
-    if(period === 'week') activeId = 'btn-stats-week';
-    if(period === 'month') activeId = 'btn-stats-month';
-    
-    const activeBtn = document.getElementById(activeId);
-    if(activeBtn) activeBtn.className = 'stats-filter px-4 py-1.5 rounded-full text-xs font-bold shadow-sm transition-all bg-slate-800 text-white border border-slate-700';
-
-    // Render ulang statistik dengan filter baru
-    renderStats();
-}
     window.showMenu = function(menu) { 
         currentMenu = menu; 
         searchQuery = "";
         const searchInput = document.getElementById('globalSearchInput');
         if(searchInput) searchInput.value = "";
-
+ 
         document.querySelectorAll('.menu-item').forEach(c => c.classList.remove('active')); 
         const activeItem = document.querySelector(`[data-menu="${menu}"]`);
         if(activeItem) activeItem.classList.add('active'); 
@@ -1292,7 +1049,7 @@ function renderInventory() {
             const initials = topG.name.split(' ').map(n=>n[0]).join('').substring(0,2);
             if(document.getElementById('topScorerAvatar')) document.getElementById('topScorerAvatar').innerText = initials;
         }
-
+ 
         const topA = Object.values(assists).sort((a,b)=>b.val-a.val)[0]; 
         if(topA) {
             if(document.getElementById('topAssist')) document.getElementById('topAssist').textContent = topA.name; 
@@ -1300,10 +1057,10 @@ function renderInventory() {
             const initials = topA.name.split(' ').map(n=>n[0]).join('').substring(0,2);
             if(document.getElementById('topAssistAvatar')) document.getElementById('topAssistAvatar').innerText = initials;
         }
-
+ 
 const upcomingSchedules = allData.filter(d => d.type === 'schedule' && new Date(d.date + 'T' + (d.time || '00:00')) > new Date())
                                          .sort((a,b) => new Date(a.date) - new Date(b.date));
-
+ 
         if (upcomingSchedules.length > 0) {
             const next = upcomingSchedules[0];
             
@@ -1329,7 +1086,7 @@ const upcomingSchedules = allData.filter(d => d.type === 'schedule' && new Date(
             nextMatchTargetTime = null; 
         }
     }
-
+ 
     async function getAutoPrayerTimes() {
       const date = new Date(); const d = String(date.getDate()).padStart(2,'0'); const m = String(date.getMonth()+1).padStart(2,'0'); const y = date.getFullYear();
       try { const res = await fetch(`https://api.aladhan.com/v1/timings/${d}-${m}-${y}?latitude=-6.9175&longitude=107.6191&method=20`); const json = await res.json(); const t = json.data.timings; return [{prayer:"Subuh",prayer_time:t.Fajr},{prayer:"Dzuhur",prayer_time:t.Dhuhr},{prayer:"Ashar",prayer_time:t.Asr},{prayer:"Maghrib",prayer_time:t.Maghrib},{prayer:"Isya",prayer_time:t.Isha}]; } catch(e){ return null; }
@@ -1359,7 +1116,7 @@ const upcomingSchedules = allData.filter(d => d.type === 'schedule' && new Date(
             }
         } catch (error) { if(ayatEl) ayatEl.innerText = "Fainna ma'al 'usri yusra"; if(transEl) transEl.innerText = "Sesungguhnya bersama kesulitan ada kemudahan."; }
     }
-
+ 
     window.getOnlineDoa = async function() {
         const container = document.getElementById('doaListContainer');
         if(!container) return;
@@ -1379,7 +1136,7 @@ const upcomingSchedules = allData.filter(d => d.type === 'schedule' && new Date(
             } else { throw new Error("Data kosong"); }
         } catch (e) { container.innerHTML = '<div class="text-center py-2 text-red-400 text-xs">Gagal memuat doa online.</div>'; }
     }
-
+ 
     function displayRenungan() { refreshRenungan(); }
     window.refreshRenungan = function() { 
         const randomH = hadistDatabase[Math.floor(Math.random() * hadistDatabase.length)];
@@ -1404,7 +1161,7 @@ const upcomingSchedules = allData.filter(d => d.type === 'schedule' && new Date(
         listContainer.innerHTML = items.map(k=>`<div class="bg-white rounded-xl shadow-sm border border-l-4 border-l-amber-400 p-4 flex flex-col md:flex-row justify-between items-start md:items-center hover-lift relative overflow-hidden"><div class="flex-1"><div class="flex items-center gap-2 mb-1"><span class="bg-green-100 text-green-700 text-[10px] font-bold px-2 py-0.5 rounded uppercase">Kajian Rutin</span><span class="text-xs text-gray-400 flex items-center gap-1">📅 ${new Date(k.kajian_date).toLocaleDateString('id-ID', {day:'numeric', month:'long'})} • ⏰ ${k.kajian_time}</span></div><h4 class="text-lg font-bold text-slate-800">${k.kajian_topic}</h4><p class="text-sm text-gray-600 mt-1">👤 Bersama: <span class="font-semibold text-amber-700">${k.kajian_speaker}</span></p></div><button onclick="deleteKajian('${k.__backendId}')" class="admin-only absolute top-2 right-2 text-red-400 hover:text-red-600 bg-white p-1 rounded-full shadow-sm">🗑️</button></div>`).join(''); 
     }
     window.deleteKajian = async function(id) { if(confirm('Hapus?')) await deleteData(id); }
-
+ 
     window.addMember = async function() { 
         const name = document.getElementById('memberName').value; 
         if(!name) return; 
@@ -1425,7 +1182,7 @@ function renderMembers() {
             members = members.filter(m => m.position === currentSquadFilter);
         }
         // ----------------------------
-
+ 
         if (searchQuery) members = members.filter(m => m.name.toLowerCase().includes(searchQuery) || m.position.toLowerCase().includes(searchQuery));
         
         if(countEl) countEl.innerText = `${members.length} Pemain Terdaftar`;
@@ -1434,7 +1191,7 @@ function renderMembers() {
             container.innerHTML = `<div class="col-span-full text-center py-12 text-gray-400 bg-gray-50 rounded-xl border border-dashed border-gray-300 flex flex-col items-center justify-center gap-2"><span class="text-2xl">🔍</span><span>Tidak ada pemain di posisi ini.</span></div>`; 
             return; 
         }
-
+ 
         container.innerHTML = members.map(m => {
             let posGradient = "from-gray-700 to-gray-900";
             let posBadgeColor = "text-gray-600 bg-gray-100";
@@ -1455,12 +1212,12 @@ function renderMembers() {
             if (m.skill_level === 'Menengah') ovr += 10;
             if (m.skill_level === 'Mahir') ovr += 20;
             if (ovr > 99) ovr = 99;
-
+ 
             return `
             <div class="relative bg-gradient-to-br ${posGradient} rounded-2xl p-4 text-white shadow-xl hover-lift group overflow-hidden cursor-pointer border border-white/20" onclick="showPlayerDetail('${m.__backendId}')">
                 
                 <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
-
+ 
                 <div class="flex justify-between items-start mb-3 relative z-10">
                     <div class="text-center">
                         <div class="text-3xl font-bold font-head leading-none drop-shadow-md">${ovr}</div>
@@ -1496,7 +1253,7 @@ function renderMembers() {
                         </div>
                     </div>
                 </div>
-
+ 
                 <div class="admin-only absolute top-2 right-2 z-20 hidden group-hover:flex gap-1.5">
                     <button onclick="event.stopPropagation();editMember('${m.__backendId}')" class="bg-white text-blue-600 p-2 rounded-full text-xs shadow-lg hover:bg-blue-50 transition transform hover:scale-110" title="Edit">✏️</button>
                     <button onclick="event.stopPropagation();deleteMember('${m.__backendId}')" class="bg-white text-red-600 p-2 rounded-full text-xs shadow-lg hover:bg-red-50 transition transform hover:scale-110" title="Hapus">🗑️</button>
@@ -1522,7 +1279,7 @@ function renderMembers() {
         
         const activeBtn = document.getElementById(activeId);
         if(activeBtn) activeBtn.className = 'squad-filter px-4 py-1.5 rounded-full text-xs font-bold shadow-sm transition-all bg-slate-800 text-white border border-slate-700';
-
+ 
         renderMembers();
     }
     // ... editMember, saveEditMember, etc ...
@@ -1532,7 +1289,7 @@ function renderMembers() {
     window.deleteMember = async function(id) { if(confirm('Hapus?')) await deleteData(id); }
     window.showPlayerDetail = function(id) { document.getElementById('playerModal').classList.remove('hidden'); const m = allData.find(d=>d.__backendId===id); if(m) { document.getElementById('modalPlayerName').textContent=m.name; document.getElementById('modalPlayerPos').textContent=m.position; const pStats = allData.filter(d=>d.type==='stats' && d.member_id===id); const totalGoals = pStats.reduce((a,b)=>a+(parseInt(b.goals)||0),0); const totalAssists = pStats.reduce((a,b)=>a+(parseInt(b.assists)||0),0); document.getElementById('modalStatsCaps').textContent = pStats.length; document.getElementById('modalStatsGoals').textContent = totalGoals; document.getElementById('modalStatsAssist').textContent = totalAssists; document.getElementById('modalHistoryList').innerHTML = pStats.map(s => `<div class="flex justify-between border-b py-1"><span>${s.date}</span><span class="font-bold">${s.totalPoints} pts</span></div>`).join(''); } }
     window.closePlayerModal = function() { document.getElementById('playerModal').classList.add('hidden'); }
-
+ 
     window.exportMembersCSV = function() {
         const members = allData.filter(d => d.type === 'member');
         if (members.length === 0) { showToast('Data kosong', 'error'); return; }
@@ -1540,7 +1297,7 @@ function renderMembers() {
         members.forEach(function(m) { const row = [`"${m.name}"`, m.position, `'${m.phone}`, m.skill_level, m.availability].join(","); csvContent += row + "\n"; });
         const encodedUri = encodeURI(csvContent); const link = document.createElement("a"); link.setAttribute("href", encodedUri); link.setAttribute("download", "Squad_Muslim_Footballers.csv"); document.body.appendChild(link); link.click(); document.body.removeChild(link);
     }
-
+ 
     window.processImport = function(event) {
         const file = event.target.files[0];
         if (!file) return;
@@ -1588,7 +1345,7 @@ window.deleteInventory = async function(id) {
         showToast('Aset telah dimusnahkan!');
     }
 }
-
+ 
 // Fungsi hapus sponsor
 window.deleteSponsor = async function(id) {
     if(confirm('Baginda yakin ingin mencopot sponsor ini dari Wall of Fame?')) {
@@ -1617,7 +1374,7 @@ window.deleteSponsor = async function(id) {
             if (name.indexOf(filter) > -1) { items[i].style.display = "flex"; } else { items[i].style.display = "none"; }
         }
     }
-
+ 
     function renderMatchRegModal(scheduleId) {
         const schedule = allData.find(d => d.__backendId === scheduleId);
         if(!schedule) return;
@@ -1655,7 +1412,7 @@ window.deleteSponsor = async function(id) {
             `).join('');
         }
     }
-
+ 
     window.addBulkRegistration = async function() {
         if (!currentMatchIdForReg) return;
         const checkboxes = document.querySelectorAll('.player-checkbox:checked');
@@ -1676,7 +1433,7 @@ window.deleteSponsor = async function(id) {
         document.getElementById('regPlayerSearch').value = ''; 
     }
     window.deleteRegistration = async function(regId) { if(confirm('Hapus pemain?')) await deleteData(regId); }
-
+ 
     // ... Team Generator Logic ...
     window.openTeamGenerator = function(id) {
         if(id) currentMatchIdForReg = id;
@@ -1699,7 +1456,7 @@ window.deleteSponsor = async function(id) {
              document.getElementById('btnToggleEdit').innerHTML = '✏️ Mode Edit';
         }
     }
-
+ 
 const positionPriority = { "GK": 1, "DEF": 2, "MID": 3, "FWD": 4 };
 window.generateTeamsLogic = function() {
     const registrations = allData.filter(d => d.type === 'registration' && d.schedule_id === currentMatchIdForReg);
@@ -1709,13 +1466,13 @@ window.generateTeamsLogic = function() {
         showToast('Minimal 2 pemain untuk generate', 'error'); 
         return; 
     }
-
+ 
     let numTeams = schedule.schedule_type === 'Fun Football' ? 4 : 2;
     const teams = Array.from({ length: numTeams }, (_, i) => ({
         name: numTeams === 2 ? (i === 0 ? "Home Team" : "Away Team") : `Tim ${String.fromCharCode(65 + i)}`,
         players: []
     }));
-
+ 
     // Kelompokkan berdasarkan posisi daftar
     const groups = { GK: [], DEF: [], MID: [], FWD: [] };
     registrations.forEach(r => {
@@ -1723,10 +1480,10 @@ window.generateTeamsLogic = function() {
         if (groups[pos]) groups[pos].push(r);
         else groups["MID"].push(r);
     });
-
+ 
     // Acak internal kelompok
     Object.keys(groups).forEach(pos => groups[pos].sort(() => 0.5 - Math.random()));
-
+ 
     // Distribusi Merata Round Robin
     let teamIdx = 0;
     ["GK", "DEF", "MID", "FWD"].forEach(pos => {
@@ -1735,12 +1492,12 @@ window.generateTeamsLogic = function() {
             teamIdx = (teamIdx + 1) % numTeams;
         });
     });
-
+ 
     // Urutkan GK paling atas di setiap kartu
     teams.forEach(t => {
         t.players.sort((a, b) => (positionPriority[a.position_played] || 99) - (positionPriority[b.position_played] || 99));
     });
-
+ 
     tempGeneratedTeams = teams; 
     isEditingTeams = false;
     renderGeneratedTeams(teams);
@@ -1770,7 +1527,7 @@ window.updatePlayerPosition = function(tIdx, pIdx, newPos) {
     tempGeneratedTeams[tIdx].players.sort((a, b) => (positionPriority[a.position_played] || 99) - (positionPriority[b.position_played] || 99));
     renderGeneratedTeams(tempGeneratedTeams);
 }
-
+ 
 window.movePlayer = function(tIdx, pIdx) {
     const player = tempGeneratedTeams[tIdx].players[pIdx];
     tempGeneratedTeams[tIdx].players.splice(pIdx, 1);
@@ -1780,7 +1537,7 @@ window.movePlayer = function(tIdx, pIdx) {
     tempGeneratedTeams[nextTIdx].players.sort((a, b) => (positionPriority[a.position_played] || 99) - (positionPriority[b.position_played] || 99));
     renderGeneratedTeams(tempGeneratedTeams);
 }
-
+ 
 window.toggleEditTeams = function() {
     if(!tempGeneratedTeams || tempGeneratedTeams.length === 0) {
         showToast("Generate tim dulu, Baginda!", "error");
@@ -1795,12 +1552,12 @@ window.toggleEditTeams = function() {
     }
     renderGeneratedTeams(tempGeneratedTeams);
 }
-
+ 
 window.renderGeneratedTeams = function(teams) {
     const container = document.getElementById('genTeamContainer');
     const formation = document.getElementById('genFormation').value;
     if(!container) return;
-
+ 
     // Pastikan ada 'const htmlContent =' di sini
     const htmlContent = teams.map((t, tIdx) => {
         const colors = [
@@ -1845,11 +1602,11 @@ window.renderGeneratedTeams = function(teams) {
             </div>
         </div>`;
     }).join('');
-
+ 
     container.innerHTML = htmlContent;
 };
     window.updateTeamName = function(idx, newName) { if(tempGeneratedTeams[idx]) tempGeneratedTeams[idx].name = newName; }
-
+ 
     function renderSchedules() { 
         const list = document.getElementById('scheduleList');
         if (!list) return;
@@ -1886,7 +1643,7 @@ window.renderGeneratedTeams = function(teams) {
                 : (diffDays === 0 
                     ? `<div class="absolute top-0 right-0 bg-red-500 text-white text-[10px] font-bold px-3 py-1 rounded-bl-xl shadow-md z-20 animate-pulse">HARI INI!</div>` 
                     : `<div class="absolute top-0 right-0 bg-gray-600 text-gray-300 text-[10px] font-bold px-3 py-1 rounded-bl-xl shadow-md z-20">SELESAI</div>`);
-
+ 
             // Tombol Input Skor (Hanya muncul jika belum diinput)
             let actionButton = '';
             if (isMatchDone) {
@@ -1894,7 +1651,7 @@ window.renderGeneratedTeams = function(teams) {
             } else {
                  actionButton = `<button onclick="openMatchInput('${s.__backendId}')" class="admin-only bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white px-4 py-1.5 rounded-lg text-xs font-bold shadow-md transform active:scale-95 transition flex items-center gap-1">📝 Input Skor</button>`;
             }
-
+ 
             const currentRegs = allData.filter(d => d.type === 'registration' && d.schedule_id === s.__backendId).length;
             const viewTeamsBtn = s.generated_teams ? `<button onclick="event.stopPropagation(); openTeamGenerator('${s.__backendId}')" class="bg-purple-500 text-white text-[10px] font-bold px-2 py-0.5 rounded hover:bg-purple-600 transition ml-2">👀 LIHAT TIM</button>` : '';
             
@@ -1903,7 +1660,7 @@ window.renderGeneratedTeams = function(teams) {
             let vsSection = s.schedule_type === 'Friendly Match' 
                 ? `<div class="flex items-center gap-3 mt-2 mb-3"><div class="text-center"><div class="w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-full flex items-center justify-center text-sm font-bold text-slate-900 shadow-lg border-2 border-amber-400">MF</div><div class="text-[9px] mt-1 font-bold tracking-wider text-amber-400">KAMI</div></div><div class="text-2xl font-bold font-head text-white/20 italic">VS</div><div class="text-center"><div class="w-10 h-10 sm:w-12 sm:h-12 bg-slate-700 rounded-full flex items-center justify-center text-lg font-bold text-white shadow-lg border-2 border-slate-500">${s.name.charAt(0).toUpperCase()}</div><div class="text-[9px] mt-1 font-bold tracking-wider text-slate-400">LAWAN</div></div></div><div class="text-lg font-bold text-white leading-tight truncate w-full text-center sm:text-left border-b border-white/10 pb-2 mb-2">${s.name}</div>`
                 : `<div class="flex items-center gap-2 mt-2 mb-3"><span class="p-2 bg-white/10 rounded-lg text-xl">⚽</span><span class="p-2 bg-white/10 rounded-lg text-xl">🏃</span><span class="p-2 bg-white/10 rounded-lg text-xl">🥅</span></div><div class="text-lg font-bold text-white leading-tight truncate w-full text-center sm:text-left border-b border-white/10 pb-2 mb-2">${s.name}</div>`;
-
+ 
             let teamPreview = '';
             if (s.generated_teams && Array.isArray(s.generated_teams) && s.generated_teams.length > 0) {
                 teamPreview = `
@@ -1917,7 +1674,7 @@ window.renderGeneratedTeams = function(teams) {
                     </div>
                 </div>`;
             }
-
+ 
             return `
             <div class="${cardBg} rounded-2xl p-5 shadow-lg relative overflow-hidden group hover:shadow-xl hover:scale-[1.01] transition-all duration-300">
                 <div class="absolute inset-0 opacity-5 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]"></div>
@@ -1953,7 +1710,7 @@ window.renderGeneratedTeams = function(teams) {
             </div>`;
         }).join(''); 
     }
-
+ 
     // --- FUNGSI BARU: ISI DROPDOWN JADWAL ---
     window.populateScheduleDropdown = function() {
        const select = document.getElementById('matchScheduleRef');
@@ -1983,7 +1740,7 @@ function populateStatsMatchDropdown() {
     });
     select.innerHTML = html;
 }
-
+ 
     // 1. RENDER FORM MATCH
     window.renderMatchInputForm = function() {
         const scheduleId = document.getElementById('matchScheduleRef').value;
@@ -1999,14 +1756,14 @@ function populateStatsMatchDropdown() {
                 if(!type) document.getElementById('matchType').value = sched.schedule_type;
             }
         }
-
+ 
         // --- PERSIAPAN DROPDOWN PEMAIN UNTUK STATS ---
         // Kita siapkan string opsi pemain di sini agar ringan
         const members = allData.filter(d => d.type === 'member').sort((a,b) => a.name.localeCompare(b.name));
         window.playerOptionsHTML = '<option value="">-- Pilih Pemain --</option>' + 
             members.map(m => `<option value="${m.__backendId}">${m.name} (${m.position})</option>`).join('');
         // ---------------------------------------------
-
+ 
         if (type === 'Friendly Match') {
             opponentInputRef.classList.remove('hidden');
             let teamOptions = '<option value="">-- Pilih Tim --</option>';
@@ -2020,12 +1777,12 @@ function populateStatsMatchDropdown() {
                     if(opponentInputRef.value === '') opponentInputRef.value = sched.name; 
                 }
             }
-
+ 
             if (!hasTeams) {
                 container.innerHTML = `<div class="bg-red-50 p-3 rounded text-red-600 text-center text-sm font-bold">⚠️ Belum ada Tim Generated di Jadwal ini.<br>Silakan ke menu JADWAL > Generate Tim dulu.</div>`;
                 return;
             }
-
+ 
             container.innerHTML = `
                 <div class="mb-4 p-3 bg-blue-50 rounded-xl border border-blue-100">
                     <p class="text-[10px] font-bold text-blue-500 uppercase mb-2">ROTASI TIM INTERNAL (A-B-A-B)</p>
@@ -2052,7 +1809,7 @@ function populateStatsMatchDropdown() {
                     <span class="text-xs font-bold uppercase tracking-widest text-slate-400">Total Agg</span>
                     <div class="flex items-center gap-3"><span id="total_friendly_us" class="text-2xl font-bold font-head text-amber-400">0</span><span class="text-sm text-gray-500">-</span><span id="total_friendly_op" class="text-2xl font-bold font-head text-white">0</span></div>
                 </div>
-
+ 
                 <div class="bg-gray-50 border-x border-b border-gray-200 p-4 rounded-b-xl mb-4">
                     <div class="flex justify-between items-center mb-2">
                         <h4 class="font-bold text-sm text-gray-700">⚽ Statistik Pemain</h4>
@@ -2063,7 +1820,7 @@ function populateStatsMatchDropdown() {
                     <p class="text-[10px] text-gray-400 italic mt-2 text-center">Masukkan pemain yang mencetak gol atau assist saja.</p>
                 </div>
                 `;
-
+ 
         } else if (type === 'Fun Football') {
             opponentInputRef.classList.add('hidden');
             let teamOptions = '<option value="">Pilih Tim...</option>';
@@ -2080,7 +1837,7 @@ function populateStatsMatchDropdown() {
             container.innerHTML = `<p class="text-center text-gray-400 italic text-sm">Pilih jenis match terlebih dahulu...</p>`;
         }
     }
-
+ 
    // FUNGSI BANTUAN: MENAMBAH BARIS INPUT STATISTIK
     window.addStatRow = function() {
         const container = document.getElementById('quickStatsList');
@@ -2124,7 +1881,7 @@ function populateStatsMatchDropdown() {
         document.getElementById('total_friendly_us').textContent = us;
         document.getElementById('total_friendly_op').textContent = op;
     }
-
+ 
     // 3. FUNGSI SIMPAN (LOGIC BARU: MATCH + STATS)
     window.addMatch = async function() { 
         const scheduleId = document.getElementById('matchScheduleRef').value;
@@ -2133,9 +1890,9 @@ function populateStatsMatchDropdown() {
         const location = document.getElementById('matchLocation').value;
         
         if (!type || !date) { showToast('Lengkapi data match!', 'error'); return; }
-
+ 
         let dataPayload = { type:'match', schedule_ref: scheduleId, date, location, match_type: type, createdAt: new Date().toISOString() };
-
+ 
         // --- 1. PROSES SIMPAN MATCH UTAMA ---
         if (type === 'Friendly Match') {
             const teamA = document.getElementById('friend_team_a').value;
@@ -2146,7 +1903,7 @@ function populateStatsMatchDropdown() {
             if(!teamA || !teamB) { 
                 if(!confirm("Tim Rotasi belum dipilih. Lanjutkan?")) return;
             }
-
+ 
             const scores = [];
             let totalUs = 0, totalOp = 0;
             for(let i=1; i<=4; i++){
@@ -2160,7 +1917,7 @@ function populateStatsMatchDropdown() {
             dataPayload.score_opponent = totalOp; 
             dataPayload.details = scores;
             dataPayload.result = totalUs > totalOp ? 'Menang' : (totalUs == totalOp ? 'Seri' : 'Kalah');
-
+ 
         } else if (type === 'Fun Football') {
             const matches = [];
             for(let i=1; i<=4; i++) {
@@ -2177,11 +1934,11 @@ function populateStatsMatchDropdown() {
             dataPayload.details = matches; 
             dataPayload.result = 'Internal';
         }
-
+ 
         try {
             // A. Simpan Data Match
             await createData(dataPayload); 
-
+ 
             // B. PROSES SIMPAN STATISTIK PEMAIN (JIKA ADA)
             const statRows = document.querySelectorAll('.stat-row-entry');
             let statsCount = 0;
@@ -2210,7 +1967,7 @@ function populateStatsMatchDropdown() {
                     statsCount++;
                 }
             }
-
+ 
             showToast(`Match & ${statsCount} Statistik Tersimpan!`); 
             
             // Reset Form
@@ -2218,7 +1975,7 @@ function populateStatsMatchDropdown() {
             document.getElementById('matchInputSection').scrollIntoView();
             document.getElementById('matchScheduleRef').value = "";
             document.getElementById('dynamicScoreInput').innerHTML = '<p class="text-center text-gray-400 italic text-sm">Pilih jadwal...</p>';
-
+ 
         } catch (e) {
             console.error(e);
             showToast('Gagal menyimpan data', 'error');
@@ -2251,7 +2008,7 @@ window.openMatchInput = function(scheduleId) {
         }
     }, 100); // Delay kecil untuk memastikan transisi menu selesai
 }
-
+ 
 // --- FUNGSI RENDER MATCHES (YANG HILANG) ---
 function renderMatches() { 
     const list = document.getElementById('matchList');
@@ -2266,7 +2023,7 @@ function renderMatches() {
     
     // Urutkan dari yang terbaru
     matches.sort((a,b) => new Date(b.date) - new Date(a.date));
-
+ 
     // Update Summary Stats (Menang/Seri/Kalah)
     let wins = 0, draws = 0, losses = 0;
     matches.forEach(m => {
@@ -2279,12 +2036,12 @@ function renderMatches() {
     if(document.getElementById('summaryWin')) document.getElementById('summaryWin').textContent = wins;
     if(document.getElementById('summaryDraw')) document.getElementById('summaryDraw').textContent = draws;
     if(document.getElementById('summaryLoss')) document.getElementById('summaryLoss').textContent = losses;
-
+ 
     if (matches.length === 0) {
         list.innerHTML = `<div class="text-center py-10 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200"><div class="text-4xl mb-2">⚽</div><p class="text-gray-500 font-semibold">Belum ada riwayat pertandingan.</p></div>`;
         return;
     }
-
+ 
     list.innerHTML = matches.map(m => {
         const us = parseInt(m.score_us) || 0;
         const op = parseInt(m.score_opponent) || 0;
@@ -2293,27 +2050,27 @@ function renderMatches() {
         if (us > op) { resultClass = "bg-green-100 text-green-700 border-green-200"; resultLabel = "WIN"; scoreColor = "text-green-600"; } 
         else if (us === op) { resultClass = "bg-gray-100 text-gray-600 border-gray-200"; resultLabel = "DRAW"; scoreColor = "text-gray-600"; } 
         else { resultClass = "bg-red-100 text-red-700 border-red-200"; resultLabel = "LOSS"; scoreColor = "text-red-600"; }
-
+ 
         const dateObj = new Date(m.date);
         const dateStr = dateObj.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
-
+ 
         // --- LOGIKA MENGAMBIL PENCETAK GOL & ASSIST ---
         const matchStats = allData.filter(d => d.type === 'stats' && d.date === m.date);
-
+ 
         const goalGetters = matchStats.filter(s => (parseInt(s.goals) || 0) > 0).map(s => {
             const member = allData.find(mem => mem.__backendId === s.member_id);
             const name = member ? member.name.split(' ')[0] : 'Unknown';
             const goals = parseInt(s.goals);
             return goals > 1 ? `<b>${name}</b>(${goals})` : `<b>${name}</b>`;
         });
-
+ 
         const assistProviders = matchStats.filter(s => (parseInt(s.assists) || 0) > 0).map(s => {
             const member = allData.find(mem => mem.__backendId === s.member_id);
             const name = member ? member.name.split(' ')[0] : 'Unknown';
             const assists = parseInt(s.assists);
             return assists > 1 ? `${name}(${assists})` : `${name}`;
         });
-
+ 
         let detailsHTML = '';
         if (goalGetters.length > 0 || assistProviders.length > 0) {
             detailsHTML = `<div class="mt-3 pt-3 border-t border-dashed border-gray-200 text-xs text-gray-600 space-y-1">`;
@@ -2355,15 +2112,15 @@ function renderMatches() {
    window.addStats = async function() {
         const matchId = document.getElementById('statsMatchRef').value;
         const playerId = document.getElementById('statsPlayerName').value;
-
+ 
         // Validasi
         if(!matchId) { showToast('Pilih Pertandingan dulu!', 'error'); return; }
         if(!playerId) { showToast('Pilih Pemain dulu!', 'error'); return; }
-
+ 
         // Ambil Tanggal Otomatis dari Data Match yang dipilih
         const matchData = allData.find(d => d.__backendId === matchId);
         const matchDate = matchData ? matchData.date : new Date().toISOString().split('T')[0];
-
+ 
         const pts = (parseInt(document.getElementById('statsGoals').value)||0)*3 + 
                     (parseInt(document.getElementById('statsAssists').value)||0) + 
                     (parseInt(document.getElementById('statsSaves').value)||0);
@@ -2398,36 +2155,11 @@ function renderMatches() {
         document.getElementById('statsBestXI').checked = false;
     }
     
-function renderStats() { 
+   function renderStats() { 
         const statsMap = {};
         
-        // --- LOGIKA FILTER WAKTU (MINGGU INI / BULAN INI) ---
-        const now = new Date();
-        // Set awal minggu (Senin)
-        const day = now.getDay(); 
-        const diff = now.getDate() - day + (day == 0 ? -6 : 1); 
-        const startOfWeek = new Date(now); 
-        startOfWeek.setDate(diff); startOfWeek.setHours(0,0,0,0);
-
-        // Set awal bulan (Tanggal 1)
-        const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-
-        // Filter data mentah dulu sebelum dihitung
-        const filteredRawData = allData.filter(d => d.type === 'stats').filter(s => {
-            if (currentStatsFilter === 'all') return true;
-            
-            const statDate = new Date(s.date);
-            // Fix: set jam statDate ke 0 agar komparasi adil
-            statDate.setHours(0,0,0,0);
-
-            if (currentStatsFilter === 'week') return statDate >= startOfWeek;
-            if (currentStatsFilter === 'month') return statDate >= startOfMonth;
-            return true;
-        });
-        // ----------------------------------------------------
-
-        // 1. Agregasi Data (Menggunakan data yang sudah difilter)
-        filteredRawData.forEach(s => {
+        // 1. Agregasi Data (Menggabungkan data dari input Match & Manual)
+        allData.filter(d => d.type === 'stats').forEach(s => {
             const mid = s.member_id;
             if (!statsMap[mid]) {
                 statsMap[mid] = { 
@@ -2445,7 +2177,7 @@ function renderStats() {
             statsMap[mid].points += (parseInt(s.totalPoints) || 0);
             statsMap[mid].matches += 1;
         });
-
+ 
         // 2. Sorting Canggih (Tie-Breaker Logic)
         const sortedStats = Object.values(statsMap).sort((a, b) => {
             if (b.points !== a.points) return b.points - a.points; // 1. Cek Poin
@@ -2453,7 +2185,7 @@ function renderStats() {
             if (b.assists !== a.assists) return b.assists - a.assists; // 3. Cek Assist
             return a.matches - b.matches; // 4. Cek Match (Sedikit main tapi poin sama = lebih jago)
         });
-
+ 
         const enrichedStats = sortedStats.map(stat => {
             const member = allData.find(m => m.__backendId === stat.id);
             return { 
@@ -2463,24 +2195,19 @@ function renderStats() {
                 photo: member ? member.photo : '' 
             };
         });
-
+ 
         // 3. Render Podium (3 Besar)
         const podiumContainer = document.getElementById('statsPodium');
         const listContainer = document.getElementById('statsList');
         
         if(!podiumContainer || !listContainer) return;
-
+ 
         let podiumHTML = '';
         if (enrichedStats.length > 0) {
             const rank1 = enrichedStats[0];
             const rank2 = enrichedStats.length > 1 ? enrichedStats[1] : null;
             const rank3 = enrichedStats.length > 2 ? enrichedStats[2] : null;
-            
-            // Label Periode di Podium
-            let periodLabel = "SEASON 2024/25";
-            if(currentStatsFilter === 'week') periodLabel = "MINGGU INI";
-            if(currentStatsFilter === 'month') periodLabel = "BULAN INI";
-
+ 
             // Juara 2 (Kiri)
             if (rank2) {
                 podiumHTML += `
@@ -2498,7 +2225,7 @@ function renderStats() {
                     <div class="h-14 sm:h-16 w-full bg-gradient-to-t from-slate-300 to-slate-100 rounded-t-lg mt-2 shadow-inner"></div>
                 </div>`;
             } else { podiumHTML += `<div class="hidden md:block"></div>`; }
-
+ 
             // Juara 1 (Tengah - Lebih Besar)
             if (rank1) {
                 podiumHTML += `
@@ -2515,11 +2242,11 @@ function renderStats() {
                         <div class="text-amber-600 text-xs sm:text-sm font-bold">${rank1.points} Pts</div>
                     </div>
                     <div class="h-20 sm:h-24 w-full bg-gradient-to-t from-yellow-300 via-yellow-100 to-white rounded-t-lg mt-2 shadow-lg border-t border-white flex items-end justify-center pb-2">
-                        <span class="text-[9px] font-bold text-yellow-800 opacity-60 uppercase">${periodLabel}</span>
+                        <span class="text-[10px] font-bold text-yellow-700 opacity-50">MVP</span>
                     </div>
                 </div>`;
             }
-
+ 
             // Juara 3 (Kanan)
             if (rank3) {
                 podiumHTML += `
@@ -2538,10 +2265,10 @@ function renderStats() {
                 </div>`;
             } else { podiumHTML += `<div class="hidden md:block"></div>`; }
         } else {
-            podiumHTML = '<div class="col-span-3 text-center text-gray-400 italic py-10">Belum ada data statistik di periode ini.</div>';
+            podiumHTML = '<div class="col-span-3 text-center text-gray-400 italic py-10">Belum ada data statistik musim ini.</div>';
         }
         podiumContainer.innerHTML = podiumHTML;
-
+ 
         // 4. Render Table
         if (enrichedStats.length === 0) {
             listContainer.innerHTML = '<tr><td colspan="7" class="text-center py-4 text-gray-400">Data kosong</td></tr>';
@@ -2574,26 +2301,24 @@ function renderStats() {
                 </tr>`;
             }).join('');
         }
-        
-        // Panggil Log Riwayat
-        renderStatsHistory();
+       renderStatsHistory();
     }
-
+ 
    // --- KODE YANG HILANG: LOGIKA RIWAYAT & HAPUS ---
-
+ 
 function renderStatsHistory() {
     const container = document.getElementById('statsHistoryLog');
     if (!container) return;
-
+ 
     // Ambil data stats, urutkan dari yang terbaru (createdAt desc)
     const historyData = allData.filter(d => d.type === 'stats')
         .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-
+ 
     if (historyData.length === 0) {
         container.innerHTML = '<div class="p-4 text-center text-xs text-gray-400 italic">Belum ada data statistik.</div>';
         return;
     }
-
+ 
     container.innerHTML = historyData.map(h => {
         const member = allData.find(m => m.__backendId === h.member_id);
         const name = member ? member.name : 'Unknown Player';
@@ -2623,251 +2348,42 @@ function renderStatsHistory() {
         `;
     }).join('');
 }
-
+ 
 window.deleteStats = async function(id) {
     if(confirm('Batalkan poin ini? Peringkat klasemen akan otomatis berubah.')) {
         await deleteData(id);
         showToast('Poin berhasil direvisi.');
     }
 }
- // --- MULAI KODE BARU (ASET, SPONSOR, GALERI) ---
-
-    // 1. INVENTARIS / ASET
-    window.addInventory = async function() { 
-        await createData({ 
-            type:'inventory', 
-            item_name:document.getElementById('itemName').value, 
-            item_image:document.getElementById('itemImage').value, 
-            quantity:document.getElementById('itemQuantity').value, 
-            condition:document.getElementById('itemCondition').value, 
-            createdAt:new Date().toISOString() 
-        }); 
-        showToast('Item ditambah'); 
-        document.getElementById('itemName').value=''; 
-    }
-
-    function renderInventory() { 
-        const container = document.getElementById('inventoryList');
-        if (!container) return;
-        
-        const items = allData.filter(d => d.type === 'inventory')
-                             .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-
-        if (items.length === 0) {
-            container.innerHTML = `
-                <div class="col-span-full text-center py-12 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-300">
-                    <div class="text-4xl mb-2">📦</div>
-                    <p class="text-gray-500 font-bold">Gudang Kosong</p>
-                    <p class="text-xs text-gray-400 mt-1">Belum ada aset yang dicatat.</p>
-                </div>`;
-            return;
-        }
-
-        container.innerHTML = items.map(i => {
-            let badgeClass = 'bg-green-100 text-green-700';
-            if(i.condition === 'Cukup') badgeClass = 'bg-yellow-100 text-yellow-700';
-            if(i.condition === 'Perlu Diganti') badgeClass = 'bg-red-100 text-red-700';
-
-            return `
-            <div class="bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden hover-lift group relative flex flex-col">
-                <div class="h-32 w-full bg-gray-100 relative overflow-hidden">
-                    <img src="${i.item_image || 'https://via.placeholder.com/300x200?text=Aset'}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" onerror="this.src='https://via.placeholder.com/300x200?text=No+Image'">
-                    <div class="absolute top-2 right-2 ${badgeClass} text-[10px] font-bold px-2 py-1 rounded-lg shadow-sm backdrop-blur-sm">${i.condition}</div>
-                </div>
-                <div class="p-3 flex-1 flex flex-col justify-between">
-                    <div><h4 class="font-bold text-slate-800 text-sm leading-tight mb-1 line-clamp-2">${i.item_name}</h4></div>
-                    <div class="flex justify-between items-end mt-3 border-t border-gray-50 pt-2">
-                        <div class="text-xs font-mono text-slate-500 bg-slate-50 px-2 py-1 rounded border border-slate-100">Stok: <b class="text-slate-800 text-sm">${i.quantity}</b></div>
-                        <div class="admin-only flex gap-1">
-                            <button onclick="editInventory('${i.__backendId}')" class="w-7 h-7 flex items-center justify-center bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition shadow-sm">✏️</button>
-                            <button onclick="deleteInventory('${i.__backendId}')" class="w-7 h-7 flex items-center justify-center bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition shadow-sm">🗑️</button>
-                        </div>
-                    </div>
-                </div>
-            </div>`;
-        }).join('');
-    }
-
-    window.editInventory = function(id) { 
-        currentEditingRecord=allData.find(d=>d.__backendId===id); 
-        if(!currentEditingRecord) return; 
-        document.getElementById('editItemName').value=currentEditingRecord.item_name; 
-        document.getElementById('editItemImage').value=currentEditingRecord.item_image||''; 
-        document.getElementById('editItemQuantity').value=currentEditingRecord.quantity; 
-        document.getElementById('editItemCondition').value=currentEditingRecord.condition; 
-        document.getElementById('editInventoryModal').classList.remove('hidden'); 
-    }
-    
-    window.saveEditInventory = async function() { 
-        if(!currentEditingRecord) return; 
-        await updateData({
-            ...currentEditingRecord, 
-            item_name:document.getElementById('editItemName').value, 
-            item_image:document.getElementById('editItemImage').value, 
-            quantity:document.getElementById('editItemQuantity').value, 
-            condition:document.getElementById('editItemCondition').value 
-        }); 
-        showToast('Update berhasil'); 
-        closeEditInventoryModal(); 
-    }
-    
+    window.addInventory = async function() { await createData({ type:'inventory', item_name:document.getElementById('itemName').value, item_image:document.getElementById('itemImage').value, quantity:document.getElementById('itemQuantity').value, condition:document.getElementById('itemCondition').value, createdAt:new Date().toISOString() }); showToast('Item ditambah'); document.getElementById('itemName').value=''; }
+    function renderInventory() { document.getElementById('inventoryList').innerHTML = allData.filter(d=>d.type==='inventory').map(i=>`<div class="flex gap-3 p-3 bg-white rounded border items-center hover-lift"><img src="${i.item_image||'https://via.placeholder.com/50'}" class="w-12 h-12 object-cover rounded"><div class="flex-1"><b>${i.item_name}</b> <span class="text-xs bg-gray-200 px-1 rounded">${i.condition}</span><div class="text-xs">Stok: ${i.quantity}</div></div><div class="admin-only flex gap-1"><button onclick="editInventory('${i.__backendId}')" class="text-blue-500">✏️</button><button onclick="deleteInventory('${i.__backendId}')" class="text-red-500">🗑️</button></div></div>`).join(''); }
+    window.editInventory = function(id) { currentEditingRecord=allData.find(d=>d.__backendId===id); if(!currentEditingRecord) return; document.getElementById('editItemName').value=currentEditingRecord.item_name; document.getElementById('editItemImage').value=currentEditingRecord.item_image||''; document.getElementById('editItemQuantity').value=currentEditingRecord.quantity; document.getElementById('editItemCondition').value=currentEditingRecord.condition; document.getElementById('editInventoryModal').classList.remove('hidden'); }
+    window.saveEditInventory = async function() { if(!currentEditingRecord) return; await updateData({...currentEditingRecord, item_name:document.getElementById('editItemName').value, item_image:document.getElementById('editItemImage').value, quantity:document.getElementById('editItemQuantity').value, condition:document.getElementById('editItemCondition').value }); showToast('Update berhasil'); closeEditInventoryModal(); }
     window.closeEditInventoryModal = function() { document.getElementById('editInventoryModal').classList.add('hidden'); }
-    window.deleteInventory = async function(id) { if(confirm('Hapus aset ini?')) await deleteData(id); }
-
-    // 2. SPONSOR
-    window.addSponsor = async function() { 
-        await createData({ 
-            type:'sponsor', 
-            sponsor_name:document.getElementById('sponsorName').value, 
-            sponsor_image:document.getElementById('sponsorImage').value, 
-            contact:document.getElementById('sponsorContact').value, 
-            amount:document.getElementById('sponsorAmount').value, 
-            tier: document.getElementById('sponsorTier').value, 
-            createdAt:new Date().toISOString() 
-        }); 
-        showToast('Sponsor ditambah'); 
-    }
-
+    window.deleteInventory = async function(id) { if(confirm('Hapus?')) await deleteData(id); }
+    window.addSponsor = async function() { await createData({ type:'sponsor', sponsor_name:document.getElementById('sponsorName').value, sponsor_image:document.getElementById('sponsorImage').value, contact:document.getElementById('sponsorContact').value, amount:document.getElementById('sponsorAmount').value, tier: document.getElementById('sponsorTier').value, createdAt:new Date().toISOString() }); showToast('Sponsor ditambah'); }
     function renderSponsors() { 
+        let list = allData.filter(d=>d.type==='sponsor').sort((a,b) => (parseInt(a.tier)||3) - (parseInt(b.tier)||3) || (parseInt(b.amount)||0) - (parseInt(a.amount)||0));
         const grid = document.getElementById('sponsorListGrid');
         if(!grid) return;
-        
-        let list = allData.filter(d=>d.type==='sponsor').sort((a,b) => (parseInt(a.tier)||3) - (parseInt(b.tier)||3) || (parseInt(b.amount)||0) - (parseInt(a.amount)||0));
-        
-        if (list.length === 0) {
-            grid.innerHTML = `
-                <div class="col-span-full text-center py-12 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-300">
-                    <div class="text-4xl mb-2">🤝</div>
-                    <p class="text-gray-500 font-bold">Belum Ada Sponsor</p>
-                    <p class="text-xs text-gray-400 mt-1">Jadilah pendukung pertama tim ini!</p>
-                </div>`;
-            return;
-        }
-
         grid.innerHTML = list.map((s) => {
             const tier = parseInt(s.tier) || 3;
             let tierClass = tier === 1 ? "bg-gradient-to-br from-slate-800 to-slate-900 border-slate-700 text-white" : (tier === 2 ? "bg-gradient-to-br from-amber-500 to-yellow-600 border-amber-400 text-white" : "bg-gradient-to-br from-slate-200 to-gray-300 border-gray-300 text-slate-800");
             let badge = tier === 1 ? "👑 PLATINUM" : (tier === 2 ? "⭐ GOLD" : "🥈 SILVER");
-            
-            return `
-            <div class="${tierClass} relative rounded-2xl p-6 hover-lift group flex flex-col sm:flex-row items-center gap-6 min-h-[160px] overflow-hidden border shadow-lg">
-                <div class="absolute top-0 left-0 bg-white/20 text-[10px] font-bold px-3 py-1 rounded-br-lg shadow-sm z-10">${badge}</div>
-                <div class="admin-only absolute top-2 right-2 flex gap-1 z-20 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <button onclick="editSponsor('${s.__backendId}')" class="bg-white/20 backdrop-blur p-1 rounded text-xs hover:bg-white/40">✏️</button>
-                    <button onclick="deleteSponsor('${s.__backendId}')" class="bg-red-500/80 backdrop-blur p-1 rounded text-xs hover:bg-red-600">🗑️</button>
-                </div>
-                <div class="w-24 h-24 flex-shrink-0 bg-white rounded-full p-2 shadow-md">
-                    <img src="${s.sponsor_image}" class="w-full h-full object-contain" onerror="this.src='https://via.placeholder.com/100?text=Logo'">
-                </div>
-                <div class="text-center sm:text-left flex-1">
-                    <h4 class="font-bold text-2xl font-head tracking-wide">${s.sponsor_name}</h4>
-                    <p class="text-sm opacity-80 mt-1">${s.contact}</p>
-                    <div class="mt-2 text-xs font-mono opacity-60">
-                        ${new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(s.amount || 0)}
-                    </div>
-                </div>
-            </div>`;
+            return `<div class="${tierClass} relative rounded-2xl p-6 hover-lift group flex flex-col sm:flex-row items-center gap-6 min-h-[160px] overflow-hidden border shadow-lg"><div class="absolute top-0 left-0 bg-white/20 text-[10px] font-bold px-3 py-1 rounded-br-lg shadow-sm z-10">${badge}</div><div class="admin-only absolute top-2 right-2 flex gap-1 z-20 opacity-0 group-hover:opacity-100 transition-opacity"><button onclick="editSponsor('${s.__backendId}')" class="bg-white/20 backdrop-blur p-1 rounded text-xs">✏️</button><button onclick="deleteSponsor('${s.__backendId}')" class="bg-red-500/80 backdrop-blur p-1 rounded text-xs">🗑️</button></div><div class="w-20 h-20 flex-shrink-0 bg-white rounded-full p-2"><img src="${s.sponsor_image}" class="w-full h-full object-contain" onerror="this.src='https://via.placeholder.com/100'"></div><div class="text-center sm:text-left flex-1"><h4 class="font-bold text-2xl">${s.sponsor_name}</h4><p class="text-sm opacity-80">${s.contact}</p></div></div>`;
         }).join('');
     }
-
-    window.editSponsor = function(id) { 
-        currentEditingRecord=allData.find(d=>d.__backendId===id); 
-        if(!currentEditingRecord) return; 
-        document.getElementById('editSponsorName').value=currentEditingRecord.sponsor_name; 
-        document.getElementById('editSponsorImage').value=currentEditingRecord.sponsor_image||''; 
-        document.getElementById('editSponsorContact').value=currentEditingRecord.contact; 
-        document.getElementById('editSponsorAmount').value=currentEditingRecord.amount; 
-        document.getElementById('editSponsorTier').value=currentEditingRecord.tier || '3'; 
-        document.getElementById('editSponsorModal').classList.remove('hidden'); 
-    }
-    window.saveEditSponsor = async function() { 
-        if(!currentEditingRecord) return; 
-        await updateData({
-            ...currentEditingRecord, 
-            sponsor_name:document.getElementById('editSponsorName').value, 
-            sponsor_image:document.getElementById('editSponsorImage').value, 
-            contact:document.getElementById('editSponsorContact').value, 
-            amount:document.getElementById('editSponsorAmount').value, 
-            tier: document.getElementById('editSponsorTier').value 
-        }); 
-        showToast('Update berhasil'); 
-        closeEditSponsorModal(); 
-    }
+    window.editSponsor = function(id) { currentEditingRecord=allData.find(d=>d.__backendId===id); if(!currentEditingRecord) return; document.getElementById('editSponsorName').value=currentEditingRecord.sponsor_name; document.getElementById('editSponsorImage').value=currentEditingRecord.sponsor_image||''; document.getElementById('editSponsorContact').value=currentEditingRecord.contact; document.getElementById('editSponsorAmount').value=currentEditingRecord.amount; document.getElementById('editSponsorTier').value=currentEditingRecord.tier || '3'; document.getElementById('editSponsorModal').classList.remove('hidden'); }
+    window.saveEditSponsor = async function() { if(!currentEditingRecord) return; await updateData({...currentEditingRecord, sponsor_name:document.getElementById('editSponsorName').value, sponsor_image:document.getElementById('editSponsorImage').value, contact:document.getElementById('editSponsorContact').value, amount:document.getElementById('editSponsorAmount').value, tier: document.getElementById('editSponsorTier').value }); showToast('Update berhasil'); closeEditSponsorModal(); }
     window.closeEditSponsorModal = function() { document.getElementById('editSponsorModal').classList.add('hidden'); }
-    window.deleteSponsor = async function(id) { if(confirm('Hapus Sponsor?')) await deleteData(id); }
-    window.handleManageSponsor = function() { 
-        if(document.body.classList.contains('is-admin')){ 
-            document.getElementById('sponsorSectionAdmin').scrollIntoView({behavior: 'smooth'}); 
-        } else { 
-            showToast('Silakan Login sebagai Admin', 'error'); 
-            toggleAdmin(); 
-        } 
-    }
-
-    // 3. GALERI
-    window.addGalleryItem = async function() { 
-        await createData({ 
-            type:'gallery_item', 
-            title:document.getElementById('galleryTitle').value, 
-            category:document.getElementById('galleryCategory').value, 
-            image:document.getElementById('galleryImage').value, 
-            description:document.getElementById('galleryDesc').value, 
-            createdAt:new Date().toISOString() 
-        }); 
-        showToast('Foto ditambahkan'); 
-    }
-
-    window.filterGallery = function(filter) { 
-        currentGalleryFilter = filter; 
-        document.querySelectorAll('.gallery-filter').forEach(btn => { 
-            if(btn.id === `btn-filter-${filter}`) { 
-                btn.classList.remove('bg-white','text-gray-600','border-gray-200'); 
-                btn.classList.add('bg-slate-800','text-white','border-slate-700'); 
-            } else { 
-                btn.classList.add('bg-white','text-gray-600','border-gray-200'); 
-                btn.classList.remove('bg-slate-800','text-white','border-slate-700'); 
-            } 
-        }); 
-        renderGallery(); 
-    }
-
-    function renderGallery() { 
-        const grid = document.getElementById('galleryGrid'); 
-        if(!grid) return; 
-        
-        let items = allData.filter(d => d.type === 'gallery_item'); 
-        
-        if (currentGalleryFilter !== 'all') { 
-            items = items.filter(d => d.category === currentGalleryFilter); 
-        } 
-
-        items.sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
-
-        if (items.length === 0) { 
-            grid.innerHTML = `
-                <div class="col-span-full text-center py-12 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-300">
-                    <div class="text-4xl mb-2">📷</div>
-                    <p class="text-gray-500 font-bold">Galeri Kosong</p>
-                    <p class="text-xs text-gray-400 mt-1">Belum ada foto di kategori ini.</p>
-                </div>`; 
-            return; 
-        } 
-        
-        grid.innerHTML = items.map(item => `
-        <div class="mb-4 break-inside-avoid relative group rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 bg-white">
-            <img src="${item.image}" class="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-700" onerror="this.src='https://via.placeholder.com/400x300?text=No+Image'">
-            <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
-                <span class="text-[10px] font-bold uppercase tracking-wider text-amber-400 mb-1">${item.category}</span>
-                <h3 class="text-white font-bold text-lg leading-tight mb-1">${item.title}</h3>
-                <p class="text-gray-300 text-xs line-clamp-2">${item.description}</p>
-                <button onclick="deleteGalleryItem('${item.__backendId}')" class="admin-only absolute top-2 right-2 bg-white/20 hover:bg-red-600 text-white p-2 rounded-full backdrop-blur transition shadow-lg">🗑️</button>
-            </div>
-        </div>`).join(''); 
-    }
-    
+    window.deleteSponsor = async function(id) { if(confirm('Hapus?')) await deleteData(id); }
+    window.handleManageSponsor = function() { if(document.body.classList.contains('is-admin')){ document.getElementById('sponsorSectionAdmin').scrollIntoView({behavior: 'smooth'}); } else { showToast('Silakan Login sebagai Admin', 'error'); toggleAdmin(); } }
+ 
+    window.addGalleryItem = async function() { await createData({ type:'gallery_item', title:document.getElementById('galleryTitle').value, category:document.getElementById('galleryCategory').value, image:document.getElementById('galleryImage').value, description:document.getElementById('galleryDesc').value, createdAt:new Date().toISOString() }); showToast('Foto ditambahkan'); }
+    window.filterGallery = function(filter) { currentGalleryFilter = filter; document.querySelectorAll('.gallery-filter').forEach(btn => { if(btn.id === `btn-filter-${filter}`) { btn.classList.remove('bg-white','text-gray-600','border-gray-200'); btn.classList.add('bg-slate-800','text-white','border-slate-700'); } else { btn.classList.add('bg-white','text-gray-600','border-gray-200'); btn.classList.remove('bg-slate-800','text-white','border-slate-700'); } }); renderGallery(); }
+    function renderGallery() { const grid = document.getElementById('galleryGrid'); if(!grid) return; let items = allData.filter(d => d.type === 'gallery_item'); if (currentGalleryFilter !== 'all') { items = items.filter(d => d.category === currentGalleryFilter); } if (items.length === 0) { grid.innerHTML = `<div class="col-span-full text-center py-10 text-gray-500 italic">Belum ada foto di kategori ini.</div>`; return; } grid.innerHTML = items.map(item => `<div class="mb-4 break-inside-avoid relative group rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 bg-white"><img src="${item.image}" class="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-700" onerror="this.src='https://via.placeholder.com/400x300?text=No+Image'"><div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4"><span class="text-[10px] font-bold uppercase tracking-wider text-amber-400 mb-1">${item.category}</span><h3 class="text-white font-bold text-lg leading-tight mb-1">${item.title}</h3><p class="text-gray-300 text-xs line-clamp-2">${item.description}</p><button onclick="deleteGalleryItem('${item.__backendId}')" class="admin-only absolute top-2 right-2 bg-white/20 hover:bg-red-500 text-white p-2 rounded-full backdrop-blur transition">🗑️</button></div></div>`).join(''); }
     window.deleteGalleryItem = async function(id) { if(confirm('Hapus foto ini?')) await deleteData(id); }
-
-    // --- SELESAI KODE BARU ---  
+   
     window.showToast = function(msg, type='success') { const t = document.createElement('div'); t.className = `fixed top-4 right-4 z-[9999] px-4 py-2 rounded text-white shadow-lg toast ${type==='success'?'bg-green-500':'bg-red-500'}`; t.innerText = msg; document.body.appendChild(t); setTimeout(()=>t.remove(), 2800); }
     window.toggleAdmin = function() { if(document.body.classList.contains('is-admin')){ document.body.classList.remove('is-admin'); document.getElementById('adminBtn').textContent='🔒'; localStorage.setItem('isAdmin', 'false'); showToast('Admin Logout'); } else { document.getElementById('loginModal').classList.remove('hidden'); } }
     window.submitLogin = function() { if(document.getElementById('adminPassInput').value === 'hudan123'){ document.body.classList.add('is-admin'); document.getElementById('adminBtn').textContent='🔓'; localStorage.setItem('isAdmin', 'true'); closeAdminModal(); showToast('Selamat datang, Baginda Raja!'); } else { showToast('Password Salah','error'); } }
