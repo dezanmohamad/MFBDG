@@ -544,6 +544,34 @@
               <p class="text-gray-300 text-sm mb-6">Data akurat untuk evaluasi objektif. Teruslah berlatih, angka tidak pernah berbohong.</p>
               <button onclick="document.getElementById('statsInputSection').scrollIntoView({behavior: 'smooth'})" class="admin-only bg-amber-500 hover:bg-amber-600 text-slate-900 px-6 py-2 rounded-full font-bold text-sm transition shadow-lg">Input Statistik</button>
           </div>
+       <div class="mt-8 mb-6 admin-only">
+    <div class="bg-white rounded-xl shadow-lg border border-red-100 overflow-hidden">
+        <div class="bg-red-50 p-4 border-b border-red-100 flex justify-between items-center">
+            <h3 class="font-bold text-red-800 flex items-center gap-2">🛠️ Audit & Koreksi Data</h3>
+            <span class="text-[10px] text-red-600 bg-white px-2 py-1 rounded border border-red-200">Admin Only</span>
+        </div>
+        <div class="p-4">
+            <p class="text-xs text-gray-500 mb-4">Jika terjadi kesalahan input, cari data yang salah di bawah ini lalu tekan tombol Hapus (🗑️). Total poin akan otomatis dikalkulasi ulang.</p>
+            <div class="overflow-x-auto max-h-[400px]">
+                <table class="w-full text-xs text-left">
+                    <thead class="bg-gray-50 text-gray-500 font-bold uppercase border-b">
+                        <tr>
+                            <th class="px-3 py-2">Tanggal</th>
+                            <th class="px-3 py-2">Pemain</th>
+                            <th class="px-3 py-2 text-center">G</th>
+                            <th class="px-3 py-2 text-center">A</th>
+                            <th class="px-3 py-2 text-center">S</th>
+                            <th class="px-3 py-2 text-center">PTS</th>
+                            <th class="px-3 py-2 text-center">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="statsLogTable" class="divide-y divide-gray-100">
+                        </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
       </div>
 
       <div id="statsPodium" class="mb-10 grid grid-cols-1 md:grid-cols-3 gap-4 items-end min-h-[100px]">
@@ -2154,7 +2182,53 @@ window.openMatchInput = function(scheduleId) {
                 </tr>`;
             }).join('');
         }
+     renderStatsLog();
     }
+
+   // 🔥🔥🔥 TEMPEL KODE INI DI BAWAH FUNGSI renderStats 🔥🔥🔥
+
+function renderStatsLog() {
+    const container = document.getElementById('statsLogTable');
+    if (!container) return;
+
+    // Ambil data stats, urutkan dari yang terbaru
+    const rawStats = allData.filter(d => d.type === 'stats')
+        .sort((a, b) => new Date(b.createdAt || b.date) - new Date(a.createdAt || a.date));
+
+    if (rawStats.length === 0) {
+        container.innerHTML = '<tr><td colspan="7" class="text-center py-4 text-gray-400 italic">Belum ada data statistik masuk.</td></tr>';
+        return;
+    }
+
+    container.innerHTML = rawStats.map(s => {
+        const member = allData.find(m => m.__backendId === s.member_id);
+        const name = member ? member.name : 'Unknown';
+        const dateObj = new Date(s.date);
+        const dateStr = dateObj.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
+
+        return `
+        <tr class="hover:bg-red-50 transition-colors border-b border-gray-50">
+            <td class="px-3 py-2 text-gray-500">${dateStr}</td>
+            <td class="px-3 py-2 font-bold text-gray-700">${name}</td>
+            <td class="px-3 py-2 text-center text-green-600 font-bold bg-green-50/50 rounded">${s.goals || 0}</td>
+            <td class="px-3 py-2 text-center text-blue-600 font-bold bg-blue-50/50 rounded">${s.assists || 0}</td>
+            <td class="px-3 py-2 text-center text-orange-600 font-bold bg-orange-50/50 rounded">${s.saves || 0}</td>
+            <td class="px-3 py-2 text-center font-bold text-gray-800">${s.totalPoints || 0}</td>
+            <td class="px-3 py-2 text-center">
+                <button onclick="deleteStatEntry('${s.__backendId}', '${name}')" class="bg-white border border-red-200 text-red-500 hover:bg-red-500 hover:text-white px-2 py-1 rounded shadow-sm transition text-[10px] font-bold flex items-center gap-1 mx-auto">
+                    <span>HAPUS</span> 🗑️
+                </button>
+            </td>
+        </tr>
+        `;
+    }).join('');
+}
+
+window.deleteStatEntry = async function(id, playerName) {
+    if(confirm(`Baginda yakin ingin membatalkan/menghapus input statistik untuk ${playerName} ini? Poin pemain akan otomatis berkurang.`)) {
+        await deleteData(id);
+    }
+}
     window.addInventory = async function() { await createData({ type:'inventory', item_name:document.getElementById('itemName').value, item_image:document.getElementById('itemImage').value, quantity:document.getElementById('itemQuantity').value, condition:document.getElementById('itemCondition').value, createdAt:new Date().toISOString() }); showToast('Item ditambah'); document.getElementById('itemName').value=''; }
     function renderInventory() { document.getElementById('inventoryList').innerHTML = allData.filter(d=>d.type==='inventory').map(i=>`<div class="flex gap-3 p-3 bg-white rounded border items-center hover-lift"><img src="${i.item_image||'https://via.placeholder.com/50'}" class="w-12 h-12 object-cover rounded"><div class="flex-1"><b>${i.item_name}</b> <span class="text-xs bg-gray-200 px-1 rounded">${i.condition}</span><div class="text-xs">Stok: ${i.quantity}</div></div><div class="admin-only flex gap-1"><button onclick="editInventory('${i.__backendId}')" class="text-blue-500">✏️</button><button onclick="deleteInventory('${i.__backendId}')" class="text-red-500">🗑️</button></div></div>`).join(''); }
     window.editInventory = function(id) { currentEditingRecord=allData.find(d=>d.__backendId===id); if(!currentEditingRecord) return; document.getElementById('editItemName').value=currentEditingRecord.item_name; document.getElementById('editItemImage').value=currentEditingRecord.item_image||''; document.getElementById('editItemQuantity').value=currentEditingRecord.quantity; document.getElementById('editItemCondition').value=currentEditingRecord.condition; document.getElementById('editInventoryModal').classList.remove('hidden'); }
