@@ -534,7 +534,7 @@
       </div>
     </div>
 
-    <div id="statistikView" class="view-content hidden">
+<div id="statistikView" class="view-content hidden">
       <div class="relative rounded-2xl overflow-hidden mb-8 shadow-xl bg-slate-900 text-white min-h-[200px] flex items-center">
           <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2000')] bg-cover bg-center opacity-40"></div>
           <div class="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/80 to-transparent"></div>
@@ -544,38 +544,10 @@
               <p class="text-gray-300 text-sm mb-6">Data akurat untuk evaluasi objektif. Teruslah berlatih, angka tidak pernah berbohong.</p>
               <button onclick="document.getElementById('statsInputSection').scrollIntoView({behavior: 'smooth'})" class="admin-only bg-amber-500 hover:bg-amber-600 text-slate-900 px-6 py-2 rounded-full font-bold text-sm transition shadow-lg">Input Statistik</button>
           </div>
-       <div class="mt-8 mb-6 admin-only">
-    <div class="bg-white rounded-xl shadow-lg border border-red-100 overflow-hidden">
-        <div class="bg-red-50 p-4 border-b border-red-100 flex justify-between items-center">
-            <h3 class="font-bold text-red-800 flex items-center gap-2">🛠️ Audit & Koreksi Data</h3>
-            <span class="text-[10px] text-red-600 bg-white px-2 py-1 rounded border border-red-200">Admin Only</span>
-        </div>
-        <div class="p-4">
-            <p class="text-xs text-gray-500 mb-4">Jika terjadi kesalahan input, cari data yang salah di bawah ini lalu tekan tombol Hapus (🗑️). Total poin akan otomatis dikalkulasi ulang.</p>
-            <div class="overflow-x-auto max-h-[400px]">
-                <table class="w-full text-xs text-left">
-                    <thead class="bg-gray-50 text-gray-500 font-bold uppercase border-b">
-                        <tr>
-                            <th class="px-3 py-2">Tanggal</th>
-                            <th class="px-3 py-2">Pemain</th>
-                            <th class="px-3 py-2 text-center">G</th>
-                            <th class="px-3 py-2 text-center">A</th>
-                            <th class="px-3 py-2 text-center">S</th>
-                            <th class="px-3 py-2 text-center">PTS</th>
-                            <th class="px-3 py-2 text-center">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody id="statsLogTable" class="divide-y divide-gray-100">
-                        </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
       </div>
 
       <div id="statsPodium" class="mb-10 grid grid-cols-1 md:grid-cols-3 gap-4 items-end min-h-[100px]">
-          </div>
+      </div>
 
       <div class="glass-effect rounded-2xl overflow-hidden shadow-lg mb-8 border border-gray-100">
           <div class="p-4 bg-gradient-to-r from-slate-50 to-white border-b border-gray-200 flex justify-between items-center">
@@ -596,28 +568,58 @@
                       </tr>
                   </thead>
                   <tbody id="statsList" class="divide-y divide-gray-100 bg-white">
-                      </tbody>
+                  </tbody>
               </table>
           </div>
       </div>
 
       <div id="statsInputSection" class="glass-effect rounded-xl p-6 mb-6 admin-only border border-amber-200 shadow-xl">
-       <h2 class="text-xl font-bold text-amber-600 mb-4 flex items-center gap-2">📝 Input Statistik Baru</h2>
-       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4"><select id="statsPlayerName" class="px-4 py-3 border border-amber-300 rounded-xl bg-white font-bold text-gray-700 focus:ring-2 focus:ring-amber-400"> <option value="">-- Pilih Pemain --</option> </select> <input type="date" id="statsDate" class="px-4 py-3 border border-amber-300 rounded-xl focus:ring-2 focus:ring-amber-400"></div>
-       <div class="grid grid-cols-3 gap-3 mb-4">
-           <div class="bg-green-50 p-2 rounded-lg border border-green-100"><label class="text-[10px] font-bold text-green-700 block mb-1">GOL (+3)</label> <input type="number" id="statsGoals" placeholder="0" min="0" class="w-full px-3 py-2 border border-green-200 rounded-lg text-center font-bold text-lg"></div>
-           <div class="bg-blue-50 p-2 rounded-lg border border-blue-100"><label class="text-[10px] font-bold text-blue-700 block mb-1">ASSIST (+1)</label> <input type="number" id="statsAssists" placeholder="0" min="0" class="w-full px-3 py-2 border border-blue-200 rounded-lg text-center font-bold text-lg"></div>
-           <div class="bg-orange-50 p-2 rounded-lg border border-orange-100"><label class="text-[10px] font-bold text-orange-700 block mb-1">SAVE (+1)</label> <input type="number" id="statsSaves" placeholder="0" min="0" class="w-full px-3 py-2 border border-orange-200 rounded-lg text-center font-bold text-lg"></div>
-       </div>
-       <div class="mb-4 bg-gray-50 p-4 rounded-xl border border-gray-200"><p class="text-xs font-bold text-gray-600 mb-2 uppercase tracking-wide">Bonus Poin:</p><div class="grid grid-cols-2 gap-3"><label class="flex items-center space-x-2 cursor-pointer bg-white p-2 rounded border hover:bg-gray-50"> <input type="checkbox" id="statsJersey" class="w-4 h-4 text-amber-600 rounded"> <span class="text-sm text-gray-700">👕 Jersey (+2)</span> </label> <label class="flex items-center space-x-2 cursor-pointer bg-white p-2 rounded border hover:bg-gray-50"> <input type="checkbox" id="statsCleanSheet" class="w-4 h-4 text-amber-600 rounded"> <span class="text-sm text-gray-700">🧤 Clean Sheet (+3)</span> </label></div></div>
-       
-       <div class="mb-6 bg-gradient-to-r from-amber-50 to-yellow-50 p-4 rounded-xl border border-amber-200"><p class="text-xs font-bold text-amber-800 mb-2 uppercase tracking-wide">Awards (MVP):</p><div class="grid grid-cols-2 gap-3 text-sm">
-           <label class="flex items-center space-x-2 bg-white p-2 rounded border border-amber-100"><input type="checkbox" id="statsPOTM" class="w-4 h-4 text-amber-500"> <span>🏅 MOTM (+3)</span></label> 
-           <label class="flex items-center space-x-2 bg-white p-2 rounded border border-amber-100"><input type="checkbox" id="statsBestXI" class="w-4 h-4 text-amber-500"> <span>🛡️ Best XI (+3)</span></label> 
-       </div></div>
-       <button onclick="addStats()" class="w-full gold-gradient text-white px-4 py-3 rounded-xl hover:opacity-90 font-bold shadow-lg transform active:scale-95 transition flex items-center justify-center gap-2"> 💾 Simpan Data Statistik </button>
+        <h2 class="text-xl font-bold text-amber-600 mb-4 flex items-center gap-2">📝 Input Statistik Baru</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4"><select id="statsPlayerName" class="px-4 py-3 border border-amber-300 rounded-xl bg-white font-bold text-gray-700 focus:ring-2 focus:ring-amber-400"> <option value="">-- Pilih Pemain --</option> </select> <input type="date" id="statsDate" class="px-4 py-3 border border-amber-300 rounded-xl focus:ring-2 focus:ring-amber-400"></div>
+        <div class="grid grid-cols-3 gap-3 mb-4">
+            <div class="bg-green-50 p-2 rounded-lg border border-green-100"><label class="text-[10px] font-bold text-green-700 block mb-1">GOL (+3)</label> <input type="number" id="statsGoals" placeholder="0" min="0" class="w-full px-3 py-2 border border-green-200 rounded-lg text-center font-bold text-lg"></div>
+            <div class="bg-blue-50 p-2 rounded-lg border border-blue-100"><label class="text-[10px] font-bold text-blue-700 block mb-1">ASSIST (+1)</label> <input type="number" id="statsAssists" placeholder="0" min="0" class="w-full px-3 py-2 border border-blue-200 rounded-lg text-center font-bold text-lg"></div>
+            <div class="bg-orange-50 p-2 rounded-lg border border-orange-100"><label class="text-[10px] font-bold text-orange-700 block mb-1">SAVE (+1)</label> <input type="number" id="statsSaves" placeholder="0" min="0" class="w-full px-3 py-2 border border-orange-200 rounded-lg text-center font-bold text-lg"></div>
+        </div>
+        <div class="mb-4 bg-gray-50 p-4 rounded-xl border border-gray-200"><p class="text-xs font-bold text-gray-600 mb-2 uppercase tracking-wide">Bonus Poin:</p><div class="grid grid-cols-2 gap-3"><label class="flex items-center space-x-2 cursor-pointer bg-white p-2 rounded border hover:bg-gray-50"> <input type="checkbox" id="statsJersey" class="w-4 h-4 text-amber-600 rounded"> <span class="text-sm text-gray-700">👕 Jersey (+2)</span> </label> <label class="flex items-center space-x-2 cursor-pointer bg-white p-2 rounded border hover:bg-gray-50"> <input type="checkbox" id="statsCleanSheet" class="w-4 h-4 text-amber-600 rounded"> <span class="text-sm text-gray-700">🧤 Clean Sheet (+3)</span> </label></div></div>
+        
+        <div class="mb-6 bg-gradient-to-r from-amber-50 to-yellow-50 p-4 rounded-xl border border-amber-200"><p class="text-xs font-bold text-amber-800 mb-2 uppercase tracking-wide">Awards (MVP):</p><div class="grid grid-cols-2 gap-3 text-sm">
+            <label class="flex items-center space-x-2 bg-white p-2 rounded border border-amber-100"><input type="checkbox" id="statsPOTM" class="w-4 h-4 text-amber-500"> <span>🏅 MOTM (+3)</span></label> 
+            <label class="flex items-center space-x-2 bg-white p-2 rounded border border-amber-100"><input type="checkbox" id="statsBestXI" class="w-4 h-4 text-amber-500"> <span>🛡️ Best XI (+3)</span></label> 
+        </div></div>
+        <button onclick="addStats()" class="w-full gold-gradient text-white px-4 py-3 rounded-xl hover:opacity-90 font-bold shadow-lg transform active:scale-95 transition flex items-center justify-center gap-2"> 💾 Simpan Data Statistik </button>
       </div>
-    </div>
+
+      <div class="mt-8 mb-6 admin-only">
+        <div class="bg-white rounded-xl shadow-lg border border-red-100 overflow-hidden">
+            <div class="bg-red-50 p-4 border-b border-red-100 flex justify-between items-center">
+                <h3 class="font-bold text-red-800 flex items-center gap-2">🛠️ Audit & Koreksi Data</h3>
+                <span class="text-[10px] text-red-600 bg-white px-2 py-1 rounded border border-red-200">Admin Only</span>
+            </div>
+            <div class="p-4">
+                <p class="text-xs text-gray-500 mb-4">Jika terjadi kesalahan input, cari data yang salah di bawah ini lalu tekan tombol Hapus (🗑️). Total poin akan otomatis dikalkulasi ulang.</p>
+                <div class="overflow-x-auto max-h-[400px]">
+                    <table class="w-full text-xs text-left">
+                        <thead class="bg-gray-50 text-gray-500 font-bold uppercase border-b">
+                            <tr>
+                                <th class="px-3 py-2">Tanggal</th>
+                                <th class="px-3 py-2">Pemain</th>
+                                <th class="px-3 py-2 text-center">G</th>
+                                <th class="px-3 py-2 text-center">A</th>
+                                <th class="px-3 py-2 text-center">S</th>
+                                <th class="px-3 py-2 text-center">PTS</th>
+                                <th class="px-3 py-2 text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="statsLogTable" class="divide-y divide-gray-100">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+      </div>
+      </div> 
+    ```
 
     <div id="inventarisView" class="view-content hidden">
       <div class="relative rounded-2xl overflow-hidden mb-8 shadow-xl bg-slate-800 text-white min-h-[180px] flex items-center">
