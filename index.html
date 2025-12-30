@@ -1043,7 +1043,7 @@ function updateDashboard() {
     if(document.getElementById('totalAnggota')) document.getElementById('totalAnggota').textContent = members.length;
     if(document.getElementById('totalMatches')) document.getElementById('totalMatches').textContent = matches.length;
     
-    // 2. Update Top Scorer & Assist (Dashboard Card)
+    // 2. Update Top Scorer & Assist
     const stats = allData.filter(d => d.type === 'stats');
     const goals = {}; const assists = {};
     stats.forEach(s => { 
@@ -1069,20 +1069,25 @@ function updateDashboard() {
         if(document.getElementById('topAssistAvatar')) document.getElementById('topAssistAvatar').innerText = initials;
     }
 
-    // 3. Update Next Match Hero Section (INI YANG DIPERBAIKI)
+    // 3. Update Next Match Hero Section (LOGIKA DIPERBAIKI)
     const upcomingSchedules = allData.filter(d => d.type === 'schedule' && new Date(d.date + 'T' + (d.time || '00:00')) > new Date())
                                      .sort((a,b) => new Date(a.date) - new Date(b.date));
 
     if (upcomingSchedules.length > 0) {
         const next = upcomingSchedules[0];
         
-        // --- PERBAIKAN LOGIKA "VS" ---
-        let displayTitle = "";
-        if (next.schedule_type === 'Friendly Match') {
-            displayTitle = "vs " + next.name; // Pakai "vs" kalau lawan orang
-        } else {
-            displayTitle = next.name; // Kalau Internal, langsung nama acaranya
-        }
+        // --- LOGIKA JUDUL PINTAR ---
+        let displayTitle = next.name;
+        
+        // Ambil tipe jadwal dan ubah ke huruf kecil
+        const type = (next.schedule_type || "").toLowerCase(); 
+        const nameLower = next.name.toLowerCase();
+
+        // Tampilkan "vs" HANYA JIKA tipe Friendly DAN nama tidak mengandung kata "internal"
+        // Ini menjaga kalau Baginda salah pilih tipe, tapi namanya "Internal", dia tetap aman.
+        if (type.includes('friendly') && !nameLower.includes('internal')) {
+             displayTitle = "vs " + next.name;
+        } 
         
         if(document.getElementById('nextMatchTitle')) document.getElementById('nextMatchTitle').textContent = displayTitle;
         
