@@ -1037,69 +1037,80 @@ function startGlobalTimer() {
     
     // ... render functions ...
 function updateDashboard() {
-    // 1. Update Counter (Jumlah Pemain & Match)
+    // 1. Update Counter
     const members = allData.filter(d => d.type === 'member');
     const matches = allData.filter(d => d.type === 'match');
     if(document.getElementById('totalAnggota')) document.getElementById('totalAnggota').textContent = members.length;
     if(document.getElementById('totalMatches')) document.getElementById('totalMatches').textContent = matches.length;
     
-    // 2. Update Top Scorer & Assist
-    const stats = allData.filter(d => d.type === 'stats');
-    const goals = {}; const assists = {};
-    stats.forEach(s => { 
-        if(!goals[s.member_id]) goals[s.member_id]={name:'', val:0}; goals[s.member_id].val+=(parseInt(s.goals)||0);
-        if(!assists[s.member_id]) assists[s.member_id]={name:'', val:0}; assists[s.member_id].val+=(parseInt(s.assists)||0);
-        const m = members.find(x => x.__backendId === s.member_id); 
-        if(m) { goals[s.member_id].name = m.name; assists[s.member_id].name = m.name; }
-    });
+    // ... (Bagian Top Scorer biarkan saja seperti lama) ...
+
+    // 3. LOGIKA BARU: TAMPILKAN JADWAL (Masa Depan ATAU Masa Lalu)
+    const schedules = allData.filter(d => d.type === 'schedule');
     
-    const topG = Object.values(goals).sort((a,b) => b.val - a.val)[0]; 
-    if(topG) {
-        if(document.getElementById('topScorer')) document.getElementById('topScorer').textContent = topG.name; 
-        if(document.getElementById('topScorerGoals')) document.getElementById('topScorerGoals').textContent = topG.val + ' Goals';
-        const initials = topG.name.split(' ').map(n=>n[0]).join('').substring(0,2);
-        if(document.getElementById('topScorerAvatar')) document.getElementById('topScorerAvatar').innerText = initials;
+    // Pisahkan jadwal masa depan dan masa lalu
+    const upcoming = schedules.filter(d => new Date(d.date + 'T' + (d.time || '00:00')) > new Date())
+                             .sort((a,b) => new Date(a.date) - new Date(b.date));
+                             
+    const past = schedules.filter(d => new Date(d.date + 'T' + (d.time || '00:00')) <= new Date())
+                          .sort((a,b) => new Date(b.date) - new Date(a.date)); // Urutkan dari yang terbaru
+
+    let displayMatch = null;
+    let label = "";
+    let isUpcoming = false;
+
+    if (upcoming.length > 0) {
+        displayMatch = upcoming[0];
+        label = "Next Match";
+        isUpcoming = true;
+    } else if (past.length > 0) {
+        displayMatch = past[0];
+        label = "Last Match"; // Tampilkan match terakhir jika tidak ada yang baru
+        isUpcoming = false;
     }
 
-    const topA = Object.values(assists).sort((a,b) => b.val - a.val)[0]; 
-    if(topA) {
-        if(document.getElementById('topAssist')) document.getElementById('topAssist').textContent = topA.name; 
-        if(document.getElementById('topAssistCount')) document.getElementById('topAssistCount').textContent = topA.val + ' Assists';
-        const initials = topA.name.split(' ').map(n=>n[0]).join('').substring(0,2);
-        if(document.getElementById('topAssistAvatar')) document.getElementById('topAssistAvatar').innerText = initials;
-    }
-
-    // 3. Update Next Match Hero Section (LOGIKA DIPERBAIKI)
-    const upcomingSchedules = allData.filter(d => d.type === 'schedule' && new Date(d.date + 'T' + (d.time || '00:00')) > new Date())
-                                     .sort((a,b) => new Date(a.date) - new Date(b.date));
-
-    if (upcomingSchedules.length > 0) {
-        const next = upcomingSchedules[0];
-        
-        // --- LOGIKA JUDUL PINTAR ---
-        let displayTitle = next.name;
-        
-        // Ambil tipe jadwal dan ubah ke huruf kecil
-        const type = (next.schedule_type || "").toLowerCase(); 
-        const nameLower = next.name.toLowerCase();
-
-        // Tampilkan "vs" HANYA JIKA tipe Friendly DAN nama tidak mengandung kata "internal"
-        // Ini menjaga kalau Baginda salah pilih tipe, tapi namanya "Internal", dia tetap aman.
-        if (type.includes('friendly') && !nameLower.includes('internal')) {
-             displayTitle = "vs " + next.name;
-        } 
+    if (displayMatch) {
+        // Tampilkan Judul
+        let displayTitle = displayMatch.name;
+        const type = (displayMatch.schedule_type || "").toLowerCase();
+        if (type.includes('friendly') && !displayTitle.toLowerCase().includes('internal')) {
+             displayTitle = "vs " + displayMatch.name;
+        }
         
         if(document.getElementById('nextMatchTitle')) document.getElementById('nextMatchTitle').textContent = displayTitle;
         
-        const d = new Date(next.date);
-        if(document.getElementById('nextMatchDate')) document.getElementById('nextMatchDate').textContent = d.toLocaleDateString('id-ID', {day:'numeric', month:'long'}) + ' @ ' + next.time;
-        
-        // Set Timer Global
-        nextMatchTargetTime = new Date(next.date + 'T' + (next.time || '00:00') + ':00').getTime();
+        // Tampilkan Tanggal
+        const d = new Date(displayMatch.date);
+        if(document.getElementById('nextMatchDate')) document.getElementById('nextMatchDate').textContent = d.toLocaleDateString('id-ID', {day:'numeric', month:'long'}) + ' @ ' + displayMatch.time;
+
+        // Ubah Label Badge (Next Match / Last Match)
+        const badge = document.querySelector('.bg-amber-500.text-slate-900');
+        if(badge) {
+            badge.textContent = label;
+            if(!isUpcoming) {
+                badge.classList.remove('bg-amber-500', 'animate-pulse');
+                badge.classList.add('bg-gray-500', 'text-white');
+            } else {
+                badge.classList.add('bg-amber-500', 'animate-pulse');
+                badge.classList.remove('bg-gray-500', 'text-white');
+            }
+        }
+
+        // Set Timer (Hanya jika upcoming, jika last match set ke 00)
+        if (isUpcoming) {
+            nextMatchTargetTime = new Date(displayMatch.date + 'T' + (displayMatch.time || '00:00') + ':00').getTime();
+        } else {
+            nextMatchTargetTime = null; // Matikan timer
+            // Set angka timer jadi strip atau 00
+            ['Days','Hours','Minutes','Seconds'].forEach(t => {
+                if(document.getElementById('countdown'+t)) document.getElementById('countdown'+t).textContent = "-";
+            });
+        }
+
     } else {
-        if(document.getElementById('nextMatchTitle')) document.getElementById('nextMatchTitle').textContent = "Belum Ada Jadwal";
+        // Jika benar-benar kosong (Database 0 data)
+        if(document.getElementById('nextMatchTitle')) document.getElementById('nextMatchTitle').textContent = "Belum Ada Data";
         if(document.getElementById('nextMatchDate')) document.getElementById('nextMatchDate').textContent = "-";
-        nextMatchTargetTime = null;
     }
 }
 
