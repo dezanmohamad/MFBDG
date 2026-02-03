@@ -894,11 +894,13 @@
             renderKajianList();
             renderPrayerSchedule();
             updateDashboard(); 
-            if(currentMenu === 'statistik') updatePlayerDropdown();
             
-            // --- UPDATE PENTING: ISI DROPDOWN JADWAL SAAT DATA MASUK ---
+            // --- UPDATE PENTING: ISI SEMUA DROPDOWN SAAT DATA MASUK ---
             populateScheduleDropdown(); 
-            
+            populateStatsMatchSelect(); // <--- TAMBAHAN: Supaya dropdown match di stats terisi
+            if(currentMenu === 'statistik') updatePlayerDropdown();
+            // ---------------------------------------------------------
+
             if(currentMatchIdForReg && !document.getElementById('matchRegModal').classList.contains('hidden')) {
                 renderMatchRegModal(currentMatchIdForReg);
             }
@@ -1037,7 +1039,7 @@ function startGlobalTimer() {
         if(hijriEl) hijriEl.textContent = '1446 H'; 
     }
     
-    window.showMenu = function(menu) { 
+   window.showMenu = function(menu) { 
         currentMenu = menu; 
         searchQuery = "";
         const searchInput = document.getElementById('globalSearchInput');
@@ -1052,10 +1054,13 @@ function startGlobalTimer() {
         if(view) view.classList.remove('hidden'); 
         
         renderCurrentView(); 
+        
+        // --- PERBAIKAN DI SINI (Menambahkan kurung kurawal penutup) ---
         if(menu === 'statistik') {
-    updatePlayerDropdown();
-    populateStatsMatchSelect(); // <--- TAMBAHAN BARU
-}
+            updatePlayerDropdown();
+            populateStatsMatchSelect(); 
+        }
+    } 
     
     // ... render functions ...
 function updateDashboard() {
@@ -2146,7 +2151,18 @@ window.openMatchInput = function(scheduleId) {
     }, 100); // Delay kecil untuk memastikan transisi menu selesai
 }
     window.deleteMatch = async function(id) { if(confirm('Hapus?')) await deleteData(id); }
-    window.inputStatsForMatch = function(id) { showMenu('statistik'); const m=allData.find(d=>d.__backendId===id); if(m) document.getElementById('statsDate').value=m.date; }
+    window.inputStatsForMatch = function(id) { 
+        showMenu('statistik'); 
+        // Tunggu sebentar agar tampilan berpindah, lalu set nilai dropdown
+        setTimeout(() => {
+            const select = document.getElementById('statsMatchRef');
+            if(select) {
+                select.value = id; // Pilih match secara otomatis
+                // Scroll ke form input
+                document.getElementById('statsInputSection').scrollIntoView({behavior: 'smooth'});
+            }
+        }, 100);
+    }
     window.updatePlayerDropdown = function() { document.getElementById('statsPlayerName').innerHTML = '<option value="">Pilih</option>' + allData.filter(d=>d.type==='member').map(m=>`<option value="${m.__backendId}">${m.name}</option>`).join(''); }
     window.populateStatsMatchSelect = function() {
        const select = document.getElementById('statsMatchRef');
