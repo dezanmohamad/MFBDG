@@ -587,9 +587,11 @@
         <h2 class="text-xl font-bold text-amber-600 mb-4 flex items-center gap-2">📝 Input Statistik Baru</h2>
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-            <select id="statsPlayerName" class="px-4 py-3 border border-amber-300 rounded-xl bg-white font-bold text-gray-700 focus:ring-2 focus:ring-amber-400"> 
-                <option value="">-- Pilih Pemain --</option> 
-            </select> 
+            <div class="relative">
+    <input type="text" id="statsPlayerInput" list="statsPlayerList" placeholder="Ketik Nama Pemain..." class="w-full px-4 py-3 border border-amber-300 rounded-xl bg-white font-bold text-gray-700 focus:ring-2 focus:ring-amber-400" onchange="validatePlayerInput(this)">
+    <datalist id="statsPlayerList">
+        </datalist>
+    <input type="hidden" id="statsPlayerName"> </div>
             <select id="statsMatchRef" class="px-4 py-3 border border-amber-300 rounded-xl bg-amber-50 font-bold text-slate-700 focus:ring-2 focus:ring-amber-400">
                 <option value="">-- Pilih Pertandingan --</option>
             </select>
@@ -1845,11 +1847,18 @@ window.renderGeneratedTeams = function(teams) {
         const container = document.getElementById('quickStatsList');
         if(!container) return;
         
+        // URUTKAN MEMBER A-Z UNTUK SELECT BIASA (Quick Stats tetap pakai Select biar cepat)
+        const sortedMembers = allData.filter(d => d.type === 'member')
+                                     .sort((a, b) => a.name.localeCompare(b.name));
+                                     
+        const optionsHTML = '<option value="">-- Pilih --</option>' + 
+                            sortedMembers.map(m => `<option value="${m.__backendId}">${m.name}</option>`).join('');
+
         const rowId = 'stat_row_' + Date.now();
         const html = `
         <div id="${rowId}" class="flex gap-2 items-center bg-white p-2 rounded border border-gray-200 stat-row-entry">
             <select class="stat-player-select flex-1 text-xs border border-gray-300 rounded p-1.5 focus:outline-none focus:border-amber-400 bg-white">
-                ${window.playerOptionsHTML}
+                ${optionsHTML}
             </select>
             <div class="flex items-center gap-1 w-14" title="Goal (+3)">
                 <span class="text-[10px]">⚽</span>
@@ -2163,7 +2172,49 @@ window.openMatchInput = function(scheduleId) {
             }
         }, 100);
     }
-    window.updatePlayerDropdown = function() { document.getElementById('statsPlayerName').innerHTML = '<option value="">Pilih</option>' + allData.filter(d=>d.type==='member').map(m=>`<option value="${m.__backendId}">${m.name}</option>`).join(''); }
+    window.updatePlayerDropdown = function() {
+        const datalist = document.getElementById('statsPlayerList');
+        if(!datalist) return;
+        
+        // 1. Ambil data pemain dan urutkan A-Z
+        const sortedMembers = allData.filter(d => d.type === 'member')
+                                     .sort((a, b) => a.name.localeCompare(b.name));
+        
+        // 2. Isi Datalist
+        let html = '';
+        sortedMembers.forEach(m => {
+            // Kita simpan ID di atribut data-id (trik agar input text bisa simpan ID)
+            // Tapi karena datalist standar tidak support data-attribute langsung di input,
+            // Kita pakai validasi manual di langkah berikutnya.
+            html += `<option value="${m.name} (${m.position})" data-id="${m.__backendId}">`;
+        });
+        datalist.innerHTML = html;
+    }
+
+    // FUNGSI BARU: VALIDASI & SIMPAN ID PEMAIN
+    window.validatePlayerInput = function(inputElement) {
+        const val = inputElement.value;
+        const list = document.getElementById('statsPlayerList');
+        const hiddenId = document.getElementById('statsPlayerName'); // Ini yg menyimpan ID asli
+        
+        // Cari opsi yang cocok di datalist
+        let foundId = '';
+        for (let i = 0; i < list.options.length; i++) {
+            if (list.options[i].value === val) {
+                foundId = list.options[i].getAttribute('data-id');
+                break;
+            }
+        }
+        
+        if(foundId) {
+            hiddenId.value = foundId; // Set ID yang benar
+            inputElement.classList.remove('border-red-500');
+            inputElement.classList.add('border-green-500');
+        } else {
+            hiddenId.value = ''; // Reset jika nama tidak valid/typo
+            // showToast('Pilih nama dari daftar, Baginda!', 'error'); // Opsional
+        }
+    }
     window.populateStatsMatchSelect = function() {
        const select = document.getElementById('statsMatchRef');
        if(!select) return;
@@ -2184,6 +2235,11 @@ window.openMatchInput = function(scheduleId) {
         // 1. Validasi Input Match
         const matchId = document.getElementById('statsMatchRef').value;
         const playerId = document.getElementById('statsPlayerName').value;
+     if (!playerId) { 
+    showToast('Nama pemain tidak valid/belum dipilih dari daftar!', 'error'); 
+    document.getElementById('statsPlayerInput').focus();
+    return; 
+}
         
         if (!matchId) { showToast('Pilih pertandingan dulu, Baginda!', 'error'); return; }
         if (!playerId) { showToast('Pilih pemain dulu, Baginda!', 'error'); return; }
