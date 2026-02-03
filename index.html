@@ -585,7 +585,15 @@
 
       <div id="statsInputSection" class="glass-effect rounded-xl p-6 mb-6 admin-only border border-amber-200 shadow-xl">
         <h2 class="text-xl font-bold text-amber-600 mb-4 flex items-center gap-2">📝 Input Statistik Baru</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4"><select id="statsPlayerName" class="px-4 py-3 border border-amber-300 rounded-xl bg-white font-bold text-gray-700 focus:ring-2 focus:ring-amber-400"> <option value="">-- Pilih Pemain --</option> </select> <input type="date" id="statsDate" class="px-4 py-3 border border-amber-300 rounded-xl focus:ring-2 focus:ring-amber-400"></div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <select id="statsPlayerName" class="px-4 py-3 border border-amber-300 rounded-xl bg-white font-bold text-gray-700 focus:ring-2 focus:ring-amber-400"> 
+                <option value="">-- Pilih Pemain --</option> 
+            </select> 
+            <select id="statsMatchRef" class="px-4 py-3 border border-amber-300 rounded-xl bg-amber-50 font-bold text-slate-700 focus:ring-2 focus:ring-amber-400">
+                <option value="">-- Pilih Pertandingan --</option>
+            </select>
+        </div>
         <div class="grid grid-cols-3 gap-3 mb-4">
             <div class="bg-green-50 p-2 rounded-lg border border-green-100"><label class="text-[10px] font-bold text-green-700 block mb-1">GOL (+3)</label> <input type="number" id="statsGoals" placeholder="0" min="0" class="w-full px-3 py-2 border border-green-200 rounded-lg text-center font-bold text-lg"></div>
             <div class="bg-blue-50 p-2 rounded-lg border border-blue-100"><label class="text-[10px] font-bold text-blue-700 block mb-1">ASSIST (+2)</label> <input type="number" id="statsAssists" placeholder="0" min="0" class="w-full px-3 py-2 border border-blue-200 rounded-lg text-center font-bold text-lg"></div>
@@ -1044,8 +1052,10 @@ function startGlobalTimer() {
         if(view) view.classList.remove('hidden'); 
         
         renderCurrentView(); 
-        if(menu === 'statistik') updatePlayerDropdown(); 
-    }
+        if(menu === 'statistik') {
+    updatePlayerDropdown();
+    populateStatsMatchSelect(); // <--- TAMBAHAN BARU
+}
     
     // ... render functions ...
 function updateDashboard() {
@@ -2138,8 +2148,35 @@ window.openMatchInput = function(scheduleId) {
     window.deleteMatch = async function(id) { if(confirm('Hapus?')) await deleteData(id); }
     window.inputStatsForMatch = function(id) { showMenu('statistik'); const m=allData.find(d=>d.__backendId===id); if(m) document.getElementById('statsDate').value=m.date; }
     window.updatePlayerDropdown = function() { document.getElementById('statsPlayerName').innerHTML = '<option value="">Pilih</option>' + allData.filter(d=>d.type==='member').map(m=>`<option value="${m.__backendId}">${m.name}</option>`).join(''); }
-   window.addStats = async function() {
-        // RUMUS: Goal*3 + Assist*2 + Save*1
+    window.populateStatsMatchSelect = function() {
+       const select = document.getElementById('statsMatchRef');
+       if(!select) return;
+       
+       // Ambil hanya data match, urutkan dari yang terbaru
+       const matches = allData.filter(d => d.type === 'match').sort((a,b) => new Date(b.date) - new Date(a.date));
+       
+       let html = '<option value="">-- Pilih Pertandingan --</option>';
+       matches.forEach(m => {
+           // Format tanggal agar mudah dibaca
+           const d = new Date(m.date).toLocaleDateString('id-ID', { day:'numeric', month:'short' });
+           const label = `${m.opponent} (${d})`;
+           html += `<option value="${m.__backendId}">${label}</option>`;
+       });
+       select.innerHTML = html;
+    }
+    window.addStats = async function() {
+        // 1. Validasi Input Match
+        const matchId = document.getElementById('statsMatchRef').value;
+        const playerId = document.getElementById('statsPlayerName').value;
+        
+        if (!matchId) { showToast('Pilih pertandingan dulu, Baginda!', 'error'); return; }
+        if (!playerId) { showToast('Pilih pemain dulu, Baginda!', 'error'); return; }
+
+        // 2. Ambil Tanggal Otomatis dari Data Match
+        const matchData = allData.find(d => d.__backendId === matchId);
+        const autoDate = matchData ? matchData.date : new Date().toISOString().split('T')[0];
+
+        // 3. Hitung Poin (Sesuai Aturan Baru)
         const goals = parseInt(document.getElementById('statsGoals').value)||0;
         const assists = parseInt(document.getElementById('statsAssists').value)||0;
         const saves = parseInt(document.getElementById('statsSaves').value)||0;
@@ -2147,32 +2184,28 @@ window.openMatchInput = function(scheduleId) {
         const basePoints = (goals * 3) + (assists * 2) + (saves * 1);
         
         let bonus = 0;
-        // Checkbox Bonus
         if(document.getElementById('statsJersey').checked) bonus += 2;
         if(document.getElementById('statsCleanSheet').checked) bonus += 3;
-        if(document.getElementById('statsPOTM').checked) bonus += 3; // MVP
-        if(document.getElementById('statsBestXI').checked) bonus += 3; // Best XI
-        if(document.getElementById('statsBestMonth').checked) bonus += 3; // Best Month (BARU)
+        if(document.getElementById('statsPOTM').checked) bonus += 3; 
+        if(document.getElementById('statsBestXI').checked) bonus += 3; 
+        if(document.getElementById('statsBestMonth').checked) bonus += 3; 
         
-        // Note: Untuk input manual, kehadiran default tidak otomatis ditambahkan 
-        // karena Baginda bisa menambahkan lewat 'Jersey (+2)' atau input manual poin.
-        // Jika ingin kehadiran otomatis, tambahkan +1 (Internal) atau +2 (Friendly) di sini.
-        // Tapi untuk manual biasanya fleksibel.
-        
+        // 4. Simpan ke Database
         await createData({ 
-            type:'stats', 
-            member_id:document.getElementById('statsPlayerName').value, 
-            date:document.getElementById('statsDate').value, 
+            type: 'stats', 
+            member_id: playerId, 
+            match_ref: matchId, // Link ke ID Match (Opsional tapi bagus untuk relasi)
+            date: autoDate,     // Tanggal otomatis dari match
             goals: goals, 
             assists: assists, 
             saves: saves, 
             totalPoints: basePoints + bonus, 
-            createdAt:new Date().toISOString() 
+            createdAt: new Date().toISOString() 
         });
         
-        showToast('Statistik disimpan');
+        showToast('Statistik disimpan!');
         
-        // Reset Inputs
+        // 5. Reset Input Angka (Tapi biarkan Match terpilih agar bisa input pemain lain di match yg sama)
         document.getElementById('statsGoals').value = '';
         document.getElementById('statsAssists').value = '';
         document.getElementById('statsSaves').value = '';
