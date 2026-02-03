@@ -1908,7 +1908,7 @@ window.renderGeneratedTeams = function(teams) {
 
         let dataPayload = { type:'match', schedule_ref: scheduleId, date, location, match_type: type, createdAt: new Date().toISOString() };
 
-        // --- 1. PROSES SIMPAN MATCH UTAMA ---
+        // --- 1. PROSES SIMPAN DATA SKOR MATCH ---
         if (type === 'Friendly Match') {
             const teamA = document.getElementById('friend_team_a').value;
             const teamB = document.getElementById('friend_team_b').value;
@@ -1950,16 +1950,19 @@ window.renderGeneratedTeams = function(teams) {
         }
 
         try {
-            // A. Simpan Data Match
+            // A. Simpan Data Match Utama
             await createData(dataPayload); 
 
-            // B. PROSES SIMPAN STATISTIK PEMAIN
-            const statRows = document.querySelectorAll('.stat-row-entry');
-            let statsCount = 0;
-            
-            // ATURAN POIN KEHADIRAN
+            // B. PERSIAPAN POIN
             // Friendly = 2, Internal = 1
             const attendancePoints = (type === 'Friendly Match') ? 2 : 1;
+            
+            // Array untuk melacak siapa saja yang sudah dapat poin dari input manual
+            const processedMemberIds = []; 
+
+            // C. SIMPAN PEMAIN YANG INPUT MANUAL (GOL/ASSIST/SAVE)
+            const statRows = document.querySelectorAll('.stat-row-entry');
+            let statsCount = 0;
 
             for (const row of statRows) {
                 const playerId = row.querySelector('.stat-player-select').value;
@@ -1981,11 +1984,38 @@ window.renderGeneratedTeams = function(teams) {
                         totalPoints: totalPoints,
                         createdAt: new Date().toISOString()
                     });
+                    
+                    processedMemberIds.push(playerId); // Tandai pemain ini sudah diproses
                     statsCount++;
                 }
             }
 
-            showToast(`Match & ${statsCount} Statistik Tersimpan!`); 
+            // D. [FITUR BARU] AUTO-POIN UNTUK PEMAIN TERDAFTAR LAINNYA
+            // Ambil semua pemain yang terdaftar di jadwal ini
+            if(scheduleId) {
+                const registeredPlayers = allData.filter(d => d.type === 'registration' && d.schedule_id === scheduleId);
+                
+                for (const reg of registeredPlayers) {
+                    // Jika pemain ini BELUM diproses (artinya dia main tapi gak nge-golin/assist)
+                    if (!processedMemberIds.includes(reg.member_id)) {
+                        await createData({
+                            type: 'stats',
+                            member_id: reg.member_id,
+                            date: date,
+                            goals: 0,
+                            assists: 0,
+                            saves: 0,
+                            totalPoints: attendancePoints, // Hanya dapat poin kehadiran
+                            createdAt: new Date().toISOString()
+                        });
+                        statsCount++;
+                    }
+                }
+            }
+
+            showToast(`Sukses! ${statsCount} pemain mendapatkan poin.`); 
+            
+            // Reset Form
             renderCurrentView();
             document.getElementById('matchInputSection').scrollIntoView();
             document.getElementById('matchScheduleRef').value = "";
