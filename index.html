@@ -14,8 +14,18 @@
     .font-arabic { font-family: 'Amiri', serif; }
     .font-head { font-family: 'Oswald', sans-serif; }
     
-    .glass-effect { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border: 1px solid rgba(218, 165, 32, 0.2); }
-    .glass-nav { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.5); box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
+    .glass-effect { 
+        background: #ffffff; /* Ganti transparansi dengan warna solid putih */
+        border: 1px solid #DAA520; 
+        /* backdrop-filter: blur(10px);  <-- DIBUANG AGAR RINGAN */
+    }
+    
+    .glass-nav { 
+        background: #ffffff; 
+        border: 1px solid #e2e8f0; 
+        box-shadow: 0 4px 10px rgba(0,0,0,0.05); 
+        /* backdrop-filter: blur(12px); <-- DIBUANG AGAR RINGAN */
+    }
     
     .gold-gradient { background: linear-gradient(135deg, #DAA520 0%, #FFD700 100%); }
     .platinum-gradient { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 1px solid #475569; }
@@ -210,7 +220,7 @@
    <div id="dashboardView" class="view-content"> 
     <div class="mb-8">
      <div class="relative rounded-3xl overflow-hidden shadow-2xl bg-slate-900 border border-white/10 min-h-[280px] flex flex-col justify-center">
-        <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1556056504-5c7696c4c28d?q=80&w=2000')] bg-cover bg-center opacity-30"></div>
+        <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1556056504-5c7696c4c28d?q=60&w=600')] bg-cover bg-center opacity-30"></div>
         <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/60 to-transparent"></div>
         
         <div class="relative p-6 text-white text-center">
@@ -390,7 +400,7 @@
 
     <div id="anggotaView" class="view-content hidden">
       <div class="relative rounded-2xl overflow-hidden mb-8 shadow-xl bg-slate-900 text-white min-h-[200px] flex items-center">
-          <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1579952363873-27f3bade9f55?q=80&w=2000')] bg-cover bg-center opacity-40"></div>
+          <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1579952363873-27f3bade9f55?q=60&w=600')] bg-cover bg-center opacity-40"></div>
           <div class="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/80 to-transparent"></div>
           <div class="relative p-8 z-10 max-w-2xl">
               <span class="text-amber-400 font-bold tracking-widest text-xs uppercase mb-2 block">Daftar Pemain Resmi</span>
@@ -434,7 +444,7 @@
 
     <div id="jadwalView" class="view-content hidden">
       <div class="relative rounded-2xl overflow-hidden mb-8 shadow-xl bg-slate-900 text-white min-h-[200px] flex items-center">
-          <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1522778119026-d647f0565c6d?q=80&w=2000')] bg-cover bg-center opacity-40"></div>
+          <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1522778119026-d647f0565c6d?q=60&w=600')] bg-cover bg-center opacity-40"></div>
           <div class="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/80 to-transparent"></div>
           <div class="relative p-8 z-10 max-w-2xl">
               <span class="text-amber-400 font-bold tracking-widest text-xs uppercase mb-2 block">Kalender Kegiatan</span>
@@ -461,7 +471,7 @@
 
     <div id="matchView" class="view-content hidden">
       <div class="relative rounded-2xl overflow-hidden mb-8 shadow-xl bg-slate-900 text-white min-h-[200px] flex items-center">
-          <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=2000')] bg-cover bg-center opacity-40"></div>
+          <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=60&w=600')] bg-cover bg-center opacity-40"></div>
           <div class="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/80 to-transparent"></div>
           <div class="relative p-8 z-10 max-w-2xl">
               <span class="text-amber-400 font-bold tracking-widest text-xs uppercase mb-2 block">Scoreboard & History</span>
@@ -536,7 +546,7 @@
 
 <div id="statistikView" class="view-content hidden">
       <div class="relative rounded-2xl overflow-hidden mb-8 shadow-xl bg-slate-900 text-white min-h-[200px] flex items-center">
-          <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2000')] bg-cover bg-center opacity-40"></div>
+          <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=60&w=600')] bg-cover bg-center opacity-40"></div>
           <div class="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/80 to-transparent"></div>
           <div class="relative p-8 z-10 max-w-2xl">
               <span class="text-amber-400 font-bold tracking-widest text-xs uppercase mb-2 block">Performance Center</span>
@@ -618,12 +628,10 @@
             </div>
         </div>
       </div>
-      </div> 
-    ```
-
+      </div>
     <div id="inventarisView" class="view-content hidden">
       <div class="relative rounded-2xl overflow-hidden mb-8 shadow-xl bg-slate-800 text-white min-h-[180px] flex items-center">
-          <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1522778119026-d647f0565c6d?q=80&w=2000')] bg-cover bg-center opacity-40"></div>
+          <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1522778119026-d647f0565c6d?q=60&w=600')] bg-cover bg-center opacity-40"></div>
           <div class="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/80 to-transparent"></div>
           <div class="relative p-8 z-10 max-w-2xl">
               <span class="text-amber-400 font-bold tracking-widest text-xs uppercase mb-2 block">Gudang & Logistik</span>
@@ -642,7 +650,7 @@
 
     <div id="sponsorView" class="view-content hidden">
       <div class="relative rounded-2xl overflow-hidden mb-8 shadow-xl bg-slate-900 text-white min-h-[200px] flex items-center">
-          <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1517466787929-bc90951d0974?q=80&w=2000')] bg-cover bg-center opacity-40"></div>
+          <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1517466787929-bc90951d0974?q=60&w=600')] bg-cover bg-center opacity-40"></div>
           <div class="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/80 to-transparent"></div>
           <div class="relative p-8 z-10 max-w-2xl">
               <span class="text-amber-400 font-bold tracking-widest text-xs uppercase mb-2 block">Mitra & Pendukung</span>
@@ -661,7 +669,7 @@
     
     <div id="galeriView" class="view-content hidden">
         <div class="relative rounded-2xl overflow-hidden mb-8 shadow-xl bg-slate-900 text-white min-h-[200px] flex items-center">
-            <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1516733968668-dbdce39c4651?q=80&w=2000')] bg-cover bg-center opacity-40"></div>
+            <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1516733968668-dbdce39c4651?q=60&w=600')] bg-cover bg-center opacity-40"></div>
             <div class="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/80 to-transparent"></div>
             <div class="relative p-8 z-10 max-w-2xl">
                 <span class="text-amber-400 font-bold tracking-widest text-xs uppercase mb-2 block">Hall of Fame</span>
@@ -1694,7 +1702,7 @@ window.renderGeneratedTeams = function(teams) {
                     </div>
                     <div class="flex sm:flex-col gap-2 mt-2 sm:mt-0 self-start">
                         ${actionButton}
-                        <button onclick="window.open('https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(s.location)}', '_blank')" class="w-10 h-10 rounded-full bg-white/5 hover:bg-amber-500 hover:text-slate-900 text-white flex items-center justify-center transition border border-white/10 backdrop-blur" title="Buka Peta">🗺️</button>
+                        <button onclick="window.open('https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(s.location), '_blank')" class="w-10 h-10 rounded-full bg-white/5 hover:bg-amber-500 hover:text-slate-900 text-white flex items-center justify-center transition border border-white/10 backdrop-blur" title="Buka Peta">🗺️</button>
                         <button onclick="deleteSchedule('${s.__backendId}')" class="admin-only w-10 h-10 rounded-full bg-red-500/20 hover:bg-red-500 text-red-300 hover:text-white flex items-center justify-center transition border border-red-500/30 backdrop-blur" title="Hapus Jadwal">🗑️</button>
                     </div>
                 </div>
