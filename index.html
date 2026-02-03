@@ -572,7 +572,7 @@
                           <th class="px-4 py-3">Pemain</th>
                           <th class="px-4 py-3 text-center w-16" title="Matches Played">Main</th>
                           <th class="px-4 py-3 text-center w-16 text-green-600" title="Gol (3 Poin)">⚽</th>
-                          <th class="px-4 py-3 text-center w-16 text-blue-600" title="Assist (1 Poin)">🎯</th>
+                          <th class="px-4 py-3 text-center w-16 text-blue-600" title="Assist (2 Poin)">🎯</th>
                           <th class="px-4 py-3 text-center w-16 text-orange-600" title="Saves (1 Poin)">🧤</th>
                           <th class="px-4 py-3 text-center w-20 text-amber-600 font-extrabold text-base bg-amber-50" title="Total Poin">PTS</th>
                       </tr>
@@ -588,15 +588,19 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4"><select id="statsPlayerName" class="px-4 py-3 border border-amber-300 rounded-xl bg-white font-bold text-gray-700 focus:ring-2 focus:ring-amber-400"> <option value="">-- Pilih Pemain --</option> </select> <input type="date" id="statsDate" class="px-4 py-3 border border-amber-300 rounded-xl focus:ring-2 focus:ring-amber-400"></div>
         <div class="grid grid-cols-3 gap-3 mb-4">
             <div class="bg-green-50 p-2 rounded-lg border border-green-100"><label class="text-[10px] font-bold text-green-700 block mb-1">GOL (+3)</label> <input type="number" id="statsGoals" placeholder="0" min="0" class="w-full px-3 py-2 border border-green-200 rounded-lg text-center font-bold text-lg"></div>
-            <div class="bg-blue-50 p-2 rounded-lg border border-blue-100"><label class="text-[10px] font-bold text-blue-700 block mb-1">ASSIST (+1)</label> <input type="number" id="statsAssists" placeholder="0" min="0" class="w-full px-3 py-2 border border-blue-200 rounded-lg text-center font-bold text-lg"></div>
+            <div class="bg-blue-50 p-2 rounded-lg border border-blue-100"><label class="text-[10px] font-bold text-blue-700 block mb-1">ASSIST (+2)</label> <input type="number" id="statsAssists" placeholder="0" min="0" class="w-full px-3 py-2 border border-blue-200 rounded-lg text-center font-bold text-lg"></div>
             <div class="bg-orange-50 p-2 rounded-lg border border-orange-100"><label class="text-[10px] font-bold text-orange-700 block mb-1">SAVE (+1)</label> <input type="number" id="statsSaves" placeholder="0" min="0" class="w-full px-3 py-2 border border-orange-200 rounded-lg text-center font-bold text-lg"></div>
         </div>
         <div class="mb-4 bg-gray-50 p-4 rounded-xl border border-gray-200"><p class="text-xs font-bold text-gray-600 mb-2 uppercase tracking-wide">Bonus Poin:</p><div class="grid grid-cols-2 gap-3"><label class="flex items-center space-x-2 cursor-pointer bg-white p-2 rounded border hover:bg-gray-50"> <input type="checkbox" id="statsJersey" class="w-4 h-4 text-amber-600 rounded"> <span class="text-sm text-gray-700">👕 Jersey (+2)</span> </label> <label class="flex items-center space-x-2 cursor-pointer bg-white p-2 rounded border hover:bg-gray-50"> <input type="checkbox" id="statsCleanSheet" class="w-4 h-4 text-amber-600 rounded"> <span class="text-sm text-gray-700">🧤 Clean Sheet (+3)</span> </label></div></div>
         
-        <div class="mb-6 bg-gradient-to-r from-amber-50 to-yellow-50 p-4 rounded-xl border border-amber-200"><p class="text-xs font-bold text-amber-800 mb-2 uppercase tracking-wide">Awards (MVP):</p><div class="grid grid-cols-2 gap-3 text-sm">
-            <label class="flex items-center space-x-2 bg-white p-2 rounded border border-amber-100"><input type="checkbox" id="statsPOTM" class="w-4 h-4 text-amber-500"> <span>🏅 MOTM (+3)</span></label> 
-            <label class="flex items-center space-x-2 bg-white p-2 rounded border border-amber-100"><input type="checkbox" id="statsBestXI" class="w-4 h-4 text-amber-500"> <span>🛡️ Best XI (+3)</span></label> 
-        </div></div>
+        <div class="mb-6 bg-gradient-to-r from-amber-50 to-yellow-50 p-4 rounded-xl border border-amber-200">
+            <p class="text-xs font-bold text-amber-800 mb-2 uppercase tracking-wide">Awards (MVP):</p>
+            <div class="grid grid-cols-2 gap-3 text-sm">
+                <label class="flex items-center space-x-2 bg-white p-2 rounded border border-amber-100"><input type="checkbox" id="statsPOTM" class="w-4 h-4 text-amber-500"> <span>🏅 MVP/MOTM (+3)</span></label> 
+                <label class="flex items-center space-x-2 bg-white p-2 rounded border border-amber-100"><input type="checkbox" id="statsBestXI" class="w-4 h-4 text-amber-500"> <span>🛡️ Best XI Month (+3)</span></label> 
+                <label class="flex items-center space-x-2 bg-white p-2 rounded border border-amber-100 col-span-2"><input type="checkbox" id="statsBestMonth" class="w-4 h-4 text-amber-500"> <span>👑 Player of The Month (+3)</span></label> 
+            </div>
+        </div>
         <button onclick="addStats()" class="w-full gold-gradient text-white px-4 py-3 rounded-xl hover:opacity-90 font-bold shadow-lg transform active:scale-95 transition flex items-center justify-center gap-2"> 💾 Simpan Data Statistik </button>
       </div>
 
@@ -1822,7 +1826,7 @@ window.renderGeneratedTeams = function(teams) {
         }
     }
    // FUNGSI BANTUAN: MENAMBAH BARIS INPUT STATISTIK
-    window.addStatRow = function() {
+   window.addStatRow = function() {
         const container = document.getElementById('quickStatsList');
         if(!container) return;
         
@@ -1832,13 +1836,17 @@ window.renderGeneratedTeams = function(teams) {
             <select class="stat-player-select flex-1 text-xs border border-gray-300 rounded p-1.5 focus:outline-none focus:border-amber-400 bg-white">
                 ${window.playerOptionsHTML}
             </select>
-            <div class="flex items-center gap-1 w-16">
+            <div class="flex items-center gap-1 w-14" title="Goal (+3)">
                 <span class="text-[10px]">⚽</span>
                 <input type="number" min="0" placeholder="0" class="stat-goals-input w-full text-xs border border-gray-300 rounded p-1 text-center font-bold">
             </div>
-            <div class="flex items-center gap-1 w-16">
+            <div class="flex items-center gap-1 w-14" title="Assist (+2)">
                 <span class="text-[10px]">🎯</span>
                 <input type="number" min="0" placeholder="0" class="stat-assists-input w-full text-xs border border-gray-300 rounded p-1 text-center font-bold">
+            </div>
+            <div class="flex items-center gap-1 w-14" title="Save (+1)">
+                <span class="text-[10px]">🧤</span>
+                <input type="number" min="0" placeholder="0" class="stat-saves-input w-full text-xs border border-gray-300 rounded p-1 text-center font-bold">
             </div>
             <button onclick="document.getElementById('${rowId}').remove()" class="text-red-400 hover:text-red-600 font-bold px-1">✕</button>
         </div>
@@ -1882,7 +1890,6 @@ window.renderGeneratedTeams = function(teams) {
             const teamB = document.getElementById('friend_team_b').value;
             const opponentName = document.getElementById('matchOpponent').value || 'Lawan';
             
-            // Validasi Tim Rotasi (Boleh kosong tapi sebaiknya diisi)
             if(!teamA || !teamB) { 
                 if(!confirm("Tim Rotasi belum dipilih. Lanjutkan?")) return;
             }
@@ -1922,28 +1929,31 @@ window.renderGeneratedTeams = function(teams) {
             // A. Simpan Data Match
             await createData(dataPayload); 
 
-            // B. PROSES SIMPAN STATISTIK PEMAIN (JIKA ADA)
+            // B. PROSES SIMPAN STATISTIK PEMAIN
             const statRows = document.querySelectorAll('.stat-row-entry');
             let statsCount = 0;
             
+            // ATURAN POIN KEHADIRAN
+            // Friendly = 2, Internal = 1
+            const attendancePoints = (type === 'Friendly Match') ? 2 : 1;
+
             for (const row of statRows) {
                 const playerId = row.querySelector('.stat-player-select').value;
                 const goals = parseInt(row.querySelector('.stat-goals-input').value) || 0;
                 const assists = parseInt(row.querySelector('.stat-assists-input').value) || 0;
+                const saves = parseInt(row.querySelector('.stat-saves-input').value) || 0;
                 
-                // Hanya simpan jika pemain dipilih DAN ada kontribusi (gol/assist > 0)
-                if (playerId && (goals > 0 || assists > 0)) {
-                    // Hitung Poin (Gol=3, Assist=1) + Bonus otomatis Main(+2)
-                    // Note: Kita asumsikan input di sini dapat bonus Main. Bonus lain manual nanti kalau mau.
-                    const totalPoints = (goals * 3) + (assists * 1) + 2; 
+                if (playerId) { 
+                    // RUMUS: Goal(3) + Assist(2) + Save(1) + Kehadiran(1/2)
+                    const totalPoints = (goals * 3) + (assists * 2) + (saves * 1) + attendancePoints; 
                     
                     await createData({
                         type: 'stats',
                         member_id: playerId,
-                        date: date, // Tanggal disamakan dengan match
+                        date: date,
                         goals: goals,
                         assists: assists,
-                        saves: 0, // Default 0 kalau input cepat
+                        saves: saves,
                         totalPoints: totalPoints,
                         createdAt: new Date().toISOString()
                     });
@@ -1952,8 +1962,6 @@ window.renderGeneratedTeams = function(teams) {
             }
 
             showToast(`Match & ${statsCount} Statistik Tersimpan!`); 
-            
-            // Reset Form
             renderCurrentView();
             document.getElementById('matchInputSection').scrollIntoView();
             document.getElementById('matchScheduleRef').value = "";
@@ -2130,20 +2138,49 @@ window.openMatchInput = function(scheduleId) {
     window.deleteMatch = async function(id) { if(confirm('Hapus?')) await deleteData(id); }
     window.inputStatsForMatch = function(id) { showMenu('statistik'); const m=allData.find(d=>d.__backendId===id); if(m) document.getElementById('statsDate').value=m.date; }
     window.updatePlayerDropdown = function() { document.getElementById('statsPlayerName').innerHTML = '<option value="">Pilih</option>' + allData.filter(d=>d.type==='member').map(m=>`<option value="${m.__backendId}">${m.name}</option>`).join(''); }
-    window.addStats = async function() {
-        const pts = (parseInt(document.getElementById('statsGoals').value)||0)*3 + (parseInt(document.getElementById('statsAssists').value)||0) + (parseInt(document.getElementById('statsSaves').value)||0);
+   window.addStats = async function() {
+        // RUMUS: Goal*3 + Assist*2 + Save*1
+        const goals = parseInt(document.getElementById('statsGoals').value)||0;
+        const assists = parseInt(document.getElementById('statsAssists').value)||0;
+        const saves = parseInt(document.getElementById('statsSaves').value)||0;
+        
+        const basePoints = (goals * 3) + (assists * 2) + (saves * 1);
+        
         let bonus = 0;
+        // Checkbox Bonus
         if(document.getElementById('statsJersey').checked) bonus += 2;
         if(document.getElementById('statsCleanSheet').checked) bonus += 3;
-        if(document.getElementById('statsPOTM').checked) bonus += 3;
-        if(document.getElementById('statsBestXI').checked) bonus += 3;
+        if(document.getElementById('statsPOTM').checked) bonus += 3; // MVP
+        if(document.getElementById('statsBestXI').checked) bonus += 3; // Best XI
+        if(document.getElementById('statsBestMonth').checked) bonus += 3; // Best Month (BARU)
         
-        await createData({ type:'stats', member_id:document.getElementById('statsPlayerName').value, date:document.getElementById('statsDate').value, goals:document.getElementById('statsGoals').value, assists:document.getElementById('statsAssists').value, saves:document.getElementById('statsSaves').value, totalPoints: pts + bonus, createdAt:new Date().toISOString() });
+        // Note: Untuk input manual, kehadiran default tidak otomatis ditambahkan 
+        // karena Baginda bisa menambahkan lewat 'Jersey (+2)' atau input manual poin.
+        // Jika ingin kehadiran otomatis, tambahkan +1 (Internal) atau +2 (Friendly) di sini.
+        // Tapi untuk manual biasanya fleksibel.
+        
+        await createData({ 
+            type:'stats', 
+            member_id:document.getElementById('statsPlayerName').value, 
+            date:document.getElementById('statsDate').value, 
+            goals: goals, 
+            assists: assists, 
+            saves: saves, 
+            totalPoints: basePoints + bonus, 
+            createdAt:new Date().toISOString() 
+        });
+        
         showToast('Statistik disimpan');
         
+        // Reset Inputs
         document.getElementById('statsGoals').value = '';
         document.getElementById('statsAssists').value = '';
         document.getElementById('statsSaves').value = '';
+        document.getElementById('statsJersey').checked = false;
+        document.getElementById('statsCleanSheet').checked = false;
+        document.getElementById('statsPOTM').checked = false;
+        document.getElementById('statsBestXI').checked = false;
+        document.getElementById('statsBestMonth').checked = false;
     }
     
 function renderStats() { 
